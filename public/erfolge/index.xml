@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Erfolge on EmyKarate</title>
+		<link>http://192.168.0.40:1313/erfolge/</link>
+		<description>Recent content in Erfolge on EmyKarate</description>
+		<generator>Hugo</generator>
+		<language>de</language>
+		
+		
+		
+		
+			<lastBuildDate>Fri, 15 Nov 2024 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="http://192.168.0.40:1313/erfolge/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Fairness-Preis</title>
+				<link>http://192.168.0.40:1313/erfolge/fairness-preis/</link>
+				<pubDate>Fri, 01 Dec 2023 00:00:00 +0000</pubDate>
+				<guid>http://192.168.0.40:1313/erfolge/fairness-preis/</guid>
+				<description>Auszeichnung mit dem Fairness-Preis 2023 unseres Dojos.</description>
+			</item>
+			<item>
+				<title>Landesmeisterschaft Berlin 2024</title>
+				<link>http://192.168.0.40:1313/erfolge/landesmeisterschaft-2024/</link>
+				<pubDate>Fri, 15 Nov 2024 00:00:00 +0000</pubDate>
+				<guid>http://192.168.0.40:1313/erfolge/landesmeisterschaft-2024/</guid>
+				<description>Erster Platz in der Kategorie Kata U14 bei der Berliner Landesmeisterschaft. Ein unvergesslicher Moment!</description>
+			</item>
+			<item>
+				<title>Landesmeisterschaft (3. Platz)</title>
+				<link>http://192.168.0.40:1313/erfolge/landesmeisterschaft-platz3/</link>
+				<pubDate>Thu, 09 May 2024 00:00:00 +0000</pubDate>
+				<guid>http://192.168.0.40:1313/erfolge/landesmeisterschaft-platz3/</guid>
+				<description>Ein harter Wettkampf, der mit dem 3. Platz belohnt wurde. Im Sommer geht es um die Meisterschaft!</description>
+			</item>
+			<item>
+				<title>Dojo Champion</title>
+				<link>http://192.168.0.40:1313/erfolge/dojo-champion/</link>
+				<pubDate>Mon, 15 Jan 2024 00:00:00 +0000</pubDate>
+				<guid>http://192.168.0.40:1313/erfolge/dojo-champion/</guid>
+				<description>Interner Titel als Dojo Champion beim Kiai Berlin.</description>
+			</item>
+			<item>
+				<title>Norddeutsche Meisterschaft 2024</title>
+				<link>http://192.168.0.40:1313/erfolge/norddeutsche-2024/</link>
+				<pubDate>Tue, 20 Aug 2024 00:00:00 +0000</pubDate>
+				<guid>http://192.168.0.40:1313/erfolge/norddeutsche-2024/</guid>
+				<description>Silbermedaille beim Norddeutschen Turnier – das bisher größte Turnier, an dem ich teilgenommen habe.</description>
+			</item>
+	</channel>
+</rss>

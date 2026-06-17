@@ -1,0 +1,120 @@
+{
+  "hero": {
+    "badge": "Meine Reise ",
+    "heading_line1": "KINETISCHE",
+    "heading_line2": "ELEGANZ",
+    "heading_suffix": "IN JEDEM SCHLAG.",
+    "description": "Seit ich sechs Jahre alt bin, ist das Dojo mein zweites Zuhause. Für mich ist Karate mehr als Medaillen – es ist eine Symphonie aus Fokus, Disziplin und explosiver Energie in einer einzigen Bewegung. hhh",
+    "image": "portrait.webp",
+    "image_alt": "Miya beim Karate-Kick",
+    "rang_label": "Aktueller Rang",
+    "rang_value": "Lila "
+  },
+  "gurtweg": {
+    "title": "Der Weg zur Meisterschaft",
+    "subtitle": "Jeder Gürtel erzählt eine Geschichte aus Hingabe und Wachstum.",
+    "aktiver_gurt": "Grün",
+    "gurte": [
+      {
+        "name": "Weiß",
+        "farbe": "bg-white border-2 border-zinc-300",
+        "geschichte": "Der allererste Schritt auf die Matte. Hier begann Emys große Karate-Reise und die Grundlagen wurden gelegt."
+      },
+      {
+        "name": "Gelb",
+        "farbe": "bg-yellow-400",
+        "geschichte": "Die erste Prüfung erfolgreich bestanden! Das Verständnis für Kihon und erste Katas wurde belohnt."
+      },
+      {
+        "name": "Orange",
+        "farbe": "bg-orange-500",
+        "geschichte": "Mit dem Orangegurt kam mehr Kraft und Präzision in die Techniken. Erste Turniererfahrungen wurden gesammelt."
+      },
+      {
+        "name": "Grün",
+        "farbe": "bg-green-600",
+        "geschichte": "Ein echter Meilenstein! Komplexere Katas und fortgeschrittene Kumite-Techniken zeichnen diesen Champion-Gürtel aus."
+      },
+      {
+        "name": "Blau",
+        "farbe": "bg-blue-600",
+        "geschichte": "Noch nicht erreicht. Der Blaugurt steht für mentale Stärke und tieferes Verständnis der Karate-Philosophie."
+      },
+      {
+        "name": "Lila",
+        "farbe": "bg-purple-700",
+        "geschichte": "Noch nicht erreicht. Ein wichtiger Zwischenschritt auf dem Weg zu den Meistergraden."
+      },
+      {
+        "name": "Braun",
+        "farbe": "bg-red-700",
+        "geschichte": "Noch nicht erreicht. Der höchste Schülergrad (Kyu). Die Techniken werden reflexartig und meisterlich."
+      },
+      {
+        "name": "Schwarz",
+        "farbe": "bg-zinc-900",
+        "geschichte": "Das ultimative Ziel: Der erste Dan. Hier endet das Schüler-Dasein und der wahre Weg des Karate (Do) beginnt."
+      }
+    ]
+  },
+  "haupterfolg": {
+    "titel": "Landesmeisterschaft Berlin ",
+    "platz": "Gold – Kata U14  ",
+    "beschreibung": "Mein bisher größter Erfolg. Monatelanges hartes Training gipfelte in einer Vorführung, die meinen Wettkampfgeist unter Beweis stellte. hh ",
+    "jahr": "2024 ",
+    "ort": "Esslingen am Neckar ",
+    "kategorie": "U14"
+  },
+  "weitere_erfolge": [
+    {
+      "titel": "Norddeutsche Meisterschaft",
+      "detail": "Silber – Kata 2024",
+      "beschreibung": "fdfffdfdfdfd\nfdf",
+      "jahr": "2099",
+      "ort": "Heilbronn",
+      "kategorie": "haha"
+    },
+    {
+      "titel": "Dojo Champion",
+      "detail": "Kiai Berlin, intern",
+      "beschreibung": "fdffdfdfde",
+      "jahr": "",
+      "ort": "",
+      "kategorie": ""
+    },
+    {
+      "titel": "Fairness-Preis",
+      "detail": "Dojo-Auszeichnung 2023",
+      "beschreibung": "hghghfghfghfghfg",
+      "jahr": "",
+      "ort": "",
+      "kategorie": ""
+    },
+    {
+      "titel": "Der beste",
+      "detail": "Ganz oben auf dem Treppchen",
+      "beschreibung": "eqweqweqw",
+      "jahr": "",
+      "ort": "",
+      "kategorie": ""
+    }
+  ],
+  "stats": [
+    {
+      "wert": "5+",
+      "label": "Jahre Training"
+    },
+    {
+      "wert": "32",
+      "label": "Turniere"
+    },
+    {
+      "wert": "12",
+      "label": "Goldmedaillen"
+    }
+  ],
+  "zitat": {
+    "text": "Karate ist nicht nur ein Sport. Es ist eine Linse, durch die ich die Welt sehe – mit Präzision, Respekt und unbeugsamer Konzentration.",
+    "autor": "Emy"
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "photos": [
+    {
+      "id": "1778361895205-amw83",
+      "filename": "1778361895205-amw83.webp",
+      "thumb": "1778361895205-amw83-thumb.webp",
+      "title": "EF75AE9A-1670-46F8-AB04-798D22334E66",
+      "kategorie": "Haudrauf",
+      "datum": "2026-05-09"
+    },
+    {
+      "id": "1777571196788-em155",
+      "filename": "1777571196788-em155.webp",
+      "thumb": "1777571196788-em155-thumb.webp",
+      "title": "254E64FC-1F3E-4694-9828-28C620DB7A0D_1_105_c",
+      "kategorie": "Haudrauf",
+      "datum": "2026-04-30"
+    },
+    {
+      "id": "1775774640975-43j95",
+      "filename": "1775774640975-43j95.webp",
+      "thumb": "1775774640975-43j95-thumb.webp",
+      "title": "IMG_1106",
+      "kategorie": "Training",
+      "datum": "2026-04-09"
+    },
+    {
+      "id": "1775774312130-1yqrc",
+      "filename": "1775774312130-1yqrc.webp",
+      "thumb": "1775774312130-1yqrc-thumb.webp",
+      "title": "Test",
+      "kategorie": "Wettkämpfe",
+      "datum": "2026-04-09"
+    },
+    {
+      "id": "1775774187000-q74m0",
+      "filename": "1775774187000-q74m0.webp",
+      "thumb": "1775774187000-q74m0-thumb.webp",
+      "title": "Test",
+      "kategorie": "Wettkämpfe",
+      "datum": "2026-04-09"
+    }
+  ]
+}

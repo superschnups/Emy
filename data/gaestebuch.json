@@ -1,0 +1,64 @@
+{
+  "hero": {
+    "badge": "Melde dich bei mir",
+    "heading": "Schreib mir &",
+    "heading_colored": "teile deine Geschichte",
+    "description": "Ob du eine Frage zu meinem Training hast oder einfach eine nette Nachricht hinterlassen möchtest – ich freue mich von dir zu hören!",
+    "image": ""
+  },
+  "kontakt": {
+    "email": "emy@emy-karate.de",
+    "dojo": "Shodocan Esslingen"
+  },
+  "eintraege": [
+    {
+      "id": "1780693920712",
+      "name": "sascha",
+      "rolle": "Allgemeine Frage",
+      "text": "Du bist und bleibst die beste 😄",
+      "farbe": "default",
+      "breit": false,
+      "datum": "2026-06-05T21:12:00.712Z"
+    },
+    {
+      "id": "2",
+      "name": "Trainerin Elena",
+      "rolle": "Sensei",
+      "text": "Deine Konzentration beim letzten Grading war außergewöhnlich. Die Körperkontrolle, die du entwickelst, ist selten für dein Alter. Ich bin stolz auf dich!",
+      "farbe": "default",
+      "breit": false
+    },
+    {
+      "id": "3",
+      "name": "Opa Karl",
+      "rolle": "Familie",
+      "text": "Wir drücken dir von zuhause alle die Daumen! Kann es kaum erwarten, den nächsten Pokal auf dem Regal zu sehen!",
+      "farbe": "default",
+      "breit": true
+    },
+    {
+      "id": "4",
+      "name": "Lea M.",
+      "rolle": "Freundin",
+      "text": "Die Website sieht so professionell aus! Mega cool, alle deine Erfolge an einem Ort zu sehen. Wir müssen bald mal wieder eis essen gehen!",
+      "farbe": "secondary",
+      "breit": true
+    },
+    {
+      "id": "5",
+      "name": "Trainer Thomas",
+      "rolle": "Dojo Kiai Berlin",
+      "text": "Ich trainiere viele Kinder, aber die kinetische Flüssigkeit in deinen Bewegungen ist etwas Besonderes. Du machst jede Kata zu einem Tanz. Weiter so – der nächste schwarze Gürtel wartet schon!",
+      "farbe": "secondary",
+      "breit": true
+    },
+    {
+      "id": "6",
+      "name": "Herr Braun",
+      "rolle": "Lehrer",
+      "text": "Balance im Sport führt zu Balance im Leben. Halt die Disziplin, die du im Dojo zeigst, auch in der Schule!",
+      "farbe": "default",
+      "breit": false
+    }
+  ]
+}

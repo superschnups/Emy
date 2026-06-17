@@ -1,0 +1,40 @@
+server {
+    server_name bonzeipunk.de www.bonzeipunk.de;
+
+    root /var/www/ki-labor;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    gzip on;
+    gzip_types text/plain text/css application/javascript application/json image/svg+xml;
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/bonzeipunk.de/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/bonzeipunk.de/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+
+}
+server {
+    if ($host = www.bonzeipunk.de) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    if ($host = bonzeipunk.de) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    listen 80;
+    server_name bonzeipunk.de www.bonzeipunk.de;
+    return 404; # managed by Certbot
+
+
+
+
+}

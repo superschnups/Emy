@@ -1,0 +1,31 @@
+{
+  "bettertouchtool": [
+    {
+      "name": "test mich doch",
+      "key": "strg+t",
+      "tags": [
+        "bt"
+      ],
+      "description": "soso",
+      "date": "08.06.2026"
+    },
+    {
+      "name": "chache space",
+      "key": "cmd+alt+<>",
+      "tags": [
+        "global"
+      ],
+      "description": "haja",
+      "date": "08.06.2026"
+    }
+  ],
+  "global": [
+    {
+      "name": "neue Notiz von überall",
+      "key": "alt+esc",
+      "tags": [],
+      "description": "  ",
+      "date": "19.03.2026"
+    }
+  ]
+}

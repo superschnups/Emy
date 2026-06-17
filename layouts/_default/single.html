@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>{{ .Title }} | EmyKarate</title>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@700;900&family=Be+Vietnam+Pro:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans p-8 max-w-3xl mx-auto">
+  <a href="/" class="text-pink-600 font-bold uppercase tracking-widest text-sm hover:underline">← Zurück</a>
+  <h1 class="text-5xl font-black mt-8 mb-4">{{ .Title }}</h1>
+  {{ with .Params.rang }}<span class="bg-purple-700 text-white px-4 py-1 rounded-full text-sm font-bold uppercase">{{ . }}</span>{{ end }}
+  <div class="mt-8 prose prose-lg">{{ .Content }}</div>
+</body>
+</html>

@@ -1,0 +1,20 @@
+#!/bin/bash
+set -euo pipefail
+
+SITE_DIR="/Users/jessi/wp-ki-labor"
+SSH_KEY="/Users/jessi/.ssh/vpsserver/vpsserver"
+REMOTE="root@bonzeipunk.de:/var/www/ki-labor/"
+
+cd "$SITE_DIR"
+
+# Hugo-Devserver beenden falls läuft
+pkill -f "hugo server" 2>/dev/null || true
+
+echo "==> Building..."
+hugo --minify
+
+echo "==> Syncing to ${REMOTE}..."
+rsync -azv --delete -e "ssh -i ${SSH_KEY}" public/ "$REMOTE"
+
+echo "==> Done. Starting dev server..."
+hugo server --disableFastRender --noHTTPCache

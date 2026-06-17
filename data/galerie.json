@@ -1,0 +1,26 @@
+{
+  "hero": {
+    "badge": "Visuelle Reise",
+    "heading_main": "Eingefangene",
+    "heading_colored": "Momente",
+    "description": "Die Kunst der Disziplin durch die Linse. Von intensiven Trainingseinheiten bis zum Triumph bei Gürtelprüfungen."
+  },
+  "ribbon": {
+    "heading": "Hinter der Linse ha",
+    "description": "Unsere Galerie ist nicht nur Fotos – sie ist ein Zeugnis der Disziplin, die wir jeden Tag im Dojo leben.",
+    "stats": [
+      {
+        "wert": "24",
+        "label": "Turniere"
+      },
+      {
+        "wert": "20",
+        "label": "Schüler"
+      },
+      {
+        "wert": "6",
+        "label": "Gürtelprüfungen"
+      }
+    ]
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "siteTitle": "EmyKarate",
+  "hero": {
+    "badge": "MEINE REISE IN KATA ",
+    "description": "Entdecke die Welt des Karate durch meine Augen. Von den ersten Schritten im Dojo bis hin zu nationalen Meisterschaften – hier teile ich meine Leidenschaft für Bewegung, Disziplin und Erfolg. ",
+    "image": "hero.webp"
+  },
+  "hero_karte": {
+    "rang": "Grüngurt",
+    "status": "Status 2026"
+  },
+  "stats": [
+    {
+      "value": "7+",
+      "label": "Jahre Training"
+    },
+    {
+      "value": "1",
+      "label": "Gold Medaillen"
+    },
+    {
+      "value": "11",
+      "label": "Turniere"
+    }
+  ],
+  "pruefung_karte": {
+    "titel": "Prüfung bestanden",
+    "beschreibung": "Neuer Gürtelgrad erreicht! Jetzt stolze Trägerin des Blaugurts."
+  },
+  "dojo_karte": {
+    "titel": "Dojo Champion",
+    "beschreibung": "Hausinterner Wettbewerb im Dojo \"Kiai Berlin\"."
+  },
+  "cta": {
+    "heading_main": "Bereit für mehr",
+    "heading_colored": "Action?",
+    "description": "Schau dir hunderte Fotos von Trainingseinheiten, Turnieren und Reisen in meiner großen Galerie an.",
+    "button_text": "ZUR GALERIE GEHEN"
+  }
+}

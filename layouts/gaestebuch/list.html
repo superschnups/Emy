@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="de">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Gästebuch | {{ .Site.Data.homepage.siteTitle | default .Site.Title }}</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Lexend:wght@400;700;800;900&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "tertiary-container": "#ffffff", "surface-bright": "#f5f6f7",
+          "on-tertiary-container": "#636262", "error-dim": "#a70138",
+          "on-surface-variant": "#595c5d", "surface-tint": "#b30065",
+          "surface-container-highest": "#dadddf", "on-secondary-fixed-variant": "#7d21a4",
+          "inverse-on-surface": "#9b9d9e", "inverse-surface": "#0c0f10",
+          "surface-container": "#e6e8ea", "surface": "#f5f6f7",
+          "primary-fixed": "#ff6ea9", "surface-container-low": "#eff1f2",
+          "secondary": "#8930b0", "tertiary": "#5c5b5b",
+          "on-secondary": "#ffedff", "secondary-dim": "#7c20a3",
+          "secondary-container": "#f0c1ff", "surface-dim": "#d1d5d7",
+          "primary": "#b30065", "on-primary-fixed": "#000000",
+          "surface-container-high": "#e0e3e4", "primary-fixed-dim": "#ff4e9e",
+          "primary-dim": "#9d0058", "outline": "#757778",
+          "error": "#b41340", "outline-variant": "#abadae",
+          "secondary-fixed": "#f0c1ff", "secondary-fixed-dim": "#eaaeff",
+          "tertiary-fixed-dim": "#f3f0ef", "on-surface": "#2c2f30",
+          "on-tertiary-fixed-variant": "#6e6d6d", "on-tertiary": "#f5f2f1",
+          "tertiary-fixed": "#ffffff", "background": "#f5f6f7",
+          "on-primary": "#ffeff2", "surface-container-lowest": "#ffffff",
+          "inverse-primary": "#ff479c", "primary-container": "#ff6ea9",
+          "on-primary-fixed-variant": "#5c0031", "on-secondary-container": "#72129a",
+          "error-container": "#f74b6d", "surface-variant": "#dadddf",
+          "on-background": "#2c2f30", "on-error": "#ffefef",
+          "on-tertiary-fixed": "#515050", "tertiary-dim": "#504f4f",
+          "on-primary-container": "#4b0027", "on-secondary-fixed": "#580079",
+          "on-error-container": "#510017"
+        },
+        "borderRadius": {
+          "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"
+        },
+        "fontFamily": {
+          "headline": ["Outfit", "Lexend"], "body": ["Outfit", "Be Vietnam Pro"], "label": ["Be Vietnam Pro"]
+        }
+      },
+    },
+  }
+</script>
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .editorial-text { text-wrap: balance; }
+  .glass-card { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); }
+
+  /* Floating Header & Nav Effects */
+  .nav-link-modern {
+    position: relative;
+    padding-bottom: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.3s ease;
+  }
+  .nav-link-modern .jap-text {
+    position: absolute;
+    top: -24px;
+    font-size: 1rem;
+    font-family: 'Noto Serif JP', serif;
+    opacity: 0;
+    transform: translateY(5px);
+    transition: all 0.3s ease;
+    color: #b30065;
+    white-space: nowrap;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+  }
+  .nav-link-modern:hover .jap-text {
+    opacity: 0.6;
+    transform: translateY(0);
+  }
+  .nav-link-modern.active .jap-text {
+    opacity: 0.8;
+    transform: translateY(0);
+  }
+  .header-floating {
+    top: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 2rem);
+    border-radius: 1.5rem;
+    height: 6rem;
+    transition: all 0.3s ease;
+  }
+  .header-scrolled {
+    top: 0;
+    width: 100%;
+    border-radius: 0;
+    height: 5rem;
+    background: rgba(255, 255, 255, 0.9) !important;
+  }
+  .btn-glow {
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-glow::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+    transform: scale(0);
+    transition: transform 0.6s ease-out;
+  }
+  .btn-glow:hover::before {
+    transform: scale(1);
+  }
+</style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container">
+{{ $gb := .Site.Data.gaestebuch }}
+
+<!-- TopAppBar -->
+
+<nav id="mainNav" class="fixed z-50 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl shadow-2xl shadow-pink-500/10 header-floating border border-white/20 dark:border-zinc-800/50">
+  <div class="flex justify-between items-center h-full px-6 md:px-10 max-w-screen-2xl mx-auto">
+    <a href="{{ "/" | relURL }}" class="flex items-center gap-2 group transition-all duration-500">
+      <div class="w-10 h-10 bg-gradient-to-br from-primary to-primary-container rounded-lg flex items-center justify-center text-white shadow-lg group-hover:rotate-12 transition-transform">
+         <span class="material-symbols-outlined text-xl" style="font-variation-settings:'FILL' 1">sports_martial_arts</span>
+      </div>
+      <span class="text-xl font-black text-on-surface dark:text-white italic font-headline tracking-tighter uppercase">{{ .Site.Data.homepage.siteTitle | default .Site.Title }}</span>
+    </a>
+    
+    
+        <div class="hidden md:flex items-center gap-10">
+      <a class="nav-link-modern font-bold font-headline tracking-tight uppercase text-sm hover:text-primary transition-colors text-zinc-500 dark:text-zinc-400" href="{{ "/" | relURL }}">
+        <span class="relative z-10">Home</span>
+        <span class="jap-text">ホーム</span>
+      </a>
+      <a class="nav-link-modern font-bold font-headline tracking-tight uppercase text-sm hover:text-primary transition-colors text-zinc-500 dark:text-zinc-400" href="{{ "/galerie/" | relURL }}">
+        <span class="relative z-10">Galerie</span>
+        <span class="jap-text">ギャラリー</span>
+      </a>
+      <a class="nav-link-modern font-bold font-headline tracking-tight uppercase text-sm hover:text-primary transition-colors text-zinc-500 dark:text-zinc-400" href="{{ "/uebermich/" | relURL }}">
+        <span class="relative z-10">Über mich</span>
+        <span class="jap-text">私について</span>
+      </a>
+      <a class="nav-link-modern font-bold font-headline tracking-tight uppercase text-sm hover:text-primary transition-colors text-zinc-500 dark:text-zinc-400" href="{{ "/erfolge/" | relURL }}">
+        <span class="relative z-10">Erfolge</span>
+        <span class="jap-text">成果</span>
+      </a>
+      <a class="nav-link-modern font-bold font-headline tracking-tight uppercase text-sm hover:text-primary transition-colors active text-primary dark:text-pink-400" href="{{ "/gaestebuch/" | relURL }}">
+        <span class="relative z-10">Gästebuch</span>
+        <span class="jap-text">ゲストブック</span>
+      </a>
+    </div>
+
+
+    <div class="flex items-center gap-4">
+      <button onclick="document.getElementById('kontaktModal').classList.remove('hidden')" class="btn-glow hidden sm:flex items-center gap-2 bg-on-surface text-white dark:bg-white dark:text-on-surface px-6 py-2.5 rounded-full font-bold font-headline tracking-tight uppercase text-xs shadow-xl hover:shadow-primary/20 hover:-translate-y-0.5 transition-all">
+        <span>Kontakt</span>
+        <span class="material-symbols-outlined text-sm">send</span>
+      </button>
+      <button onclick="toggleMobileMenu()" class="md:hidden w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-high text-primary">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+
+</header>
+
+<main class="pt-32 pb-20">
+  <!-- Hero -->
+  <section class="max-w-7xl mx-auto px-6 mb-20">
+    <div class="relative rounded-xl overflow-hidden min-h-[400px] flex items-center p-8 md:p-16">
+      {{ if $gb.hero.image }}
+      <img alt="Gästebuch Hero" class="absolute inset-0 w-full h-full object-cover" src="/gaestebuch-img/{{ $gb.hero.image }}"/>
+      {{ else }}
+      <img alt="Karate Dojo" class="absolute inset-0 w-full h-full object-cover"
+        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlVHSCQA9wTqwkVgz4Q76piwsWS33jFlIXlTw7TBSDubv3dQTnKkIUtU-rBAoPyO3eJ1BHdeKBNqS_CCcyhfI0XH1VHSDFSgxgH1oDxrICcX8b-GoehyY1x8udqwWfuKtSTI-nNW4i15l0HWDcVvSrtlM4u25KjM63nBbo_pfDq6f-larFS9uVzVlBn5KMcj8uioIHmQqPlVxWqlkETOL_6zr_Y-k_doAHs6brW-DdT4clT2MxJjtDFjxxr-cTzgKALEfMvTTJUg"/>
+      {{ end }}
+      <div class="absolute inset-0 bg-gradient-to-r from-on-surface/80 via-on-surface/40 to-transparent"></div>
+      <div class="relative z-10 max-w-2xl">
+        <span class="inline-block px-4 py-1 rounded-full bg-secondary text-on-secondary font-label text-xs tracking-[0.1em] uppercase mb-4">{{ $gb.hero.badge }}</span>
+        <h1 class="font-headline text-5xl md:text-7xl font-extrabold text-white leading-tight mb-6 tracking-tighter">
+          {{ $gb.hero.heading }} <span class="text-primary-container">{{ $gb.hero.heading_colored }}</span>
+        </h1>
+        <p class="text-lg text-surface font-medium max-w-lg editorial-text">
+          {{ $gb.hero.description }}
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bento: Formular + Sidebar -->
+  <section class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
+    <!-- Kontaktformular -->
+    <div class="lg:col-span-7 bg-surface-container-lowest rounded-xl p-8 md:p-12 shadow-sm relative overflow-hidden">
+      <div class="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full -mr-32 -mt-32"></div>
+      <div class="relative z-10">
+        <h2 class="font-headline text-3xl font-bold mb-8 flex items-center gap-3">
+          <span class="material-symbols-outlined text-primary text-4xl">send</span>
+          Nachricht schicken
+        </h2>
+        <form class="space-y-6" id="gbForm">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="space-y-2">
+              <label class="text-sm font-bold font-label uppercase tracking-widest text-on-surface-variant px-1">Dein Name</label>
+              <input id="gbName" required class="w-full bg-surface-container-low border-none rounded-sm focus:ring-2 focus:ring-primary/20 p-4 transition-all placeholder:text-outline-variant" placeholder="Mia Muster" type="text"/>
+            </div>
+            <div class="space-y-2">
+              <label class="text-sm font-bold font-label uppercase tracking-widest text-on-surface-variant px-1">E-Mail-Adresse</label>
+              <input id="gbEmail" required class="w-full bg-surface-container-low border-none rounded-sm focus:ring-2 focus:ring-primary/20 p-4 transition-all placeholder:text-outline-variant" placeholder="hallo@beispiel.de" type="email"/>
+            </div>
+          </div>
+          <div class="space-y-2">
+            <label class="text-sm font-bold font-label uppercase tracking-widest text-on-surface-variant px-1">Betreff</label>
+            <div class="flex flex-wrap gap-3 py-2">
+              <label class="cursor-pointer">
+                <input checked class="hidden peer" name="subject" type="radio" value="Allgemeine Frage"/>
+                <span class="px-6 py-2 rounded-full border-2 border-surface-container-high peer-checked:bg-secondary peer-checked:text-on-secondary peer-checked:border-secondary transition-all text-sm font-bold">Allgemeine Frage</span>
+              </label>
+              <label class="cursor-pointer">
+                <input class="hidden peer" name="subject" type="radio" value="Trainingstipps"/>
+                <span class="px-6 py-2 rounded-full border-2 border-surface-container-high peer-checked:bg-secondary peer-checked:text-on-secondary peer-checked:border-secondary transition-all text-sm font-bold">Trainingstipps</span>
+              </label>
+              <label class="cursor-pointer">
+                <input class="hidden peer" name="subject" type="radio" value="Sonstiges"/>
+                <span class="px-6 py-2 rounded-full border-2 border-surface-container-high peer-checked:bg-secondary peer-checked:text-on-secondary peer-checked:border-secondary transition-all text-sm font-bold">Sonstiges</span>
+              </label>
+            </div>
+          </div>
+          <div class="space-y-2">
+            <label class="text-sm font-bold font-label uppercase tracking-widest text-on-surface-variant px-1">Nachricht</label>
+            <textarea id="gbText" required class="w-full bg-surface-container-low border-none rounded-sm focus:ring-2 focus:ring-primary/20 p-4 transition-all placeholder:text-outline-variant resize-none" placeholder="Schreib deine Nachricht hier..." rows="5"></textarea>
+          </div>
+          <button id="gbSubmitBtn" type="submit" class="w-full bg-gradient-to-r from-primary to-primary-container text-on-primary py-5 rounded-xl font-headline text-xl font-bold shadow-xl shadow-primary/30 transition-transform active:scale-95 disabled:opacity-50">
+            Nachricht absenden
+          </button>
+          <p id="gbStatus" class="text-center text-sm font-bold hidden"></p>
+        </form>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="lg:col-span-5 flex flex-col gap-8">
+      <div class="bg-secondary-container text-on-secondary-container rounded-xl p-8 shadow-sm">
+        <h3 class="font-headline text-2xl font-bold mb-4">Direktkontakt</h3>
+        <div class="space-y-4">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-on-secondary-container/10 flex items-center justify-center">
+              <span class="material-symbols-outlined">alternate_email</span>
+            </div>
+            <div>
+              <p class="text-xs font-bold uppercase opacity-60">E-Mail</p>
+              <p class="font-bold">{{ $gb.kontakt.email }}</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-on-secondary-container/10 flex items-center justify-center">
+              <span class="material-symbols-outlined">location_on</span>
+            </div>
+            <div>
+              <p class="text-xs font-bold uppercase opacity-60">Dojo</p>
+              <p class="font-bold">{{ $gb.kontakt.dojo | safeHTML }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Neuester Eintrag -->
+      <div class="bg-surface-container-low rounded-xl p-8 flex-grow">
+        <div class="flex justify-between items-end mb-8">
+          <h3 class="font-headline text-2xl font-bold">Neuester Eintrag</h3>
+          <a class="text-primary font-bold text-sm hover:underline" href="#gaestebuch-wall">Alle ansehen</a>
+        </div>
+        {{ with index $gb.eintraege 0 }}
+        <div class="glass-card p-6 rounded-lg shadow-sm border border-white/40">
+          <div class="flex items-center gap-4 mb-4">
+            <div class="w-12 h-12 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-bold text-xl">{{ substr .name 0 1 }}</div>
+            <div>
+              <h4 class="font-bold">{{ .name }}</h4>
+              <p class="text-xs text-on-surface-variant font-medium">{{ .rolle }}</p>
+            </div>
+          </div>
+          <p class="text-on-surface-variant leading-relaxed">"{{ .text }}"</p>
+        </div>
+        {{ end }}
+      </div>
+    </div>
+  </section>
+
+  <!-- Gästebuch-Wand -->
+  <section class="max-w-7xl mx-auto px-6 mt-20" id="gaestebuch-wall">
+    <div class="text-center mb-12">
+      <h2 class="font-headline text-4xl md:text-5xl font-extrabold mb-4">Gästebuch-Wand</h2>
+      <p class="text-on-surface-variant max-w-2xl mx-auto">Nachrichten von Trainingspartnern, Familie und Freunden aus aller Welt.</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {{ range $gb.eintraege }}
+      {{ $span := "" }}{{ if .breit }}{{ $span = "md:col-span-2" }}{{ end }}
+      {{ if eq .farbe "secondary" }}
+      <div class="bg-gradient-to-br from-secondary/5 to-primary/5 border border-white rounded-lg p-6 shadow-xl shadow-black/5 {{ $span }}">
+        <div class="flex items-center gap-4 mb-4">
+          <div class="w-12 h-12 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-bold text-xl">{{ substr .name 0 1 }}</div>
+          <div>
+            <p class="font-bold">{{ .name }}</p>
+            <p class="text-xs font-medium text-secondary">{{ .rolle }}</p>
+          </div>
+        </div>
+        <blockquote class="text-on-surface-variant italic text-lg leading-relaxed">"{{ .text }}"</blockquote>
+      </div>
+      {{ else }}
+      <div class="bg-white rounded-lg p-6 shadow-xl shadow-black/5 hover:-translate-y-2 transition-transform duration-300 {{ $span }}">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center font-bold text-sm text-on-surface-variant">{{ substr .name 0 1 }}</div>
+          <div>
+            <p class="font-bold text-sm">{{ .name }}</p>
+            <p class="text-[10px] uppercase font-bold text-outline">{{ .rolle }}</p>
+          </div>
+          <span class="ml-auto material-symbols-outlined text-primary text-xl" style="font-variation-settings: 'FILL' 1;">favorite</span>
+        </div>
+        <p class="text-sm text-on-surface-variant leading-relaxed">{{ .text }}</p>
+      </div>
+      {{ end }}
+      {{ end }}
+    </div>
+  </section>
+</main>
+
+<!-- Footer -->
+<footer class="w-full rounded-t-[3rem] mt-20 bg-zinc-50 dark:bg-zinc-950">
+  <div class="flex flex-col md:flex-row justify-between items-center py-12 px-8 max-w-7xl mx-auto gap-6 text-sm tracking-wide">
+    {{ $social := .Site.Data.global.social }}
+    <div class="text-lg font-bold text-zinc-900 dark:text-zinc-100 font-headline uppercase italic">{{ .Site.Data.homepage.siteTitle | default .Site.Title }}</div>
+    <div class="flex gap-8 text-zinc-500">
+      <a class="hover:text-pink-500 transition-opacity hover:underline decoration-pink-500 decoration-2 underline-offset-4" href="{{ $social.instagram }}">Instagram</a>
+      <a class="hover:text-pink-500 transition-opacity hover:underline decoration-pink-500 decoration-2 underline-offset-4" href="{{ $social.youtube }}">YouTube</a>
+      <a class="hover:text-pink-500 transition-opacity hover:underline decoration-pink-500 decoration-2 underline-offset-4" href="mailto:{{ $social.email }}">Email</a>
+    </div>
+    <div class="text-zinc-500">© 2024 {{ .Site.Data.homepage.siteTitle | default .Site.Title }}. Alle Rechte vorbehalten.</div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('gbForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('gbSubmitBtn');
+    const status = document.getElementById('gbStatus');
+    const name = document.getElementById('gbName').value;
+    const email = document.getElementById('gbEmail').value;
+    const text = document.getElementById('gbText').value;
+    const subject = document.querySelector('input[name="subject"]:checked').value;
+
+    btn.disabled = true;
+    status.classList.remove('hidden', 'text-error', 'text-green-600');
+    status.textContent = 'Wird gesendet...';
+
+    // API URL bestimmen (Nutzt jetzt den Nginx Proxy auf der gleichen Domain)
+    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === 'karate' || window.location.hostname.startsWith('192.168.');
+    const finalUrl = isLocal ? 'http://' + window.location.hostname + ':3001/api/gaestebuch/public' : '/api/gaestebuch/public';
+
+    try {
+      const r = await fetch(finalUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, text, subject })
+      });
+
+      if (r.ok) {
+        status.textContent = '✅ Danke! Deine Nachricht wurde gespeichert und erscheint in Kürze.';
+        status.classList.add('text-green-600');
+        document.getElementById('gbForm').reset();
+      } else {
+        throw new Error('Server-Fehler');
+      }
+    } catch(e) {
+      status.textContent = '❌ Fehler beim Senden. Bitte versuche es später nochmal.';
+      status.classList.add('text-error');
+      btn.disabled = false;
+    }
+  });
+</script>
+
+
+<script>
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('mainNav');
+  if (nav && window.scrollY > 50) {
+    nav.classList.add('header-scrolled');
+  } else if (nav) {
+    nav.classList.remove('header-scrolled');
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.webp
+*.svg
+# oder ganzen Ordner:
+/images/
+/img/
+/assets/images/
+public/
+static/img

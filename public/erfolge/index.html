@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="de">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Erfolge | EmyKarate</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Lexend:wght@300;400;500;600;700;800;900&family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Noto+Serif+JP:wght@900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "belt-green": "#10b981", "belt-green-glow": "#059669",
+          "tertiary-container": "#ffffff", "surface-bright": "#f5f6f7",
+          "on-tertiary-container": "#636262", "error-dim": "#a70138",
+          "on-surface-variant": "#595c5d", "surface-tint": "#b30065",
+          "surface-container-highest": "#dadddf", "on-secondary-fixed-variant": "#7d21a4",
+          "inverse-on-surface": "#9b9d9e", "inverse-surface": "#0c0f10",
+          "surface-container": "#e6e8ea", "surface": "#f5f6f7",
+          "primary-fixed": "#ff6ea9", "surface-container-low": "#eff1f2",
+          "secondary": "#8930b0", "tertiary": "#5c5b5b",
+          "on-secondary": "#ffedff", "secondary-dim": "#7c20a3",
+          "secondary-container": "#f0c1ff", "surface-dim": "#d1d5d7",
+          "primary": "#b30065", "on-primary-fixed": "#000000",
+          "surface-container-high": "#e0e3e4", "primary-fixed-dim": "#ff4e9e",
+          "primary-dim": "#9d0058", "outline": "#757778",
+          "error": "#b41340", "outline-variant": "#abadae",
+          "secondary-fixed": "#f0c1ff", "secondary-fixed-dim": "#eaaeff",
+          "tertiary-fixed-dim": "#f3f0ef", "on-surface": "#2c2f30",
+          "on-tertiary-fixed-variant": "#6e6d6d", "on-tertiary": "#f5f2f1",
+          "tertiary-fixed": "#ffffff", "background": "#f5f6f7",
+          "on-primary": "#ffeff2", "surface-container-lowest": "#ffffff",
+          "inverse-primary": "#ff479c", "primary-container": "#ff6ea9",
+          "on-primary-fixed-variant": "#5c0031", "on-secondary-container": "#72129a",
+          "error-container": "#f74b6d", "surface-variant": "#dadddf",
+          "on-background": "#2c2f30", "on-error": "#ffefef",
+          "on-tertiary-fixed": "#515050", "tertiary-dim": "#504f4f",
+          "on-primary-container": "#4b0027", "on-secondary-fixed": "#580079",
+          "on-error-container": "#510017"
+        },
+        "borderRadius": {
+          "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"
+        },
+        "fontFamily": {
+          "headline": ["Outfit", "Lexend"], "body": ["Outfit", "Be Vietnam Pro"], "label": ["Be Vietnam Pro"]
+        },
+        "keyframes": {
+          "reveal-up": {
+            "0%": { opacity: "0", transform: "translateY(50px) scale(0.95)" },
+            "100%": { opacity: "1", transform: "translateY(0) scale(1)" }
+          },
+          "orb-float": {
+            "0%, 100%": { transform: "translate(0px, 0px) scale(1)" },
+            "33%": { transform: "translate(30px, -50px) scale(1.1)" },
+            "66%": { transform: "translate(-20px, 20px) scale(0.9)" }
+          }
+        },
+        "animation": {
+          "reveal-up": "reveal-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+          "orb-float": "orb-float 15s ease-in-out infinite",
+          "orb-float-slow": "orb-float 20s ease-in-out infinite reverse"
+        }
+      },
+    },
+  }
+</script>
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .text-glass-gradient {
+    background: linear-gradient(135deg, #b30065, #ff6ea9);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .editorial-shadow { box-shadow: 0 24px 40px -10px rgba(44, 47, 48, 0.06); }
+
+   
+  .nav-link-modern {
+    position: relative;
+    padding-bottom: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.3s ease;
+  }
+  .nav-link-modern .jap-text {
+    position: absolute;
+    top: -24px;
+    font-size: 1rem;
+    font-family: 'Noto Serif JP', serif;
+    opacity: 0;
+    transform: translateY(5px);
+    transition: all 0.3s ease;
+    color: #b30065;
+    white-space: nowrap;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+  }
+  .nav-link-modern:hover .jap-text {
+    opacity: 0.6;
+    transform: translateY(0);
+  }
+  .nav-link-modern.active .jap-text {
+    opacity: 0.8;
+    transform: translateY(0);
+  }
+  .header-floating {
+    top: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 2rem);
+    border-radius: 1.5rem;
+    height: 6rem;
+    transition: all 0.3s ease;
+  }
+  .header-scrolled {
+    top: 0;
+    width: 100%;
+    border-radius: 0;
+    height: 5rem;
+    background: rgba(255, 255, 255, 0.9) !important;
+  }
+  .btn-glow {
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-glow::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+    transform: scale(0);
+    transition: transform 0.6s ease-out;
+  }
+  .btn-glow:hover::before {
+    transform: scale(1);
+  }
+
+   
+  .timeline-line {
+    background: linear-gradient(to bottom, #b30065, #10b981, #b30065);
+    width: 4px;
+    border-radius: 2px;
+    box-shadow: 0 0 15px rgba(179, 0, 101, 0.3);
+  }
+  .timeline-dot {
+    box-shadow: 0 0 0 4px white, 0 0 0 8px rgba(179, 0, 101, 0.2);
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  .group:hover .timeline-dot {
+    box-shadow: 0 0 0 6px white, 0 0 20px rgba(16, 185, 129, 0.8);
+    transform: translateX(-50%) scale(1.3);
+    background-color: #10b981;
+  }
+  .scroll-reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 1s cubic-bezier(0.2, 1, 0.3, 1);
+  }
+  .scroll-reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .row-container {
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .row-container.is-expanded {
+    z-index: 40;
+  }
+  .row-container.is-expanded .spacer {
+    display: none !important;
+  }
+  .row-container.is-expanded .erfolg-card {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+</style>
+</head>
+<body class="bg-surface font-body text-on-surface">
+
+
+
+<nav id="mainNav" class="fixed z-50 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl shadow-2xl shadow-pink-500/10 header-floating border border-white/20 dark:border-zinc-800/50">
+  <div class="flex justify-between items-center h-full px-6 md:px-10 max-w-screen-2xl mx-auto">
+    <a href="/" class="flex items-center gap-2 group transition-all duration-500">
+      <div class="w-10 h-10 bg-gradient-to-br from-primary to-primary-container rounded-lg flex items-center justify-center text-white shadow-lg group-hover:rotate-12 transition-transform">
+         <span class="material-symbols-outlined text-xl" style="font-variation-settings:'FILL' 1">sports_martial_arts</span>
+      </div>
+      <span class="text-xl font-black text-on-surface dark:text-white italic font-headline tracking-tighter uppercase">EmyKarate</span>
+    </a>
+    
+    <div class="hidden md:flex items-center gap-10">
+      <a class="nav-link-modern font-bold font-headline tracking-tight uppercase text-sm hover:text-primary transition-colors text-zinc-500 dark:text-zinc-400" href="/">
+        <span class="relative z-10">Home</span><span class="jap-text">ホーム</span>
+      </a>
+      <a class="nav-link-modern font-bold font-headline tracking-tight uppercase text-sm hover:text-primary transition-colors text-zinc-500 dark:text-zinc-400" href="/galerie/">
+        <span class="relative z-10">Galerie</span><span class="jap-text">ギャラリー</span>
+      </a>
+      <a class="nav-link-modern font-bold font-headline tracking-tight uppercase text-sm hover:text-primary transition-colors text-zinc-500 dark:text-zinc-400" href="/uebermich/">
+        <span class="relative z-10">Über mich</span><span class="jap-text">私について</span>
+      </a>
+      <a class="nav-link-modern font-bold font-headline tracking-tight uppercase text-sm hover:text-primary transition-colors active text-primary dark:text-pink-400" href="/erfolge/">
+        <span class="relative z-10">Erfolge</span><span class="jap-text">成果</span>
+      </a>
+      <a class="nav-link-modern font-bold font-headline tracking-tight uppercase text-sm hover:text-primary transition-colors text-zinc-500 dark:text-zinc-400" href="/gaestebuch/">
+        <span class="relative z-10">Gästebuch</span><span class="jap-text">ゲストブック</span>
+      </a>
+    </div>
+
+    <div class="flex items-center gap-4">
+      <button onclick="document.getElementById('kontaktModal').classList.remove('hidden')" class="btn-glow hidden sm:flex items-center gap-2 bg-on-surface text-white dark:bg-white dark:text-on-surface px-6 py-2.5 rounded-full font-bold font-headline tracking-tight uppercase text-xs shadow-xl hover:shadow-primary/20 hover:-translate-y-0.5 transition-all">
+        <span>Kontakt</span><span class="material-symbols-outlined text-sm">send</span>
+      </button>
+      <button onclick="toggleMobileMenu()" class="md:hidden w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-high text-primary">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+
+<div id="mobileMenu" class="hidden fixed inset-0 z-40 bg-white dark:bg-zinc-900 p-6 pt-24">
+  <div class="flex flex-col gap-6 text-xl font-headline font-bold uppercase tracking-tight">
+    <a href="/" onclick="toggleMobileMenu()" class="nav-link-modern">Home</a>
+    <a href="/galerie/" onclick="toggleMobileMenu()" class="nav-link-modern">Galerie</a>
+    <a href="/uebermich/" onclick="toggleMobileMenu()" class="nav-link-modern">Über mich</a>
+    <a href="/erfolge/" onclick="toggleMobileMenu()" class="nav-link-modern">Erfolge</a>
+    <a href="/gaestebuch/" onclick="toggleMobileMenu()" class="nav-link-modern">Gästebuch</a>
+  </div>
+</div>
+
+<main class="pt-32 pb-20">
+  
+  <section class="max-w-7xl mx-auto px-6 mb-24">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+      <div class="lg:col-span-7">
+        <span class="text-primary font-bold tracking-[0.2em] uppercase text-sm mb-4 block">Meine Wettkampf-Geschichte</span>
+        <h1 class="text-6xl md:text-8xl font-headline font-extrabold text-on-surface leading-[0.9] tracking-tighter mb-8">
+          JEDER SIEG <span class="text-glass-gradient">ZÄHLT</span>
+        </h1>
+        <p class="text-xl text-on-surface-variant leading-relaxed max-w-xl">
+          Von der ersten Gürtelprüfung bis zur Landesmeisterschaft – hier sammle ich alle Momente, auf die ich besonders stolz bin.
+        </p>
+      </div>
+      <div class="lg:col-span-5 relative">
+        <div class="aspect-[4/5] rounded-xl overflow-hidden editorial-shadow bg-surface-container-highest">
+          <img class="w-full h-full object-cover" src="/erfolge-img/hero.webp" alt="Karate Erfolg"/>
+        </div>
+        <div class="absolute -bottom-10 -left-10 bg-white p-8 rounded-lg editorial-shadow hidden md:block">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-secondary flex items-center justify-center text-on-secondary">
+              <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+            </div>
+            <div>
+              <div class="text-sm font-bold uppercase tracking-widest text-secondary">Aktueller Rang</div>
+              <div class="text-2xl font-headline font-black text-on-surface">Grüngurt</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  
+  <section class="relative bg-surface-container-low py-24 rounded-t-[5rem] overflow-hidden">
+    <div class="max-w-7xl mx-auto px-6 relative z-10">
+      <h2 class="text-5xl font-headline font-black mb-16 tracking-tight uppercase">MEILENSTEINE DES <span class="text-primary italic">ERFOLGS</span></h2>
+      
+      <div class="relative pl-8 md:pl-0 space-y-24">
+        
+        <div class="absolute left-4 md:left-1/2 top-12 bottom-0 timeline-line -translate-x-1/2 opacity-30"></div>
+        <div class="absolute left-4 md:left-1/2 top-12 bottom-0 w-[2px] bg-white/20 -translate-x-1/2"></div>
+
+        
+        
+        <div class="relative group scroll-reveal scroll-mt-24">
+          
+          <div class="absolute left-4 md:left-1/2 top-12 w-6 h-6 rounded-full bg-primary z-10 -translate-x-1/2 timeline-dot transition-all duration-500"></div>
+          
+          <div class="flex flex-col md:flex-row-reverse items-center row-container">
+            <div class="hidden md:block md:w-1/2 spacer"></div>
+            
+            
+            <div class="w-full md:w-[calc(50%-3rem)] erfolg-card bg-surface-container-lowest rounded-3xl editorial-shadow overflow-hidden transition-all duration-500 hover:shadow-xl group-hover:ring-2 group-hover:ring-primary/20">
+              
+              <div class="relative h-64 overflow-hidden">
+                <img src="/erfolge-img/success-landesmeisterschaft-2024-1778536783289-lv750.webp" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Landesmeisterschaft Berlin 2024"/>
+                <div class="absolute top-4 left-4 bg-white/80 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-primary shadow-sm">Gold</div>
+              </div>
+              
+              
+              <div class="p-8">
+                <h3 class="text-2xl font-headline font-black text-on-surface mb-3">Landesmeisterschaft Berlin 2024</h3>
+                <p class="text-on-surface-variant mb-6">Erster Platz in der Kategorie Kata U14 bei der Berliner Landesmeisterschaft. Ein unvergesslicher Moment!</p>
+                
+                <button onclick="toggleErfolg(this)" class="inline-flex items-center gap-2 text-primary font-bold text-sm hover:gap-4 transition-all">
+                  <span class="btn-label">Bericht lesen</span><span class="material-symbols-outlined transition-transform duration-300">expand_more</span>
+                </button>
+                
+                <div class="erfolg-body overflow-hidden transition-all duration-500 ease-in-out" style="max-height:0">
+                  <div class="pt-8 mt-8 border-t border-surface-container text-on-surface-variant leading-relaxed space-y-4 text-lg">
+                    <p>Es war ein langer Weg bis zur Landesmeisterschaft. Monatelang haben wir jeden Tag trainiert, die Kata immer wieder verfeinert. Und dann dieser Moment auf der Matte&hellip;</p>
+
+                    
+                    
+                    <div class="mt-8 flex gap-4 overflow-x-auto pb-4 snap-x">
+                      
+                      <div class="shrink-0 snap-start relative">
+                        
+                          <img src="/erfolge-img/success-landesmeisterschaft-2024-1778536783289-lv750.webp" class="h-24 w-24 md:h-32 md:w-32 object-cover rounded-xl cursor-pointer hover:opacity-80 transition-opacity editorial-shadow" onclick="openLightbox(this.src, false)"/>
+                        
+                      </div>
+                      
+                      <div class="shrink-0 snap-start relative">
+                        
+                          <img src="/erfolge-img/success-landesmeisterschaft-2024-1778536783364-ykhep.webp" class="h-24 w-24 md:h-32 md:w-32 object-cover rounded-xl cursor-pointer hover:opacity-80 transition-opacity editorial-shadow" onclick="openLightbox(this.src, false)"/>
+                        
+                      </div>
+                      
+                      <div class="shrink-0 snap-start relative">
+                        
+                          <img src="/erfolge-img/success-landesmeisterschaft-2024-1778536783524-58ch3.webp" class="h-24 w-24 md:h-32 md:w-32 object-cover rounded-xl cursor-pointer hover:opacity-80 transition-opacity editorial-shadow" onclick="openLightbox(this.src, false)"/>
+                        
+                      </div>
+                      
+                      <div class="shrink-0 snap-start relative">
+                        
+                          <img src="/erfolge-img/success-landesmeisterschaft-2024-1778536783576-qd5nb.webp" class="h-24 w-24 md:h-32 md:w-32 object-cover rounded-xl cursor-pointer hover:opacity-80 transition-opacity editorial-shadow" onclick="openLightbox(this.src, false)"/>
+                        
+                      </div>
+                      
+                    </div>
+                    
+                  </div>
+
+                  
+                  <div class="mt-8 pt-8 border-t border-outline-variant/20 space-y-6 erfolg-interactions px-2 pb-4" data-erfolg-id="landesmeisterschaft-2024">
+                    <div class="flex flex-wrap items-center justify-between gap-4">
+                      <button onclick="likeErfolg('landesmeisterschaft-2024', this)" class="like-btn flex items-center gap-3 px-6 py-3 rounded-full bg-primary/5 hover:bg-primary/10 text-primary transition-all duration-300 transform active:scale-95 group/like">
+                        <span class="material-symbols-outlined heart-icon" style="font-variation-settings: 'FILL' 0;">favorite</span>
+                        <span class="font-headline font-bold text-sm tracking-wide"><span class="like-count">0</span> Likes</span>
+                      </button>
+                      <div class="flex items-center gap-2.5 text-on-surface-variant text-sm font-bold font-headline uppercase tracking-wider bg-surface-container-low px-5 py-3 rounded-full">
+                        <span class="material-symbols-outlined text-base">forum</span>
+                        <span><span class="comment-count">0</span> Kommentare</span>
+                      </div>
+                    </div>
+                    <div class="comment-list space-y-4 max-h-[350px] overflow-y-auto pr-2 hidden"></div>
+                    <form onsubmit="submitComment('landesmeisterschaft-2024', this, event)" class="comment-form space-y-4 bg-surface-container-low p-6 rounded-2xl relative overflow-hidden">
+                      <div class="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-primary to-primary-container"></div>
+                      <h4 class="text-sm font-bold font-label uppercase tracking-widest text-on-surface-variant mb-1">Deine Geschichte teilen</h4>
+                      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                        <div class="md:col-span-2 space-y-4">
+                          <input required name="name" type="text" placeholder="Dein Name" class="w-full bg-surface-container-lowest border-none rounded-lg focus:ring-2 focus:ring-primary/20 p-4 text-sm transition-all" />
+                          <textarea required name="text" rows="2" placeholder="Kommentar..." class="w-full bg-surface-container-lowest border-none rounded-lg focus:ring-2 focus:ring-primary/20 p-4 text-sm resize-none"></textarea>
+                        </div>
+                        <div class="h-full flex items-end">
+                          <button type="submit" class="w-full h-[52px] bg-gradient-to-r from-primary to-primary-container text-on-primary rounded-lg font-headline font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-98 transition-all flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined text-sm">send</span>
+                            <span>Senden</span>
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="relative group scroll-reveal scroll-mt-24">
+          
+          <div class="absolute left-4 md:left-1/2 top-12 w-6 h-6 rounded-full bg-primary z-10 -translate-x-1/2 timeline-dot transition-all duration-500"></div>
+          
+          <div class="flex flex-col md:flex-row items-center row-container">
+            <div class="hidden md:block md:w-1/2 spacer"></div>
+            
+            
+            <div class="w-full md:w-[calc(50%-3rem)] erfolg-card bg-surface-container-lowest rounded-3xl editorial-shadow overflow-hidden transition-all duration-500 hover:shadow-xl group-hover:ring-2 group-hover:ring-primary/20">
+              
+              <div class="relative h-64 overflow-hidden">
+                <img src="/erfolge-img/success-landesmeisterschaft-platz3-1779062024389-xus2l.webp" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Landesmeisterschaft (3. Platz)"/>
+                <div class="absolute top-4 left-4 bg-white/80 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-primary shadow-sm">Bronze</div>
+              </div>
+              
+              
+              <div class="p-8">
+                <h3 class="text-2xl font-headline font-black text-on-surface mb-3">Landesmeisterschaft (3. Platz)</h3>
+                <p class="text-on-surface-variant mb-6">Ein harter Wettkampf, der mit dem 3. Platz belohnt wurde. Im Sommer geht es um die Meisterschaft!</p>
+                
+                <button onclick="toggleErfolg(this)" class="inline-flex items-center gap-2 text-primary font-bold text-sm hover:gap-4 transition-all">
+                  <span class="btn-label">Bericht lesen</span><span class="material-symbols-outlined transition-transform duration-300">expand_more</span>
+                </button>
+                
+                <div class="erfolg-body overflow-hidden transition-all duration-500 ease-in-out" style="max-height:0">
+                  <div class="pt-8 mt-8 border-t border-surface-container text-on-surface-variant leading-relaxed space-y-4 text-lg">
+                    <p>Unglaublich, dass ich das geschafft habe. Nach vielen intensiven Runden konnte ich mir den 3. Platz bei den Landesmeisterschaften sichern! Dieser Erfolg gibt mir wahnsinnig viel Motivation, denn im Sommer kämpfe ich dann um die Meisterschaft. Das Training hat sich gelohnt!</p>
+
+                    
+                    
+                    <div class="mt-8 flex gap-4 overflow-x-auto pb-4 snap-x">
+                      
+                      <div class="shrink-0 snap-start relative">
+                        
+                          <img src="/erfolge-img/success-landesmeisterschaft-platz3-1779062024263-azy9g.webp" class="h-24 w-24 md:h-32 md:w-32 object-cover rounded-xl cursor-pointer hover:opacity-80 transition-opacity editorial-shadow" onclick="openLightbox(this.src, false)"/>
+                        
+                      </div>
+                      
+                      <div class="shrink-0 snap-start relative">
+                        
+                          <img src="/erfolge-img/success-landesmeisterschaft-platz3-1779062024389-xus2l.webp" class="h-24 w-24 md:h-32 md:w-32 object-cover rounded-xl cursor-pointer hover:opacity-80 transition-opacity editorial-shadow" onclick="openLightbox(this.src, false)"/>
+                        
+                      </div>
+                      
+                      <div class="shrink-0 snap-start relative">
+                        
+                          <img src="/erfolge-img/success-landesmeisterschaft-platz3-1779062024428-1k6zi.webp" class="h-24 w-24 md:h-32 md:w-32 object-cover rounded-xl cursor-pointer hover:opacity-80 transition-opacity editorial-shadow" onclick="openLightbox(this.src, false)"/>
+                        
+                      </div>
+                      
+                    </div>
+                    
+                  </div>
+
+                  
+                  <div class="mt-8 pt-8 border-t border-outline-variant/20 space-y-6 erfolg-interactions px-2 pb-4" data-erfolg-id="landesmeisterschaft-platz3">
+                    <div class="flex flex-wrap items-center justify-between gap-4">
+                      <button onclick="likeErfolg('landesmeisterschaft-platz3', this)" class="like-btn flex items-center gap-3 px-6 py-3 rounded-full bg-primary/5 hover:bg-primary/10 text-primary transition-all duration-300 transform active:scale-95 group/like">
+                        <span class="material-symbols-outlined heart-icon" style="font-variation-settings: 'FILL' 0;">favorite</span>
+                        <span class="font-headline font-bold text-sm tracking-wide"><span class="like-count">0</span> Likes</span>
+                      </button>
+                      <div class="flex items-center gap-2.5 text-on-surface-variant text-sm font-bold font-headline uppercase tracking-wider bg-surface-container-low px-5 py-3 rounded-full">
+                        <span class="material-symbols-outlined text-base">forum</span>
+                        <span><span class="comment-count">0</span> Kommentare</span>
+                      </div>
+                    </div>
+                    <div class="comment-list space-y-4 max-h-[350px] overflow-y-auto pr-2 hidden"></div>
+                    <form onsubmit="submitComment('landesmeisterschaft-platz3', this, event)" class="comment-form space-y-4 bg-surface-container-low p-6 rounded-2xl relative overflow-hidden">
+                      <div class="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-primary to-primary-container"></div>
+                      <h4 class="text-sm font-bold font-label uppercase tracking-widest text-on-surface-variant mb-1">Deine Geschichte teilen</h4>
+                      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                        <div class="md:col-span-2 space-y-4">
+                          <input required name="name" type="text" placeholder="Dein Name" class="w-full bg-surface-container-lowest border-none rounded-lg focus:ring-2 focus:ring-primary/20 p-4 text-sm transition-all" />
+                          <textarea required name="text" rows="2" placeholder="Kommentar..." class="w-full bg-surface-container-lowest border-none rounded-lg focus:ring-2 focus:ring-primary/20 p-4 text-sm resize-none"></textarea>
+                        </div>
+                        <div class="h-full flex items-end">
+                          <button type="submit" class="w-full h-[52px] bg-gradient-to-r from-primary to-primary-container text-on-primary rounded-lg font-headline font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-98 transition-all flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined text-sm">send</span>
+                            <span>Senden</span>
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="relative group scroll-reveal scroll-mt-24">
+          
+          <div class="absolute left-4 md:left-1/2 top-12 w-6 h-6 rounded-full bg-primary z-10 -translate-x-1/2 timeline-dot transition-all duration-500"></div>
+          
+          <div class="flex flex-col md:flex-row-reverse items-center row-container">
+            <div class="hidden md:block md:w-1/2 spacer"></div>
+            
+            
+            <div class="w-full md:w-[calc(50%-3rem)] erfolg-card bg-surface-container-lowest rounded-3xl editorial-shadow overflow-hidden transition-all duration-500 hover:shadow-xl group-hover:ring-2 group-hover:ring-primary/20">
+              
+              <div class="relative h-64 overflow-hidden">
+                <img src="/erfolge-img/success-dojo-champion-1778543253478-vs81l.mp4" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Dojo Champion"/>
+                <div class="absolute top-4 left-4 bg-white/80 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-primary shadow-sm">Kiai Berlin</div>
+              </div>
+              
+              
+              <div class="p-8">
+                <h3 class="text-2xl font-headline font-black text-on-surface mb-3">Dojo Champion</h3>
+                <p class="text-on-surface-variant mb-6">Interner Titel als Dojo Champion beim Kiai Berlin.</p>
+                
+                <button onclick="toggleErfolg(this)" class="inline-flex items-center gap-2 text-primary font-bold text-sm hover:gap-4 transition-all">
+                  <span class="btn-label">Bericht lesen</span><span class="material-symbols-outlined transition-transform duration-300">expand_more</span>
+                </button>
+                
+                <div class="erfolg-body overflow-hidden transition-all duration-500 ease-in-out" style="max-height:0">
+                  <div class="pt-8 mt-8 border-t border-surface-container text-on-surface-variant leading-relaxed space-y-4 text-lg">
+                    <p>Ein toller Start ins Jahr! Beim internen Vereinsturnier des Kiai Berlin konnte ich mir den Titel als Dojo Champion sichern. Solche internen Wettkämpfe sind immer ein tolles Erlebnis und stärken den Zusammenhalt.</p>
+
+                    
+                    
+                    <div class="mt-8 flex gap-4 overflow-x-auto pb-4 snap-x">
+                      
+                      <div class="shrink-0 snap-start relative">
+                        
+                          <video src="/erfolge-img/success-dojo-champion-1778543253478-vs81l.mp4" class="h-24 w-24 md:h-32 md:w-32 object-cover rounded-xl cursor-pointer hover:opacity-80 transition-opacity editorial-shadow" onclick="openLightbox(this.src, true)"></video>
+                          <span class="material-symbols-outlined absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white drop-shadow-md pointer-events-none text-3xl">play_circle</span>
+                        
+                      </div>
+                      
+                      <div class="shrink-0 snap-start relative">
+                        
+                          <video src="/erfolge-img/success-dojo-champion-1778544116200-5pv3h.mp4" class="h-24 w-24 md:h-32 md:w-32 object-cover rounded-xl cursor-pointer hover:opacity-80 transition-opacity editorial-shadow" onclick="openLightbox(this.src, true)"></video>
+                          <span class="material-symbols-outlined absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white drop-shadow-md pointer-events-none text-3xl">play_circle</span>
+                        
+                      </div>
+                      
+                      <div class="shrink-0 snap-start relative">
+                        
+                          <img src="/erfolge-img/success-dojo-champion-1778544116201-cnz9d.webp" class="h-24 w-24 md:h-32 md:w-32 object-cover rounded-xl cursor-pointer hover:opacity-80 transition-opacity editorial-shadow" onclick="openLightbox(this.src, false)"/>
+                        
+                      </div>
+                      
+                      <div class="shrink-0 snap-start relative">
+                        
+                          <img src="/erfolge-img/success-dojo-champion-1778544116302-845ro.webp" class="h-24 w-24 md:h-32 md:w-32 object-cover rounded-xl cursor-pointer hover:opacity-80 transition-opacity editorial-shadow" onclick="openLightbox(this.src, false)"/>
+                        
+                      </div>
+                      
+                      <div class="shrink-0 snap-start relative">
+                        
+                          <img src="/erfolge-img/success-dojo-champion-1778544116365-61zfd.webp" class="h-24 w-24 md:h-32 md:w-32 object-cover rounded-xl cursor-pointer hover:opacity-80 transition-opacity editorial-shadow" onclick="openLightbox(this.src, false)"/>
+                        
+                      </div>
+                      
+                    </div>
+                    
+                  </div>
+
+                  
+                  <div class="mt-8 pt-8 border-t border-outline-variant/20 space-y-6 erfolg-interactions px-2 pb-4" data-erfolg-id="dojo-champion">
+                    <div class="flex flex-wrap items-center justify-between gap-4">
+                      <button onclick="likeErfolg('dojo-champion', this)" class="like-btn flex items-center gap-3 px-6 py-3 rounded-full bg-primary/5 hover:bg-primary/10 text-primary transition-all duration-300 transform active:scale-95 group/like">
+                        <span class="material-symbols-outlined heart-icon" style="font-variation-settings: 'FILL' 0;">favorite</span>
+                        <span class="font-headline font-bold text-sm tracking-wide"><span class="like-count">0</span> Likes</span>
+                      </button>
+                      <div class="flex items-center gap-2.5 text-on-surface-variant text-sm font-bold font-headline uppercase tracking-wider bg-surface-container-low px-5 py-3 rounded-full">
+                        <span class="material-symbols-outlined text-base">forum</span>
+                        <span><span class="comment-count">0</span> Kommentare</span>
+                      </div>
+                    </div>
+                    <div class="comment-list space-y-4 max-h-[350px] overflow-y-auto pr-2 hidden"></div>
+                    <form onsubmit="submitComment('dojo-champion', this, event)" class="comment-form space-y-4 bg-surface-container-low p-6 rounded-2xl relative overflow-hidden">
+                      <div class="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-primary to-primary-container"></div>
+                      <h4 class="text-sm font-bold font-label uppercase tracking-widest text-on-surface-variant mb-1">Deine Geschichte teilen</h4>
+                      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                        <div class="md:col-span-2 space-y-4">
+                          <input required name="name" type="text" placeholder="Dein Name" class="w-full bg-surface-container-lowest border-none rounded-lg focus:ring-2 focus:ring-primary/20 p-4 text-sm transition-all" />
+                          <textarea required name="text" rows="2" placeholder="Kommentar..." class="w-full bg-surface-container-lowest border-none rounded-lg focus:ring-2 focus:ring-primary/20 p-4 text-sm resize-none"></textarea>
+                        </div>
+                        <div class="h-full flex items-end">
+                          <button type="submit" class="w-full h-[52px] bg-gradient-to-r from-primary to-primary-container text-on-primary rounded-lg font-headline font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-98 transition-all flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined text-sm">send</span>
+                            <span>Senden</span>
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="relative group scroll-reveal scroll-mt-24">
+          
+          <div class="absolute left-4 md:left-1/2 top-12 w-6 h-6 rounded-full bg-primary z-10 -translate-x-1/2 timeline-dot transition-all duration-500"></div>
+          
+          <div class="flex flex-col md:flex-row items-center row-container">
+            <div class="hidden md:block md:w-1/2 spacer"></div>
+            
+            
+            <div class="w-full md:w-[calc(50%-3rem)] erfolg-card bg-surface-container-lowest rounded-3xl editorial-shadow overflow-hidden transition-all duration-500 hover:shadow-xl group-hover:ring-2 group-hover:ring-primary/20">
+              
+              
+              <div class="p-8">
+                <h3 class="text-2xl font-headline font-black text-on-surface mb-3">Norddeutsche Meisterschaft 2024</h3>
+                <p class="text-on-surface-variant mb-6">Silbermedaille beim Norddeutschen Turnier – das bisher größte Turnier, an dem ich teilgenommen habe.</p>
+                
+                <button onclick="toggleErfolg(this)" class="inline-flex items-center gap-2 text-primary font-bold text-sm hover:gap-4 transition-all">
+                  <span class="btn-label">Bericht lesen</span><span class="material-symbols-outlined transition-transform duration-300">expand_more</span>
+                </button>
+                
+                <div class="erfolg-body overflow-hidden transition-all duration-500 ease-in-out" style="max-height:0">
+                  <div class="pt-8 mt-8 border-t border-surface-container text-on-surface-variant leading-relaxed space-y-4 text-lg">
+                    <p>Über 200 Teilnehmer, drei Kampftage, und am Ende eine silberne Medaille um den Hals. Ein Riesenschritt für mich!</p>
+
+                    
+                    
+                  </div>
+
+                  
+                  <div class="mt-8 pt-8 border-t border-outline-variant/20 space-y-6 erfolg-interactions px-2 pb-4" data-erfolg-id="norddeutsche-2024">
+                    <div class="flex flex-wrap items-center justify-between gap-4">
+                      <button onclick="likeErfolg('norddeutsche-2024', this)" class="like-btn flex items-center gap-3 px-6 py-3 rounded-full bg-primary/5 hover:bg-primary/10 text-primary transition-all duration-300 transform active:scale-95 group/like">
+                        <span class="material-symbols-outlined heart-icon" style="font-variation-settings: 'FILL' 0;">favorite</span>
+                        <span class="font-headline font-bold text-sm tracking-wide"><span class="like-count">0</span> Likes</span>
+                      </button>
+                      <div class="flex items-center gap-2.5 text-on-surface-variant text-sm font-bold font-headline uppercase tracking-wider bg-surface-container-low px-5 py-3 rounded-full">
+                        <span class="material-symbols-outlined text-base">forum</span>
+                        <span><span class="comment-count">0</span> Kommentare</span>
+                      </div>
+                    </div>
+                    <div class="comment-list space-y-4 max-h-[350px] overflow-y-auto pr-2 hidden"></div>
+                    <form onsubmit="submitComment('norddeutsche-2024', this, event)" class="comment-form space-y-4 bg-surface-container-low p-6 rounded-2xl relative overflow-hidden">
+                      <div class="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-primary to-primary-container"></div>
+                      <h4 class="text-sm font-bold font-label uppercase tracking-widest text-on-surface-variant mb-1">Deine Geschichte teilen</h4>
+                      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                        <div class="md:col-span-2 space-y-4">
+                          <input required name="name" type="text" placeholder="Dein Name" class="w-full bg-surface-container-lowest border-none rounded-lg focus:ring-2 focus:ring-primary/20 p-4 text-sm transition-all" />
+                          <textarea required name="text" rows="2" placeholder="Kommentar..." class="w-full bg-surface-container-lowest border-none rounded-lg focus:ring-2 focus:ring-primary/20 p-4 text-sm resize-none"></textarea>
+                        </div>
+                        <div class="h-full flex items-end">
+                          <button type="submit" class="w-full h-[52px] bg-gradient-to-r from-primary to-primary-container text-on-primary rounded-lg font-headline font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-98 transition-all flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined text-sm">send</span>
+                            <span>Senden</span>
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </section>
+
+  
+  <section class="max-w-4xl mx-auto px-6 py-32 text-center">
+    <span class="material-symbols-outlined text-primary text-6xl mb-8" style="font-variation-settings: 'FILL' 1;">format_quote</span>
+    <blockquote class="text-3xl md:text-5xl font-headline font-bold text-on-surface italic">"Karate ist nicht nur ein Sport. Es ist eine Linse, durch die ich die Welt sehe – mit Präzision, Respekt und unbeugsamer Konzentration."</blockquote>
+    <p class="mt-8 font-bold uppercase tracking-widest text-on-surface-variant">— Emy</p>
+  </section>
+</main>
+
+<footer class="bg-zinc-50 dark:bg-zinc-950 w-full rounded-t-[3rem] mt-20 py-12 px-8">
+  <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+    <div class="text-lg font-bold font-headline uppercase italic">EmyKarate</div>
+    <div class="text-sm text-zinc-500">© 2024 EmyKarate. Alle Rechte vorbehalten.</div>
+  </div>
+</footer>
+
+<div id="imageLightbox" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm transition-opacity" onclick="closeLightbox(event)">
+  <img id="lightboxImage" src="" class="hidden max-w-[90vw] max-h-[90vh] object-contain rounded-xl shadow-2xl" />
+  <video id="lightboxVideo" src="" class="hidden max-w-[90vw] max-h-[90vh] object-contain rounded-xl shadow-2xl" controls autoplay></video>
+  <button class="absolute top-8 right-8 text-white bg-white/10 hover:bg-white/20 rounded-full p-2" onclick="closeLightbox(event, true)">
+    <span class="material-symbols-outlined text-3xl">close</span>
+  </button>
+</div>
+
+<script>
+  function toggleErfolg(btn) {
+    const row = btn.closest('.row-container');
+    const card = btn.closest('.erfolg-card');
+    const body = card.querySelector('.erfolg-body');
+    const icon = btn.querySelector('.material-symbols-outlined');
+    const label = btn.querySelector('.btn-label');
+    const isOpen = body.classList.contains('is-open');
+    
+    if (!isOpen) {
+      if (row) row.classList.add('is-expanded');
+      body.style.maxHeight = body.scrollHeight + 'px';
+      body.classList.add('is-open');
+      if (icon) icon.style.transform = 'rotate(180deg)';
+      if (label) label.textContent = 'Weniger anzeigen';
+      setTimeout(() => { if (body.classList.contains('is-open')) body.style.maxHeight = 'none'; }, 500);
+    } else {
+      if (row) row.classList.remove('is-expanded');
+      body.style.maxHeight = body.scrollHeight + 'px';
+      body.offsetHeight; 
+      body.style.maxHeight = '0';
+      body.classList.remove('is-open');
+      if (icon) icon.style.transform = '';
+      if (label) label.textContent = 'Bericht lesen';
+    }
+  }
+
+  window.addEventListener('scroll', () => {
+    const nav = document.getElementById('mainNav');
+    if (nav && window.scrollY > 50) nav.classList.add('header-scrolled');
+    else if (nav) nav.classList.remove('header-scrolled');
+  });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.scroll-reveal').forEach(el => obs.observe(el));
+    
+    loadInteractions();
+  });
+
+  function toggleMobileMenu() {
+    const m = document.getElementById('mobileMenu');
+    if (m) m.classList.toggle('hidden');
+  }
+
+  function openLightbox(src, isVideo) {
+    const img = document.getElementById('lightboxImage');
+    const vid = document.getElementById('lightboxVideo');
+    if (isVideo) {
+      img.classList.add('hidden');
+      vid.classList.remove('hidden');
+      vid.src = src;
+    } else {
+      vid.classList.add('hidden');
+      vid.pause();
+      img.classList.remove('hidden');
+      img.src = src;
+    }
+    document.getElementById('imageLightbox').classList.remove('hidden');
+  }
+
+  function closeLightbox(e, force) {
+    if (force || e.target.id === 'imageLightbox') {
+      document.getElementById('imageLightbox').classList.add('hidden');
+      if (document.getElementById('lightboxVideo')) document.getElementById('lightboxVideo').pause();
+    }
+  }
+
+  
+  let erfolgInteractions = {};
+  async function loadInteractions() {
+    try {
+      const r = await fetch('/api/erfolge-interactions');
+      if (r.ok) {
+        erfolgInteractions = await r.json();
+        renderAllInteractions();
+      }
+    } catch (e) { console.error('Load Error:', e); }
+  }
+
+  function renderAllInteractions() {
+    document.querySelectorAll('.erfolg-interactions').forEach(container => {
+      const id = container.dataset.erfolgId;
+      const data = erfolgInteractions[id] || { likes: 0, comments: [] };
+      container.querySelector('.like-count').textContent = data.likes || 0;
+      container.querySelector('.comment-count').textContent = data.comments ? data.comments.length : 0;
+      const list = container.querySelector('.comment-list');
+      if (data.comments && data.comments.length > 0) {
+        list.classList.remove('hidden');
+        list.innerHTML = data.comments.map(c => `
+          <div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant/10 text-left">
+            <div class="flex items-center justify-between mb-2">
+              <span class="font-black text-xs text-primary uppercase font-headline tracking-tighter">${c.name}</span>
+              <span class="text-[10px] text-on-surface-variant opacity-50">${new Date(c.date).toLocaleDateString()}</span>
+            </div>
+            <p class="text-sm text-on-surface-variant leading-relaxed">${c.text}</p>
+          </div>
+        `).join('');
+      } else {
+        list.classList.add('hidden');
+      }
+    });
+  }
+
+  window.likeErfolg = async function(id, btn) {
+    try {
+      const res = await fetch('/api/erfolge-interactions/like', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id })
+      });
+      if (res.ok) {
+        const result = await res.json();
+        const count = btn.querySelector('.like-count');
+        count.textContent = result.data.likes;
+        btn.querySelector('.heart-icon').style.fontVariationSettings = "'FILL' 1";
+        btn.classList.add('text-pink-600');
+      }
+    } catch(e) {}
+  };
+
+  window.submitComment = async function(id, form, event) {
+    event.preventDefault();
+    const btn = form.querySelector('button[type="submit"]');
+    btn.disabled = true;
+    const formData = new FormData(form);
+    const data = { id, name: formData.get('name'), text: formData.get('text') };
+    try {
+      const res = await fetch('/api/erfolge-interactions/comment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      if (res.ok) {
+        form.reset();
+        loadInteractions();
+      }
+    } catch(e) {}
+    btn.disabled = false;
+  };
+</script>
+</body>
+</html>

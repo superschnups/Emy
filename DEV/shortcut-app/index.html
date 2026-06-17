@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html class="dark" lang="de">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Shortcuts Hub</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  
+  <!-- Google Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              DEFAULT: "#3b82f6", // macOS Blue
+              dark: "#2563eb",
+              glow: "rgba(59, 130, 246, 0.15)"
+            },
+            surface: {
+              DEFAULT: "#09090b", // Deep zinc
+              container: "#18181b",
+              card: "#202024",
+              cardBorder: "#2e2e33"
+            }
+          },
+          fontFamily: {
+            lexend: ["Lexend", "sans-serif"],
+            inter: ["Inter", "sans-serif"],
+            mono: ["JetBrains Mono", "monospace"]
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    /* Custom Scrollbar for sleek UI */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #3f3f46;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #52525b;
+    }
+  </style>
+</head>
+<body class="bg-surface text-zinc-100 min-h-screen flex flex-col antialiased pb-12">
+
+  <!-- Header Banner -->
+  <header class="border-b border-surface-cardBorder/55 bg-surface-container/80 backdrop-blur-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+      
+      <!-- Logo & Title -->
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-brand to-cyan-400 flex items-center justify-center text-white shadow-lg shadow-brand/20 active:scale-95 transition-all">
+          <span class="material-symbols-outlined font-black" style="font-variation-settings:'FILL' 1;">keyboard</span>
+        </div>
+        <div>
+          <h1 class="text-lg font-black font-lexend text-white tracking-tight flex items-center gap-2">
+            Shortcuts Hub
+            <span class="text-[10px] bg-brand/10 border border-brand/20 text-brand px-1.5 py-0.5 rounded-full font-bold uppercase font-inter">Dashboard</span>
+          </h1>
+          <p class="text-[11px] text-zinc-400 font-semibold mt-0.5">Tastaturkürzel verwalten & pflegen</p>
+        </div>
+      </div>
+
+      <!-- Search & Info Stats -->
+      <div class="flex items-center gap-4 flex-1 max-w-xl justify-end">
+        <!-- Search bar -->
+        <div class="relative flex-1 hidden md:block">
+          <span class="material-symbols-outlined text-zinc-400 absolute left-3 top-2.5 text-lg">search</span>
+          <input type="text" id="scSearchInput" placeholder="Tastaturkürzel durchsuchen... (drücke /)" 
+                 class="w-full bg-surface-container border border-surface-cardBorder rounded-xl pl-10 pr-4 py-2 text-sm text-zinc-200 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-brand/40 focus:border-brand/40 transition-all"/>
+        </div>
+
+        <!-- Mini Stats -->
+        <div class="flex gap-2">
+          <div class="bg-surface-container border border-surface-cardBorder/60 px-3 py-1.5 rounded-xl flex items-center gap-2" title="Aktive Apps">
+            <span class="material-symbols-outlined text-xs text-brand">apps</span>
+            <span class="text-xs font-bold text-zinc-300" id="statApps">0</span>
+          </div>
+          <div class="bg-surface-container border border-surface-cardBorder/60 px-3 py-1.5 rounded-xl flex items-center gap-2" title="Gesamte Shortcuts">
+            <span class="material-symbols-outlined text-xs text-brand">bolt</span>
+            <span class="text-xs font-bold text-zinc-300" id="statShortcuts">0</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Mobile Search (Visible on small screens only) -->
+  <div class="p-4 md:hidden border-b border-surface-cardBorder/40 bg-surface-container/40">
+    <div class="relative w-full">
+      <span class="material-symbols-outlined text-zinc-400 absolute left-3 top-2.5 text-lg">search</span>
+      <input type="text" id="scSearchInputMobile" placeholder="Shortcuts durchsuchen..." 
+             class="w-full bg-surface-container border border-surface-cardBorder rounded-xl pl-10 pr-4 py-2 text-sm text-zinc-200 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-brand/40 transition-all"/>
+    </div>
+  </div>
+
+  <!-- Main Bento Grid Container -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 flex-1 w-full">
+    <div class="grid grid-cols-12 gap-6">
+      
+      <!-- LEFT Spalte: Apps Sidebar -->
+      <section class="col-span-12 lg:col-span-4 bg-surface-container border border-surface-cardBorder/70 rounded-2xl p-5 shadow-xl flex flex-col gap-4">
+        <div class="flex items-center justify-between border-b border-surface-cardBorder/40 pb-3">
+          <h3 class="text-sm font-extrabold font-lexend text-zinc-200 uppercase tracking-wider flex items-center gap-2">
+            <span class="material-symbols-outlined text-brand">apps</span>
+            Programme
+          </h3>
+          <div class="flex gap-1">
+            <button type="button" id="scAddAppBtn" class="w-8 h-8 rounded-lg bg-surface-card hover:bg-zinc-800 flex items-center justify-center text-brand transition-all border border-surface-cardBorder" title="Programm hinzufügen">
+              <span class="material-symbols-outlined text-base font-bold">add</span>
+            </button>
+            <button type="button" id="scEditAppBtn" class="w-8 h-8 rounded-lg bg-surface-card hover:bg-zinc-800 flex items-center justify-center text-zinc-300 transition-all border border-surface-cardBorder" title="Programm umbenennen">
+              <span class="material-symbols-outlined text-base">edit</span>
+            </button>
+            <button type="button" id="scDeleteAppBtn" class="w-8 h-8 rounded-lg bg-surface-card hover:bg-zinc-800 flex items-center justify-center text-red-400 transition-all border border-surface-cardBorder" title="Programm löschen">
+              <span class="material-symbols-outlined text-base">delete</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-1 overflow-y-auto max-h-[350px] lg:max-h-[500px] pr-1" id="scAppList">
+          <!-- Apps show up here -->
+        </div>
+      </section>
+
+      <!-- RIGHT Spalte: Shortcuts Content Area -->
+      <section class="col-span-12 lg:col-span-8 bg-surface-container border border-surface-cardBorder/70 rounded-2xl p-5 shadow-xl flex flex-col gap-5">
+        <div class="flex items-center justify-between flex-wrap gap-4 border-b border-surface-cardBorder/40 pb-4">
+          <div>
+            <h3 class="text-lg font-black font-lexend text-white flex items-center gap-2" id="scCurrentAppTitle">Alle Shortcuts</h3>
+            <p class="text-[11px] text-zinc-400 font-semibold mt-0.5" id="scCurrentAppCount">0 Shortcuts geladen</p>
+          </div>
+          <div>
+            <!-- Add Shortcut Button -->
+            <button type="button" id="scAddShortcutBtn" class="flex items-center gap-1.5 bg-brand hover:bg-brand-dark text-white rounded-xl px-4 py-2 font-bold text-xs shadow-lg shadow-brand/10 transition-all">
+              <span class="material-symbols-outlined text-base font-black">add</span> Shortcut
+            </button>
+          </div>
+        </div>
+
+        <!-- Shortcuts Table -->
+        <div class="overflow-x-auto border border-surface-cardBorder/60 rounded-xl bg-surface-card">
+          <table class="min-w-full divide-y divide-surface-cardBorder/60 text-left text-xs">
+            <thead class="bg-surface/50 font-lexend font-bold text-zinc-400 uppercase tracking-wider">
+              <tr>
+                <th class="px-5 py-4">Bezeichnung</th>
+                <th class="px-5 py-4">Shortcut</th>
+                <th class="px-5 py-4">Beschreibung & Tags</th>
+                <th class="px-5 py-4 text-right">Aktionen</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-surface-cardBorder/40 bg-surface-card" id="scTableBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ══ MODAL: ADD/EDIT SHORTCUT ══ -->
+  <div id="scShortcutModal" class="fixed inset-0 bg-black/85 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+    <div class="bg-surface-container border border-surface-cardBorder rounded-2xl max-w-lg w-full p-6 shadow-2xl mx-4 flex flex-col gap-5 max-h-[90vh] overflow-y-auto">
+      <div>
+        <h3 class="text-xl font-black font-lexend text-white" id="scModalTitle">Shortcut Details</h3>
+        <p class="text-[11px] text-zinc-400 font-medium mt-0.5">Trage hier die Tastaturkombination und Details ein.</p>
+      </div>
+
+      <div class="flex flex-col gap-4">
+        <div>
+          <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1.5">Bezeichnung *</label>
+          <input type="text" id="scModalNameInput" placeholder="z.B. Neue Notiz anlegen" 
+                 class="w-full bg-surface-card border border-surface-cardBorder rounded-xl px-4 py-2.5 text-sm text-zinc-200 focus:outline-none focus:ring-2 focus:ring-brand/40 transition-all"/>
+        </div>
+        <div>
+          <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1.5">Shortcut / Key-Combo *</label>
+          <input type="text" id="scModalKeyInput" placeholder="z.B. alt+esc oder cmd+shift+n" 
+                 class="w-full bg-surface-card border border-surface-cardBorder rounded-xl px-4 py-2.5 text-sm text-brand font-mono font-bold focus:outline-none focus:ring-2 focus:ring-brand/40 transition-all"/>
+        </div>
+        <div>
+          <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1.5">Tags (Kommagetrennt)</label>
+          <input type="text" id="scModalTagsInput" placeholder="z.B. global, note, text" 
+                 class="w-full bg-surface-card border border-surface-cardBorder rounded-xl px-4 py-2.5 text-sm text-zinc-200 focus:outline-none focus:ring-2 focus:ring-brand/40 transition-all"/>
+        </div>
+        <div>
+          <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1.5">Beschreibung / Info</label>
+          <textarea id="scModalDescInput" rows="3" placeholder="Wofür wird dieser Shortcut verwendet?" 
+                    class="w-full bg-surface-card border border-surface-cardBorder rounded-xl px-4 py-2.5 text-sm text-zinc-200 focus:outline-none focus:ring-2 focus:ring-brand/40 transition-all resize-none"></textarea>
+        </div>
+
+        <!-- Conflict Warning Alert -->
+        <div id="scModalConflictAlert" class="hidden bg-amber-950/40 border-l-4 border-amber-500 p-4 rounded-r-xl">
+          <p class="text-[10px] font-bold text-amber-400 uppercase tracking-widest mb-1">Konflikt-Warnung</p>
+          <p class="text-xs text-amber-200/90 font-semibold leading-relaxed" id="scModalConflictText"></p>
+        </div>
+      </div>
+
+      <div class="flex gap-3 mt-2">
+        <button type="button" id="scModalCancelBtn" class="flex-1 py-3 bg-surface-card hover:bg-zinc-800 text-zinc-300 rounded-xl font-bold text-xs transition-all border border-surface-cardBorder">
+          Abbrechen
+        </button>
+        <button type="button" id="scModalSaveBtn" class="flex-1 py-3 bg-brand hover:bg-brand-dark text-white rounded-xl font-bold text-xs shadow-lg shadow-brand/10 transition-all">
+          Speichern
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toastContainer" class="fixed bottom-5 right-5 flex flex-col gap-2 z-50"></div>
+
+  <!-- frontend JavaScript logic -->
+  <script>
+    let allShortcuts = {};
+    let currentApp = '';
+    let currentEditIndex = -1; // -1 = new shortcut, otherwise index in allShortcuts[currentApp]
+
+    // HTML Helper to escape HTML tags
+    function escHtml(s) {
+      if (s === undefined || s === null) return '';
+      return String(s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // Helper to display Toast notifications
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = 'flex items-center gap-2 bg-zinc-900 border border-zinc-800 px-4 py-3 rounded-xl shadow-2xl text-xs font-bold transition-all transform translate-y-2 opacity-0 duration-300';
+      
+      const icon = type === 'success' ? 'check_circle' : (type === 'error' ? 'error' : 'warning');
+      const iconColor = type === 'success' ? 'text-emerald-400' : (type === 'error' ? 'text-red-400' : 'text-amber-400');
+      
+      toast.innerHTML = `
+        <span class="material-symbols-outlined text-base ${iconColor}">${icon}</span>
+        <span class="text-zinc-200">${escHtml(message)}</span>
+      `;
+      
+      container.appendChild(toast);
+      
+      // Animate in
+      setTimeout(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+      }, 50);
+      
+      // Remove after 3s
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-1');
+        setTimeout(() => {
+          toast.remove();
+        }, 300);
+      }, 3000);
+    }
+
+    // Load shortcuts from Server
+    async function loadShortcuts() {
+      try {
+        const res = await fetch('/api/shortcuts');
+        if (!res.ok) throw new Error('API-Fehler');
+        const rawData = await res.json();
+        
+        if (Array.isArray(rawData)) {
+          // Format A (Tauri Array) -> Convert to Format B (Dict)
+          allShortcuts = {};
+          rawData.forEach(s => {
+            const app = s.application || 'Global';
+            if (!allShortcuts[app]) allShortcuts[app] = [];
+            
+            // Format keys
+            const keyStr = Array.isArray(s.keys) ? s.keys.join('+') : (s.key || '');
+            
+            // Format tags
+            let tags = [];
+            if (s.context) tags.push(s.context);
+            if (s.created_with) tags.push(s.created_with);
+            
+            allShortcuts[app].push({
+              id: s.id || String(Date.now() + Math.floor(Math.random() * 1000)),
+              name: s.command_name || s.name || 'Unbenannt',
+              key: keyStr,
+              tags: tags,
+              description: s.description || '',
+              date: s.date || '',
+              app_icon: s.app_icon || 'bolt',
+              app_color: s.app_color || '#ffb59d'
+            });
+          });
+        } else {
+          // Format B (Dict)
+          allShortcuts = rawData;
+        }
+        
+        // Select first app if currentApp not set or no longer exists
+        const apps = Object.keys(allShortcuts).sort();
+        if (!currentApp || !allShortcuts[currentApp]) {
+          currentApp = apps.length > 0 ? apps[0] : '';
+        }
+        
+        updateStats();
+        renderAppsList();
+        renderShortcutsList();
+      } catch(err) {
+        console.error('Error loading shortcuts:', err);
+        showToast('Fehler beim Laden der Shortcuts', 'error');
+      }
+    }
+
+    // Calculate total stats
+    function updateStats() {
+      const apps = Object.keys(allShortcuts);
+      let shortcutCount = 0;
+      apps.forEach(app => {
+        shortcutCount += (allShortcuts[app] || []).length;
+      });
+      
+      document.getElementById('statApps').textContent = apps.length;
+      document.getElementById('statShortcuts').textContent = shortcutCount;
+    }
+
+    // Render App list (sidebar)
+    function renderAppsList() {
+      const list = document.getElementById('scAppList');
+      list.innerHTML = '';
+      const apps = Object.keys(allShortcuts).sort();
+      
+      if (apps.length === 0) {
+        list.innerHTML = '<p class="text-xs text-zinc-500 italic p-3 text-center">Keine Programme vorhanden.</p>';
+        return;
+      }
+      
+      apps.forEach(app => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'w-full text-left px-3.5 py-2.5 rounded-xl text-xs transition-all flex items-center justify-between group relative overflow-hidden';
+        
+        const isActive = app === currentApp;
+        if (isActive) {
+          btn.classList.add('bg-brand/10', 'text-brand', 'font-extrabold', 'border', 'border-brand/30');
+        } else {
+          btn.classList.add('text-zinc-400', 'hover:bg-zinc-800/60', 'hover:text-zinc-200', 'border', 'border-transparent');
+        }
+        
+        const count = (allShortcuts[app] || []).length;
+        btn.innerHTML = `
+          <span class="truncate pr-2 font-inter text-[13px]">${escHtml(app)}</span>
+          <span class="text-[10px] px-2 py-0.5 rounded-full ${isActive ? 'bg-brand text-white' : 'bg-zinc-800 text-zinc-400 group-hover:bg-zinc-700 group-hover:text-zinc-200'} font-bold transition-all">${count}</span>
+        `;
+        
+        btn.addEventListener('click', () => {
+          currentApp = app;
+          // Clear searches
+          document.getElementById('scSearchInput').value = '';
+          document.getElementById('scSearchInputMobile').value = '';
+          renderAppsList();
+          renderShortcutsList();
+        });
+        list.appendChild(btn);
+      });
+    }
+
+    // Render shortcuts in the table
+    function renderShortcutsList() {
+      const searchInput = document.getElementById('scSearchInput');
+      const searchInputMobile = document.getElementById('scSearchInputMobile');
+      
+      // Use whichever input is active
+      const query = (searchInput.value.trim() || searchInputMobile.value.trim()).toLowerCase();
+      const tbody = document.getElementById('scTableBody');
+      tbody.innerHTML = '';
+      
+      let items = []; // elements are { app, shortcut, index }
+      
+      if (query) {
+        // Search across all apps
+        Object.keys(allShortcuts).forEach(app => {
+          (allShortcuts[app] || []).forEach((s, idx) => {
+            const appMatch = app.toLowerCase().includes(query);
+            const nameMatch = (s.name || '').toLowerCase().includes(query);
+            const keyMatch = (s.key || '').toLowerCase().includes(query);
+            const descMatch = (s.description || '').toLowerCase().includes(query);
+            const tagMatch = (s.tags || []).some(t => t.toLowerCase().includes(query));
+            
+            if (appMatch || nameMatch || keyMatch || descMatch || tagMatch) {
+              items.push({ app, shortcut: s, index: idx });
+            }
+          });
+        });
+        
+        // Update header & count info
+        document.getElementById('scCurrentAppTitle').textContent = `Suche nach "${escHtml(query)}"`;
+        document.getElementById('scCurrentAppCount').textContent = `${items.length} Treffer gefunden`;
+        
+        // Visually clear active app highlight in sidebar
+        document.querySelectorAll('#scAppList button').forEach(btn => {
+          btn.className = 'w-full text-left px-3.5 py-2.5 rounded-xl text-xs text-zinc-400 hover:bg-zinc-800/60 hover:text-zinc-200 border border-transparent transition-all flex items-center justify-between group';
+          const badge = btn.querySelector('span:last-child');
+          if (badge) {
+            badge.className = 'text-[10px] px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400 font-bold';
+          }
+        });
+      } else {
+        // Show current app
+        if (currentApp && allShortcuts[currentApp]) {
+          allShortcuts[currentApp].forEach((s, idx) => {
+            items.push({ app: currentApp, shortcut: s, index: idx });
+          });
+        }
+        
+        const appTitle = currentApp ? currentApp : 'Keine App gewählt';
+        const countText = currentApp ? `${items.length} Shortcut(s) in dieser App` : 'Wähle links eine App aus oder lege eine neue an.';
+        
+        document.getElementById('scCurrentAppTitle').textContent = appTitle;
+        document.getElementById('scCurrentAppCount').textContent = countText;
+      }
+      
+      if (items.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="4" class="px-5 py-12 text-center text-zinc-500 italic">
+              Keine Shortcuts gefunden.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+      
+      items.forEach((item, idx) => {
+        const s = item.shortcut;
+        const tr = document.createElement('tr');
+        tr.className = idx % 2 === 0 ? 'bg-surface-card' : 'bg-surface-container/20';
+        
+        // Name column
+        let nameMarkup = '';
+        if (query) {
+          // Prepend app name in global search mode
+          nameMarkup += `<span class="inline-flex items-center px-1.5 py-0.5 mr-2 rounded text-[9px] font-extrabold uppercase tracking-wider bg-zinc-800 text-zinc-300 border border-zinc-700">${escHtml(item.app)}</span>`;
+        }
+        nameMarkup += `<span class="font-bold text-zinc-100 text-sm font-lexend">${escHtml(s.name)}</span>`;
+        if (s.date) {
+          nameMarkup += `<span class="block text-[9px] text-zinc-500 font-semibold mt-1 flex items-center gap-1"><span class="material-symbols-outlined text-[10px]">calendar_today</span> ${escHtml(s.date)}</span>`;
+        }
+        
+        // KeyCombo column: split by '+' and style keys
+        const keysHtml = (s.key || '').split('+').map(k => {
+          let cleanKey = k.trim().toUpperCase();
+          if (cleanKey === 'STRG') cleanKey = 'CTRL';
+          return `<kbd class="inline-block px-2 py-1 text-xs font-mono font-black text-zinc-200 bg-zinc-800 border border-zinc-700 rounded shadow-[0_2px_0_#3f3f46] select-all">${escHtml(cleanKey)}</kbd>`;
+        }).join('<span class="text-zinc-500 mx-1 font-bold text-xs">+</span>');
+        
+        // Tags & Description column
+        let tagsAndDesc = '';
+        if (s.description && s.description.trim()) {
+          tagsAndDesc += `<p class="text-xs text-zinc-300 mb-1.5 leading-relaxed font-medium">${escHtml(s.description)}</p>`;
+        }
+        if (s.tags && s.tags.length > 0) {
+          tagsAndDesc += `<div class="flex flex-wrap gap-1">`;
+          s.tags.forEach(t => {
+            tagsAndDesc += `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-bold bg-brand/10 text-brand border border-brand/20">${escHtml(t)}</span>`;
+          });
+          tagsAndDesc += `</div>`;
+        } else if (!s.description || !s.description.trim()) {
+          tagsAndDesc = `<span class="text-[11px] text-zinc-500 italic font-medium">Keine Beschreibung oder Tags</span>`;
+        }
+        
+        tr.innerHTML = `
+          <td class="px-5 py-4 align-top w-1/3">${nameMarkup}</td>
+          <td class="px-5 py-4 align-top whitespace-nowrap">${keysHtml}</td>
+          <td class="px-5 py-4 align-top w-2/5">${tagsAndDesc}</td>
+          <td class="px-5 py-4 align-top text-right whitespace-nowrap">
+            <div class="flex justify-end gap-1">
+              <button type="button" class="btn-edit-shortcut w-8 h-8 rounded-lg hover:bg-zinc-800 flex items-center justify-center text-zinc-400 hover:text-zinc-100 transition-all border border-transparent hover:border-zinc-700" title="Bearbeiten">
+                <span class="material-symbols-outlined text-base">edit</span>
+              </button>
+              <button type="button" class="btn-delete-shortcut w-8 h-8 rounded-lg hover:bg-red-950/20 flex items-center justify-center text-zinc-500 hover:text-red-400 transition-all border border-transparent hover:border-red-900/40" title="Löschen">
+                <span class="material-symbols-outlined text-base">delete</span>
+              </button>
+            </div>
+          </td>
+        `;
+        
+        // Wire row buttons
+        tr.querySelector('.btn-edit-shortcut').addEventListener('click', () => {
+          openShortcutModal(item.app, item.index);
+        });
+        
+        tr.querySelector('.btn-delete-shortcut').addEventListener('click', () => {
+          deleteShortcut(item.app, item.index);
+        });
+        
+        tbody.appendChild(tr);
+      });
+    }
+
+    // App Operations: ADD
+    document.getElementById('scAddAppBtn').addEventListener('click', async () => {
+      const appName = prompt('Name des neuen Programms:');
+      if (!appName) return;
+      const cleanName = appName.trim();
+      if (!cleanName) return;
+      
+      const exists = Object.keys(allShortcuts).some(k => k.toLowerCase() === cleanName.toLowerCase());
+      if (exists) {
+        showToast(`Programm "${cleanName}" existiert bereits.`, 'error');
+        return;
+      }
+      
+      allShortcuts[cleanName] = [];
+      currentApp = cleanName;
+      
+      const saved = await saveShortcutsToServer();
+      if (saved) {
+        showToast(`Programm "${cleanName}" angelegt.`);
+        renderAppsList();
+        renderShortcutsList();
+      }
+    });
+
+    // App Operations: RENAME
+    document.getElementById('scEditAppBtn').addEventListener('click', async () => {
+      if (!currentApp) {
+        showToast('Bitte wähle zuerst ein Programm aus.', 'warning');
+        return;
+      }
+      
+      const newName = prompt(`Neuer Name für "${currentApp}":`, currentApp);
+      if (!newName) return;
+      const cleanName = newName.trim();
+      if (!cleanName || cleanName === currentApp) return;
+      
+      const exists = Object.keys(allShortcuts).some(k => k.toLowerCase() === cleanName.toLowerCase() && k !== currentApp);
+      if (exists) {
+        showToast(`Programm "${cleanName}" existiert bereits.`, 'error');
+        return;
+      }
+      
+      // Swap keys
+      allShortcuts[cleanName] = allShortcuts[currentApp];
+      delete allShortcuts[currentApp];
+      currentApp = cleanName;
+      
+      const saved = await saveShortcutsToServer();
+      if (saved) {
+        showToast('Programm erfolgreich umbenannt.');
+        renderAppsList();
+        renderShortcutsList();
+      }
+    });
+
+    // App Operations: DELETE
+    document.getElementById('scDeleteAppBtn').addEventListener('click', async () => {
+      if (!currentApp) {
+        showToast('Bitte wähle zuerst ein Programm aus.', 'warning');
+        return;
+      }
+      
+      if (!confirm(`Soll das Programm "${currentApp}" mit ALLEN Shortcuts wirklich unwiderruflich gelöscht werden?`)) {
+        return;
+      }
+      
+      delete allShortcuts[currentApp];
+      const apps = Object.keys(allShortcuts).sort();
+      currentApp = apps.length > 0 ? apps[0] : '';
+      
+      const saved = await saveShortcutsToServer();
+      if (saved) {
+        showToast('Programm gelöscht.');
+        renderAppsList();
+        renderShortcutsList();
+      }
+    });
+
+    // Shortcut Modal Operations
+    function openShortcutModal(app, index = -1) {
+      currentApp = app;
+      currentEditIndex = index;
+      
+      const modal = document.getElementById('scShortcutModal');
+      const title = document.getElementById('scModalTitle');
+      const nameInput = document.getElementById('scModalNameInput');
+      const keyInput = document.getElementById('scModalKeyInput');
+      const tagsInput = document.getElementById('scModalTagsInput');
+      const descInput = document.getElementById('scModalDescInput');
+      const conflictAlert = document.getElementById('scModalConflictAlert');
+      
+      conflictAlert.classList.add('hidden');
+      
+      if (index === -1) {
+        title.textContent = `Neuer Shortcut für "${app}"`;
+        nameInput.value = '';
+        keyInput.value = '';
+        tagsInput.value = '';
+        descInput.value = '';
+      } else {
+        const s = allShortcuts[app][index];
+        title.textContent = `Shortcut bearbeiten (${app})`;
+        nameInput.value = s.name || '';
+        keyInput.value = s.key || '';
+        tagsInput.value = (s.tags || []).join(', ');
+        descInput.value = s.description || '';
+        checkConflicts(s.key || '');
+      }
+      
+      modal.classList.remove('hidden');
+      nameInput.focus();
+    }
+
+    function closeShortcutModal() {
+      document.getElementById('scShortcutModal').classList.add('hidden');
+    }
+
+    document.getElementById('scModalCancelBtn').addEventListener('click', closeShortcutModal);
+    
+    document.getElementById('scAddShortcutBtn').addEventListener('click', () => {
+      if (!currentApp) {
+        showToast('Wähle zuerst links ein Programm aus.', 'warning');
+        return;
+      }
+      openShortcutModal(currentApp);
+    });
+
+    // Conflict search logic
+    function getConflictsList(keyVal) {
+      const cleanKey = keyVal.trim().toLowerCase();
+      if (cleanKey.length < 2) return [];
+      
+      let matches = [];
+      Object.keys(allShortcuts).forEach(app => {
+        (allShortcuts[app] || []).forEach((s, idx) => {
+          // Ignore the item currently being edited
+          if (app === currentApp && idx === currentEditIndex) return;
+          
+          if ((s.key || '').trim().toLowerCase() === cleanKey) {
+            matches.push(`[${app}] ${s.name}`);
+          }
+        });
+      });
+      return matches;
+    }
+
+    function checkConflicts(keyVal) {
+      const alertDiv = document.getElementById('scModalConflictAlert');
+      const alertText = document.getElementById('scModalConflictText');
+      const conflicts = getConflictsList(keyVal);
+      
+      if (conflicts.length > 0) {
+        alertText.innerHTML = conflicts.map(c => `• ${escHtml(c)}`).join('<br>');
+        alertDiv.classList.remove('hidden');
+      } else {
+        alertDiv.classList.add('hidden');
+      }
+    }
+
+    // Modal key combo input keyup/input handler
+    document.getElementById('scModalKeyInput').addEventListener('input', (e) => {
+      checkConflicts(e.target.value);
+    });
+
+    // Delete Shortcut
+    async function deleteShortcut(app, index) {
+      const s = allShortcuts[app][index];
+      if (!confirm(`Möchtest du den Shortcut "${s.name}" wirklich löschen?`)) return;
+      
+      allShortcuts[app].splice(index, 1);
+      
+      const saved = await saveShortcutsToServer();
+      if (saved) {
+        showToast('Shortcut gelöscht.');
+        renderAppsList();
+        renderShortcutsList();
+      }
+    }
+
+    // Save Shortcut Modal Btn Click
+    document.getElementById('scModalSaveBtn').addEventListener('click', async () => {
+      const name = document.getElementById('scModalNameInput').value.trim();
+      const key = document.getElementById('scModalKeyInput').value.trim();
+      const tagsVal = document.getElementById('scModalTagsInput').value.trim();
+      const desc = document.getElementById('scModalDescInput').value.trim();
+      
+      if (!name || !key) {
+        showToast('Bitte Bezeichnung und Key-Combo ausfüllen.', 'warning');
+        return;
+      }
+      
+      // Check conflicts
+      const conflicts = getConflictsList(key);
+      if (conflicts.length > 0) {
+        const confirmSave = confirm(
+          `Shortcut-Konflikt! Das Kürzel "${key}" wird bereits verwendet in:\n\n` + 
+          conflicts.join('\n') + 
+          '\n\nMöchtest du trotzdem speichern?'
+        );
+        if (!confirmSave) return;
+      }
+      
+      const tags = tagsVal ? tagsVal.split(',').map(t => t.trim()).filter(Boolean) : [];
+      
+      // Format current date as DD.MM.YYYY
+      const now = new Date();
+      const day = String(now.getDate()).padStart(2, '0');
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const year = now.getFullYear();
+      const formattedDate = `${day}.${month}.${year}`;
+      
+      const shortcutObj = {
+        name,
+        key,
+        tags,
+        description: desc,
+        date: formattedDate
+      };
+      
+      if (currentEditIndex === -1) {
+        allShortcuts[currentApp].push(shortcutObj);
+      } else {
+        allShortcuts[currentApp][currentEditIndex] = shortcutObj;
+      }
+      
+      const saved = await saveShortcutsToServer();
+      if (saved) {
+        closeShortcutModal();
+        renderAppsList();
+        renderShortcutsList();
+      }
+    });
+
+    // POST updated JSON database back to server
+    async function saveShortcutsToServer() {
+      try {
+        const res = await fetch('/api/shortcuts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(allShortcuts)
+        });
+        if (res.ok) {
+          showToast('✓ Änderungen gespeichert.');
+          updateStats();
+          return true;
+        } else {
+          showToast('Fehler beim Speichern der Shortcuts.', 'error');
+          return false;
+        }
+      } catch (err) {
+        console.error('Error saving shortcuts:', err);
+        showToast('Verbindungsfehler beim Speichern.', 'error');
+        return false;
+      }
+    }
+
+    // Search input handlers
+    document.getElementById('scSearchInput').addEventListener('input', renderShortcutsList);
+    document.getElementById('scSearchInputMobile').addEventListener('input', renderShortcutsList);
+
+    // Keyboard shortcut / focus input listener
+    window.addEventListener('keydown', (e) => {
+      if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+        e.preventDefault();
+        const searchInput = window.innerWidth >= 768 
+          ? document.getElementById('scSearchInput') 
+          : document.getElementById('scSearchInputMobile');
+        searchInput.focus();
+        searchInput.select();
+      }
+    });
+
+    // Init Page Load
+    loadShortcuts();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,44 @@
+server {
+    server_name emy.bonzeipunk.de;
+    root /var/www/emy.bonzeipunk.de;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    # Proxy für den Admin-Server (API)
+    location /api/ {
+        proxy_pass http://localhost:3001/api/;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        client_max_body_size 100M;
+    }
+
+    # Statische Ordner vom Admin-Server durchreichen (Bilder/Videos)
+    location ~* ^/(images|hero|uebermich-img|erfolge-img|gaestebuch-img)/ {
+        proxy_pass http://localhost:3001;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/emy.bonzeipunk.de/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/emy.bonzeipunk.de/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+}
+
+server {
+    if ($host = emy.bonzeipunk.de) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+    listen 80;
+    server_name emy.bonzeipunk.de;
+    return 404; # managed by Certbot
+}

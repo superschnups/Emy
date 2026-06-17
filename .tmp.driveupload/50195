@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="de">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>{{ .Title }} | EmyKarate</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Noto+Serif+JP:wght@900&family=Yuji+Syuku&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "tertiary-container": "#ffffff",
+          "surface-bright": "#f5f6f7",
+          "on-tertiary-container": "#636262",
+          "error-dim": "#a70138",
+          "on-surface-variant": "#595c5d",
+          "surface-tint": "#b30065",
+          "surface-container-highest": "#dadddf",
+          "on-secondary-fixed-variant": "#7d21a4",
+          "inverse-on-surface": "#9b9d9e",
+          "inverse-surface": "#0c0f10",
+          "surface-container": "#e6e8ea",
+          "surface": "#f5f6f7",
+          "primary-fixed": "#ff6ea9",
+          "surface-container-low": "#eff1f2",
+          "secondary": "#8930b0",
+          "tertiary": "#5c5b5b",
+          "on-secondary": "#ffedff",
+          "secondary-dim": "#7c20a3",
+          "secondary-container": "#f0c1ff",
+          "surface-dim": "#d1d5d7",
+          "primary": "#b30065",
+          "on-primary-fixed": "#000000",
+          "surface-container-high": "#e0e3e4",
+          "primary-fixed-dim": "#ff4e9e",
+          "primary-dim": "#9d0058",
+          "outline": "#757778",
+          "error": "#b41340",
+          "outline-variant": "#abadae",
+          "secondary-fixed": "#f0c1ff",
+          "secondary-fixed-dim": "#eaaeff",
+          "tertiary-fixed-dim": "#f3f0ef",
+          "on-surface": "#2c2f30",
+          "on-tertiary-fixed-variant": "#6e6d6d",
+          "on-tertiary": "#f5f2f1",
+          "tertiary-fixed": "#ffffff",
+          "background": "#f5f6f7",
+          "on-primary": "#ffeff2",
+          "surface-container-lowest": "#ffffff",
+          "inverse-primary": "#ff479c",
+          "primary-container": "#ff6ea9",
+          "on-primary-fixed-variant": "#5c0031",
+          "on-secondary-container": "#72129a",
+          "error-container": "#f74b6d",
+          "surface-variant": "#dadddf",
+          "on-background": "#2c2f30",
+          "on-error": "#ffefef",
+          "on-tertiary-fixed": "#515050",
+          "tertiary-dim": "#504f4f",
+          "on-primary-container": "#4b0027",
+          "on-secondary-fixed": "#580079",
+          "on-error-container": "#510017"
+        },
+        "borderRadius": {
+          "DEFAULT": "1rem",
+          "lg": "2rem",
+          "xl": "3rem",
+          "full": "9999px"
+        },
+        "fontFamily": {
+          "headline": ["Lexend"],
+          "body": ["Be Vietnam Pro"],
+          "label": ["Be Vietnam Pro"],
+          "japanese": ["Noto Serif JP", "serif"],
+          "calligraphy": ["Yuji Syuku", "serif"]
+        }
+      },
+    },
+  }
+</script>
+<style>
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
+  .editorial-text-shadow {
+    text-shadow: 0 10px 30px rgba(179, 0, 101, 0.2);
+  }
+</style>
+</head>
+<body class="bg-surface font-body text-on-surface overflow-x-hidden">
+
+<!-- TopAppBar -->
+<nav class="fixed top-0 left-0 w-full z-50 bg-white/70 dark:bg-zinc-900/70 backdrop-blur-lg shadow-xl shadow-pink-500/5">
+  <div class="flex justify-between items-center h-20 px-6 md:px-12 max-w-screen-2xl mx-auto">
+    <a href="{{ "/" | relURL }}" class="flex items-center gap-3 text-2xl font-black text-pink-600 dark:text-pink-400 italic font-headline tracking-tight uppercase group hover:opacity-80 transition-opacity">
+      <span>{{ .Site.Data.homepage.siteTitle | default .Site.Title }}</span>
+    </a>
+    <div class="hidden md:flex items-center gap-8">
+      <a class="text-pink-600 dark:text-pink-400 border-b-2 border-pink-500 pb-1 font-headline tracking-tight uppercase font-bold transition-colors duration-300" href="{{ "/" | relURL }}">Home</a>
+      <a class="text-zinc-600 dark:text-zinc-400 font-medium font-headline tracking-tight uppercase hover:text-pink-500 dark:hover:text-pink-300 transition-colors duration-300" href="{{ "/galerie/" | relURL }}">Galerie</a>
+      <a class="text-zinc-600 dark:text-zinc-400 font-medium font-headline tracking-tight uppercase hover:text-pink-500 dark:hover:text-pink-300 transition-colors duration-300" href="{{ "/uebermich/" | relURL }}">Über mich</a>
+      <a class="text-zinc-600 dark:text-zinc-400 font-medium font-headline tracking-tight uppercase hover:text-pink-500 dark:hover:text-pink-300 transition-colors duration-300" href="{{ "/erfolge/" | relURL }}">Erfolge</a>
+      <a class="text-zinc-600 dark:text-zinc-400 font-medium font-headline tracking-tight uppercase hover:text-pink-500 dark:hover:text-pink-300 transition-colors duration-300" href="{{ "/gaestebuch/" | relURL }}">Gästebuch</a>
+    </div>
+    <div class="flex items-center gap-4">
+      <button onclick="document.getElementById('kontaktModal').classList.remove('hidden')" class="bg-gradient-to-br from-primary to-primary-container text-on-primary px-8 py-3 rounded-xl font-bold font-headline tracking-tight uppercase scale-95 active:scale-90 transition-transform">
+        Kontakt
+      </button>
+      <button onclick="toggleMobileMenu()" class="md:hidden text-primary">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Menu Overlay -->
+<div id="mobileMenu" class="hidden fixed inset-0 z-40 bg-white dark:bg-zinc-900 p-6 pt-24">
+  <div class="flex flex-col gap-6 text-xl font-headline font-bold uppercase tracking-tight">
+    <a href="{{ "/" | relURL }}" onclick="toggleMobileMenu()">Home</a>
+    <a href="{{ "/galerie/" | relURL }}" onclick="toggleMobileMenu()">Galerie</a>
+    <a href="{{ "/uebermich/" | relURL }}" onclick="toggleMobileMenu()">Über mich</a>
+    <a href="{{ "/erfolge/" | relURL }}" onclick="toggleMobileMenu()">Erfolge</a>
+    <a href="{{ "/gaestebuch/" | relURL }}" onclick="toggleMobileMenu()">Gästebuch</a>
+  </div>
+</div>
+
+<main class="pt-20">
+  <!-- Hero Section -->
+  <section class="relative min-h-[921px] flex items-center overflow-hidden bg-surface">
+    <div class="absolute -right-20 top-20 w-[600px] h-[600px] bg-secondary-container/20 rounded-full blur-[120px]"></div>
+    <div class="max-w-screen-2xl mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10 pt-20 md:pt-32">
+      <div class="lg:col-span-6 order-2 lg:order-1 relative">
+        <div class="relative mt-6 md:mt-10">
+          <span class="inline-block px-4 py-1 rounded-full bg-secondary-container text-on-secondary-container text-sm font-bold tracking-widest uppercase mb-6 font-label">{{ .Site.Data.homepage.hero.badge }}</span>
+          <!-- Logo schwebend zwischen Text und Bild, ausgerichtet am Schriftzug -->
+          <img src="/hp_karate_logo.png" alt="Karate Logo" class="absolute right-0 lg:-right-4 top-14 md:top-18 h-20 w-20 md:h-32 md:w-32 object-contain hover:scale-110 hover:rotate-[-5deg] transition-all duration-500 z-30 drop-shadow-2xl">
+          <h1 class="text-5xl md:text-6xl lg:text-[4.5rem] font-japanese font-black text-on-surface leading-[1.1] editorial-text-shadow mb-2">
+            エミー<br>空手
+          </h1>
+          <p class="text-sm md:text-base font-bold text-primary uppercase tracking-widest mb-10 font-label">
+            [ Emy Karate ]
+          </p>
+          <p class="text-xl text-on-surface-variant max-w-lg mb-10 leading-relaxed font-body lg:pr-20">
+            {{ .Site.Data.homepage.hero.description }}
+          </p>
+          <div class="flex flex-wrap gap-4">
+            <a href="{{ "/uebermich/" | relURL }}" class="bg-gradient-to-br from-primary to-primary-container text-on-primary px-10 py-5 rounded-xl font-bold font-headline text-lg shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all text-center">
+              Erfahre mehr
+            </a>
+            <a href="{{ "/galerie/" | relURL }}" class="px-10 py-5 rounded-xl font-bold font-headline text-lg text-primary border-2 border-primary/20 hover:bg-primary/5 transition-all text-center">
+              Galerie ansehen
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="lg:col-span-6 order-1 lg:order-2 relative z-20">
+        <div class="relative w-full lg:max-w-[460px] lg:ml-auto aspect-square rounded-xl overflow-hidden shadow-2xl shadow-primary/10 rotate-3 hover:rotate-0 transition-transform duration-700 lg:-mt-12">
+          {{ if .Site.Data.homepage.hero.image }}
+          <img alt="Miya beim Karate-Tritt" class="w-full h-full object-cover" src="/hero/{{ .Site.Data.homepage.hero.image }}"/>
+          {{ else }}
+          <img alt="Emy beim Karate-Tritt" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHCy-F1uHI1Lq8D0LuZVWXLZA4URfCtFVtXNvimgi_5HnX4ovI2C3Cl_nLp5awhMAL-cwWnK-fL-yQHgwYZ2SWg5JbnH7RkQtVdUqPCb9PcOAFIzdX9haBXQGoCYywwzqNXK4QqQoJ5XxnamSZghNPUK0pOLszlu2jowGPO8VWtQmD7PcJTOGfpOCUxw8tNzeeNTQsCDmPoGD3N8ZjTyTGD6Sk48MrYJrRUgiRvBi9tznnMXIgqMsN8G0v8JA3aQeF5jQlZmJ3kw"/>
+          {{ end }}
+          <div class="absolute bottom-8 -left-8 bg-white/40 backdrop-blur-xl p-6 rounded-lg shadow-xl border border-white/20 -rotate-6">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-secondary rounded-full flex items-center justify-center text-white">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">stars</span>
+              </div>
+              <div>
+                <p class="font-headline font-bold text-on-surface uppercase leading-none">{{ .Site.Data.global.belt_rank }}</p>
+                <p class="text-xs text-on-surface-variant uppercase tracking-widest mt-1">{{ .Site.Data.homepage.hero_karte.status }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  {{ $colors := slice "text-primary" "text-secondary" "text-primary-dim" }}
+  <section class="bg-surface-container-low py-16">
+    <div class="max-w-7xl mx-auto px-6 flex flex-wrap justify-around gap-12 text-center">
+      {{ range $i, $s := .Site.Data.homepage.stats }}
+      <div>
+        <h3 class="text-5xl font-black font-headline {{ index $colors $i }}">{{ $s.value }}</h3>
+        <p class="text-sm font-label uppercase tracking-widest text-on-surface-variant mt-2">{{ $s.label }}</p>
+      </div>
+      {{ end }}
+    </div>
+  </section>
+
+  <!-- Erfolge Section -->
+  <section class="py-24 max-w-7xl mx-auto px-6">
+    <div class="mb-16">
+      <span class="text-primary font-bold tracking-widest uppercase text-sm font-label">Die neuesten Erfolge</span>
+      <h2 class="text-5xl font-black font-headline mt-4">Meine Highlights</h2>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+      {{ range first 1 (where (where .Site.RegularPages "Section" "erfolge") "Params.is_weitere_auszeichnung" "!=" "true").ByWeight }}
+      <div class="md:col-span-12 bg-surface-container-lowest rounded-xl shadow-sm group hover:shadow-xl transition-all duration-500 overflow-hidden relative success-card">
+        <div class="p-8 relative z-10">
+          <span class="bg-secondary text-white px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest">{{ .Params.rang | default "Highlight" }}</span>
+          <h3 class="text-3xl font-black font-headline mt-6 mb-4">{{ .Title }}</h3>
+          <p class="text-on-surface-variant mb-8 max-w-md">{{ .Summary }}</p>
+          <button onclick="toggleSuccess(this)" class="flex items-center gap-2 text-primary font-bold hover:gap-4 transition-all">
+            <span class="btn-label">Bericht lesen</span> <span class="material-symbols-outlined transition-transform duration-300">expand_more</span>
+          </button>
+        </div>
+        <!-- Aufklappbarer Inhalt -->
+        <div class="success-body overflow-hidden transition-all duration-500 ease-in-out" style="max-height:0">
+          <div class="px-8 pb-8 border-t border-surface-container-high">
+            <div class="pt-6 text-on-surface-variant leading-relaxed space-y-4 text-base">
+              {{ .Content }}
+              
+              {{ if .Params.images }}
+              <div class="mt-8 flex gap-4 overflow-x-auto pb-4 snap-x">
+                {{ range $img := split .Params.images "," }}
+                <div class="shrink-0 snap-start relative">
+                  {{ if (or (strings.HasSuffix (lower $img) ".mp4") (strings.HasSuffix (lower $img) ".mov") (strings.HasSuffix (lower $img) ".webm") (strings.HasSuffix (lower $img) ".m4v")) }}
+                    <video src="{{ printf "/erfolge-img/%s" $img | relURL }}" class="h-24 w-24 md:h-32 md:w-32 object-cover rounded-xl cursor-pointer hover:opacity-80 transition-opacity editorial-shadow" onclick="openLightbox(this.src, true)"></video>
+                    <span class="material-symbols-outlined absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white drop-shadow-md pointer-events-none text-3xl">play_circle</span>
+                  {{ else }}
+                    <img src="{{ printf "/erfolge-img/%s" $img | relURL }}" class="h-24 w-24 md:h-32 md:w-32 object-cover rounded-xl cursor-pointer hover:opacity-80 transition-opacity editorial-shadow" onclick="openLightbox(this.src, false)"/>
+                  {{ end }}
+                </div>
+                {{ end }}
+              </div>
+              {{ end }}
+              
+              {{ if or .Params.datum .Params.ort .Params.kategorie }}
+              <div class="mt-8 pt-6 border-t border-outline-variant/20 flex flex-wrap items-center justify-between gap-6">
+                {{ if or .Params.datum .Params.ort }}
+                <div>
+                  {{ if .Params.datum }}<div class="text-xl font-headline text-on-surface">{{ .Params.datum }}</div>{{ end }}
+                  {{ if .Params.ort }}<div class="text-xs uppercase tracking-widest font-bold text-primary">{{ .Params.ort }}</div>{{ end }}
+                </div>
+                {{ end }}
+                {{ if .Params.kategorie }}
+                <div class="text-right">
+                  <div class="text-xl font-headline text-on-surface">{{ .Params.kategorie }}</div>
+                  <div class="text-xs uppercase tracking-widest font-bold text-primary">Kategorie</div>
+                </div>
+                {{ end }}
+              </div>
+              {{ end }}
+            </div>
+            <a href="/erfolge/" class="inline-flex items-center gap-2 mt-6 text-sm font-bold text-primary hover:underline">
+              Alle Erfolge im Detail ansehen <span class="material-symbols-outlined text-sm">arrow_forward</span>
+            </a>
+          </div>
+        </div>
+        <div class="absolute right-0 top-0 w-1/3 h-full opacity-10 group-hover:opacity-20 group-hover:scale-110 transition-all duration-700 pointer-events-none">
+          {{ if .Params.image }}
+          <img alt="{{ .Title }}" class="w-full h-full object-cover grayscale brightness-50" src="{{ printf "/erfolge-img/%s" .Params.image | relURL }}"/>
+          {{ else }}
+          <img alt="Highlight Thumbnail" class="w-full h-full object-cover grayscale brightness-50"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCt0zGFYDYcvBDPfNXlVvPqNdkvn4AvVSTlFysp0raGeWEmbAnpQkad18FIakDIrPbq4d93sRhkJnquI7QoXZrLf22SBA8nG_IjRg0JkMadeTHr_KOs0vgEVpV48jXsqKBSI2Rx4J02al6QxsLdWCA6XRBKslA9R0v-u_SrGGB7oNpfxjRV-6L6REjgsuzlGHPwdyY7bLrk_MBOvHUG9hfQ5bJiaiTiKfchBEBdNdtk3MPJow72blhWqMMflZL_bdxzAfX8TCyWKQ"/>
+          {{ end }}
+        </div>
+      </div>
+      {{ end }}
+
+    </div>
+    
+    <!-- Bild Link zu Erfolge -->
+    <div class="mt-12">
+      <a href="/erfolge/" class="block h-64 md:h-80 rounded-xl overflow-hidden relative group editorial-shadow">
+        <img alt="Alle Erfolge ansehen" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000 grayscale group-hover:grayscale-0"
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxl_8pFN3p4UiOW5vHu3eUKrCj1VrD6wYTDuajtl3iHvjkNJEOLbqbWt2QL5xcC4jC8H4unZhLKoapi4aH8paj81HeIEcOZwkfBBDZyLz6vQpXOODIg4KyEBDvfGzCyJWGf_qTxRmpzgjNfLAOeKA1dCFuRq5MJGSi3gsuobQBv7cR1kGAkgMKXEMTjsKrR_ZvwVQYyb7tWPzAWfTqEt97ViRO1y05wIOMbBiqTx2qXcbzVfsdVvtyAjaMh9Wh7npl8UTJIlvMXA"/>
+        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex items-end p-8 md:p-12">
+          <div>
+            <h3 class="text-3xl md:text-5xl font-black font-headline text-white mb-4">Alle Erfolge entdecken</h3>
+            <div class="inline-flex items-center gap-2 bg-primary text-on-primary px-6 py-3 rounded-xl font-bold text-sm uppercase tracking-widest group-hover:bg-primary-dim transition-colors shadow-lg">
+              Zur Übersicht <span class="material-symbols-outlined text-sm">arrow_forward</span>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- CTA Galerie Section -->
+  <section class="py-24 relative overflow-hidden">
+    <div class="absolute inset-0 bg-zinc-900 -z-10"></div>
+    <div class="max-w-7xl mx-auto px-6 text-center text-white">
+      <h2 class="text-5xl md:text-7xl font-black font-headline italic mb-8">{{ .Site.Data.homepage.cta.heading_main }} <span class="text-primary-fixed">{{ .Site.Data.homepage.cta.heading_colored }}</span></h2>
+      <p class="text-xl text-zinc-400 max-w-2xl mx-auto mb-12">{{ .Site.Data.homepage.cta.description }}</p>
+      <a class="inline-flex items-center gap-4 bg-primary text-white px-12 py-6 rounded-full font-black font-headline text-xl hover:bg-primary-dim transition-colors group" href="{{ "/galerie/" | relURL }}">
+        {{ .Site.Data.homepage.cta.button_text }}
+        <span class="material-symbols-outlined group-hover:translate-x-2 transition-transform">auto_awesome_motion</span>
+      </a>
+    </div>
+    <div class="absolute top-1/2 left-0 -translate-y-1/2 opacity-5 pointer-events-none whitespace-nowrap">
+      <span class="text-[200px] font-black font-headline italic text-white uppercase tracking-tighter">GALLERY GALLERY GALLERY</span>
+    </div>
+  </section>
+</main>
+
+<!-- Footer -->
+<footer class="w-full rounded-t-[3rem] mt-20 bg-zinc-50 dark:bg-zinc-950">
+  <div class="flex flex-col md:flex-row justify-between items-center py-12 px-8 max-w-7xl mx-auto gap-6">
+    <div class="text-lg font-bold text-zinc-900 dark:text-zinc-100 font-headline uppercase italic">
+      {{ .Site.Data.homepage.siteTitle | default .Site.Title }}
+    </div>
+    <div class="flex gap-8 text-sm tracking-wide">
+      {{ $social := .Site.Data.global.social }}
+      <a class="text-zinc-500 hover:text-pink-500 hover:underline decoration-pink-500 decoration-2 underline-offset-4 transition-opacity opacity-80 hover:opacity-100" href="{{ $social.instagram }}">Instagram</a>
+      <a class="text-zinc-500 hover:text-pink-500 hover:underline decoration-pink-500 decoration-2 underline-offset-4 transition-opacity opacity-80 hover:opacity-100" href="{{ $social.youtube }}">YouTube</a>
+      <a class="text-zinc-500 hover:text-pink-500 hover:underline decoration-pink-500 decoration-2 underline-offset-4 transition-opacity opacity-80 hover:opacity-100" href="mailto:{{ $social.email }}">Email</a>
+    </div>
+    <div class="text-sm tracking-wide text-zinc-500">
+      © 2024 {{ .Site.Data.homepage.siteTitle | default .Site.Title }}. Alle Rechte vorbehalten.
+    </div>
+  </div>
+</footer>
+
+
+<!-- Kontakt Modal -->
+<div id="kontaktModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
+  <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeKontakt()"></div>
+  <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg p-8 animate-none">
+
+    <!-- Header -->
+    <div class="flex items-start justify-between mb-8">
+      <div>
+        <span class="inline-block px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container text-xs font-bold tracking-widest uppercase mb-3 font-label">Schreib mir</span>
+        <h2 class="text-3xl font-black font-headline text-on-surface italic">Kontakt</h2>
+      </div>
+      <button onclick="closeKontakt()" class="text-on-surface-variant hover:text-on-surface transition-colors mt-1">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <!-- Formular -->
+    <form id="kontaktForm" class="space-y-4" onsubmit="submitKontakt(event)">
+      <div>
+        <label class="block text-sm font-bold text-on-surface-variant mb-1.5 font-label uppercase tracking-wide">Name</label>
+        <input type="text" name="name" required placeholder="Dein Name"
+          class="w-full border-2 border-outline-variant rounded-xl px-4 py-3 text-on-surface focus:outline-none focus:border-primary transition-colors font-body"/>
+      </div>
+      <div>
+        <label class="block text-sm font-bold text-on-surface-variant mb-1.5 font-label uppercase tracking-wide">E-Mail</label>
+        <input type="email" name="email" required placeholder="deine@email.de"
+          class="w-full border-2 border-outline-variant rounded-xl px-4 py-3 text-on-surface focus:outline-none focus:border-primary transition-colors font-body"/>
+      </div>
+      <div>
+        <label class="block text-sm font-bold text-on-surface-variant mb-1.5 font-label uppercase tracking-wide">Nachricht</label>
+        <textarea name="message" required rows="4" placeholder="Deine Nachricht..."
+          class="w-full border-2 border-outline-variant rounded-xl px-4 py-3 text-on-surface focus:outline-none focus:border-primary transition-colors font-body resize-none"></textarea>
+      </div>
+
+      <!-- Status -->
+      <div id="kontaktStatus" class="hidden text-sm font-bold text-center py-2 rounded-xl"></div>
+
+      <button type="submit" id="kontaktBtn"
+        class="w-full py-4 rounded-xl font-black font-headline text-lg bg-gradient-to-br from-primary to-primary-container text-on-primary shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-transform">
+        Absenden
+      </button>
+    </form>
+
+  </div>
+</div>
+
+<div id="imageLightbox" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm transition-opacity" onclick="closeLightbox(event)">
+  <img id="lightboxImage" src="" class="hidden max-w-[90vw] max-h-[90vh] object-contain rounded-xl shadow-2xl" />
+  <video id="lightboxVideo" src="" class="hidden max-w-[90vw] max-h-[90vh] object-contain rounded-xl shadow-2xl" controls autoplay></video>
+  <button class="absolute top-8 right-8 text-white bg-white/10 hover:bg-white/20 rounded-full p-2" onclick="closeLightbox(event, true)">
+    <span class="material-symbols-outlined text-3xl">close</span>
+  </button>
+</div>
+
+<script>
+function openLightbox(src, isVideo) {
+  const img = document.getElementById('lightboxImage');
+  const vid = document.getElementById('lightboxVideo');
+  
+  if (isVideo) {
+    img.classList.add('hidden');
+    vid.classList.remove('hidden');
+    vid.src = src;
+  } else {
+    vid.classList.add('hidden');
+    vid.pause();
+    img.classList.remove('hidden');
+    img.src = src;
+  }
+  document.getElementById('imageLightbox').classList.remove('hidden');
+}
+
+function closeLightbox(e, force) {
+  if (force || e.target.id === 'imageLightbox') {
+    document.getElementById('imageLightbox').classList.add('hidden');
+    document.getElementById('lightboxVideo').pause();
+  }
+}
+
+function closeKontakt() {
+  document.getElementById('kontaktModal').classList.add('hidden');
+  document.getElementById('kontaktForm').reset();
+  document.getElementById('kontaktStatus').classList.add('hidden');
+  document.getElementById('kontaktBtn').disabled = false;
+  document.getElementById('kontaktBtn').textContent = 'Absenden';
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeKontakt();
+});
+
+async function submitKontakt(e) {
+  e.preventDefault();
+  const btn = document.getElementById('kontaktBtn');
+  const status = document.getElementById('kontaktStatus');
+  const form = document.getElementById('kontaktForm');
+
+  btn.disabled = true;
+  btn.textContent = 'Wird gesendet…';
+
+  const data = Object.fromEntries(new FormData(form));
+
+  try {
+    const res = await fetch('https://formsubmit.co/ajax/{{ .Site.Data.global.social.email }}', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    const json = await res.json();
+    if (json.success === 'true' || json.success === true) {
+      status.textContent = '✓ Nachricht gesendet! Ich melde mich bald.';
+      status.className = 'text-sm font-bold text-center py-2 rounded-xl bg-green-50 text-green-700';
+      status.classList.remove('hidden');
+      form.reset();
+      btn.textContent = 'Gesendet!';
+    } else {
+      throw new Error();
+    }
+  } catch {
+    status.textContent = '✗ Fehler beim Senden. Bitte versuche es später nochmal.';
+    status.className = 'text-sm font-bold text-center py-2 rounded-xl bg-red-50 text-red-700';
+    status.classList.remove('hidden');
+    btn.disabled = false;
+    btn.textContent = 'Absenden';
+  }
+}
+
+function toggleSuccess(btn) {
+  var card = btn.closest('.success-card');
+  var body = card.querySelector('.success-body');
+  var icon = btn.querySelector('.material-symbols-outlined');
+  var label = btn.querySelector('.btn-label');
+  
+  if (!body.style.maxHeight || body.style.maxHeight === '0px') {
+    body.style.maxHeight = body.scrollHeight + 'px';
+    icon.style.transform = 'rotate(180deg)';
+    label.textContent = 'Weniger anzeigen';
+  } else {
+    body.style.maxHeight = '0';
+    icon.style.transform = '';
+    label.textContent = 'Bericht lesen';
+  }
+}
+
+function toggleMobileMenu() {
+  var menu = document.getElementById('mobileMenu');
+  if (menu) menu.classList.toggle('hidden');
+}
+</script>
+</body>
+</html>

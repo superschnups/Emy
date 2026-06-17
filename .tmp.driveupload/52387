@@ -1,0 +1,1168 @@
+const express = require('express');
+const multer = require('multer');
+const sharp = require('sharp');
+const path = require('path');
+const fs = require('fs');
+const { exec } = require('child_process');
+const os = require('os');
+const cors = require('cors');
+
+const app = express();
+const PORT = process.env.PORT || 3001;
+app.set('trust proxy', true);
+
+// CORS für den öffentlichen Gästebuch-Endpunkt
+app.use(cors({
+  origin: function(origin, callback) {
+    callback(null, true);
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+// --- BASIC AUTH CONFIG ---
+const ADMIN_USER = 'admin';
+const ADMIN_PASS = 'bonzei'; // Empfehlung: Ändern!
+
+const IMAGES_DIR = path.join(__dirname, 'static/gallery/images');
+const HERO_DIR = path.join(__dirname, 'static/hero');
+const UEBERMICH_IMG_DIR = path.join(__dirname, 'static/uebermich');
+const DATA_FILE = path.join(__dirname, 'data/gallery.json');
+const HOMEPAGE_FILE = path.join(__dirname, 'data/homepage.json');
+const CATEGORIES_FILE = path.join(__dirname, 'data/categories.json');
+const UEBERMICH_FILE = path.join(__dirname, 'data/uebermich.json');
+const ERFOLGE_FILE = path.join(__dirname, 'data/erfolge.json');
+const ERFOLGE_IMG_DIR = path.join(__dirname, 'static/erfolge-img');
+const GALERIE_PAGE_FILE = path.join(__dirname, 'data/galerie.json');
+const GAESTEBUCH_FILE = path.join(__dirname, 'data/gaestebuch.json');
+const GLOBAL_FILE = path.join(__dirname, 'data/global.json');
+const GAESTEBUCH_IMG_DIR = path.join(__dirname, 'static/gaestebuch-img');
+const DYNAMIC_DATA_DIR = path.join(__dirname, 'data_dynamic');
+const ERFOLGE_INTERACTIONS_FILE = path.join(DYNAMIC_DATA_DIR, 'erfolge_interactions.json');
+
+if (!fs.existsSync(DYNAMIC_DATA_DIR)) fs.mkdirSync(DYNAMIC_DATA_DIR, { recursive: true });
+if (!fs.existsSync(UEBERMICH_IMG_DIR)) fs.mkdirSync(UEBERMICH_IMG_DIR, { recursive: true });
+if (!fs.existsSync(HERO_DIR)) fs.mkdirSync(HERO_DIR, { recursive: true });
+if (!fs.existsSync(ERFOLGE_IMG_DIR)) fs.mkdirSync(ERFOLGE_IMG_DIR, { recursive: true });
+if (!fs.existsSync(GAESTEBUCH_IMG_DIR)) fs.mkdirSync(GAESTEBUCH_IMG_DIR, { recursive: true });
+
+
+// Basic Auth Middleware
+app.use((req, res, next) => {
+  // Öffentliche Pfade definieren
+  const publicPaths = [
+    '/api/gaestebuch/public',
+    '/api/erfolge-interactions', // GET und POST für Likes/Kommentare
+    '/images/',
+    '/hero/',
+    '/uebermich-img/',
+    '/erfolge-img/',
+    '/gaestebuch-img/'
+  ];
+
+  // Wenn es ein öffentlicher Pfad ist UND (es ist GET/POST ODER es ist nicht der Admin-Endpunkt)
+  // Speziell für Erfolge-Interaktionen: GET (laden) und POST (like/kommentar) sind frei.
+  // PUT (editieren) und DELETE (löschen) erfordern Login.
+  if (req.path.startsWith('/api/erfolge-interactions')) {
+    if (req.method === 'GET' || req.method === 'POST') {
+      return next();
+    }
+  }
+
+  if (publicPaths.some(p => req.path.startsWith(p) && p !== '/api/erfolge-interactions')) {
+    return next();
+  }
+
+  const auth = { login: ADMIN_USER, password: ADMIN_PASS };
+  const b64auth = (req.headers.authorization || '').split(' ')[1] || '';
+  if (!b64auth) {
+    res.set('WWW-Authenticate', 'Basic realm="MiyaKarate Admin"');
+    return res.status(401).send('Authentication required.');
+  }
+
+  const [login, password] = Buffer.from(b64auth, 'base64').toString().split(':');
+
+  if (login === auth.login && password === auth.password) {
+    return next();
+  }
+
+  res.set('WWW-Authenticate', 'Basic realm="MiyaKarate Admin"');
+  res.status(401).send('Authentication required.');
+});
+
+app.use(express.json());
+app.use('/images', express.static(IMAGES_DIR));
+
+// Multer: temporärer Speicher, dann sharp übernimmt
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 100 * 1024 * 1024 }, // 100MB limit für Videos
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith('image/') || file.mimetype.startsWith('video/')) cb(null, true);
+    else cb(new Error('Nur Bilder und Videos erlaubt!'));
+  }
+});
+
+function readGallery() {
+  return JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
+}
+function writeGallery(data) {
+  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+}
+
+// Upload
+app.post('/api/upload', upload.array('photos', 20), async (req, res) => {
+  try {
+    const gallery = readGallery();
+    const added = [];
+
+    for (const file of req.files) {
+      const id = Date.now() + '-' + Math.random().toString(36).slice(2, 7);
+      const filename = id + '.webp';
+      const thumbname = id + '-thumb.webp';
+
+      // Vollbild (max 1200px)
+      await sharp(file.buffer)
+        .resize(1200, 1200, { fit: 'inside', withoutEnlargement: true })
+        .webp({ quality: 85 })
+        .toFile(path.join(IMAGES_DIR, filename));
+
+      // Thumbnail (400px)
+      await sharp(file.buffer)
+        .resize(400, 400, { fit: 'cover' })
+        .webp({ quality: 80 })
+        .toFile(path.join(IMAGES_DIR, thumbname));
+
+      const photo = {
+        id,
+        filename,
+        thumb: thumbname,
+        title: req.body.title || file.originalname.replace(/\.[^.]+$/, ''),
+        kategorie: req.body.kategorie || 'Training',
+        datum: new Date().toISOString().slice(0, 10)
+      };
+      gallery.photos.unshift(photo);
+      added.push(photo);
+    }
+
+    writeGallery(gallery);
+    res.json({ ok: true, added });
+  } catch (e) {
+    res.status(500).json({ ok: false, error: e.message });
+  }
+});
+
+// Foto-Metadaten updaten
+app.put('/api/photo/:id', (req, res) => {
+  const gallery = readGallery();
+  const photo = gallery.photos.find(p => p.id === req.params.id);
+  if (!photo) return res.status(404).json({ ok: false });
+  if (req.body.title !== undefined) photo.title = req.body.title;
+  if (req.body.kategorie !== undefined) photo.kategorie = req.body.kategorie;
+  writeGallery(gallery);
+  res.json({ ok: true, photo });
+});
+
+// Foto löschen
+app.delete('/api/photo/:id', (req, res) => {
+  const gallery = readGallery();
+  const idx = gallery.photos.findIndex(p => p.id === req.params.id);
+  if (idx === -1) return res.status(404).json({ ok: false });
+  const [photo] = gallery.photos.splice(idx, 1);
+  [photo.filename, photo.thumb].forEach(f => {
+    const fp = path.join(IMAGES_DIR, f);
+    if (fs.existsSync(fp)) fs.unlinkSync(fp);
+  });
+  writeGallery(gallery);
+  res.json({ ok: true });
+});
+
+// Alle Fotos
+app.get('/api/photos', (req, res) => {
+  res.json(readGallery());
+});
+
+// ── Kategorien API ────────────────────────────────────────────
+function readCategories() {
+  if (!fs.existsSync(CATEGORIES_FILE)) return ['Training', 'Wettkämpfe', 'Gürtelprüfungen'];
+  return JSON.parse(fs.readFileSync(CATEGORIES_FILE, 'utf8'));
+}
+function writeCategories(cats) {
+  fs.writeFileSync(CATEGORIES_FILE, JSON.stringify(cats, null, 2));
+}
+
+app.get('/api/categories', (req, res) => {
+  res.json(readCategories());
+});
+
+app.post('/api/categories', (req, res) => {
+  const name = (req.body.name || '').trim();
+  if (!name) return res.status(400).json({ ok: false, error: 'Name fehlt' });
+  const cats = readCategories();
+  if (cats.includes(name)) return res.status(409).json({ ok: false, error: 'Existiert bereits' });
+  cats.push(name);
+  writeCategories(cats);
+  res.json({ ok: true, categories: cats });
+  rebuildAndDeploy();
+});
+
+app.delete('/api/categories/:name', (req, res) => {
+  const cats = readCategories().filter(c => c !== req.params.name);
+  writeCategories(cats);
+  res.json({ ok: true, categories: cats });
+  rebuildAndDeploy();
+});
+
+// ── Homepage API ──────────────────────────────────────────────
+function readHomepage() {
+  return JSON.parse(fs.readFileSync(HOMEPAGE_FILE, 'utf8'));
+}
+function writeHomepage(data) {
+  fs.writeFileSync(HOMEPAGE_FILE, JSON.stringify(data, null, 2));
+}
+
+app.get('/api/homepage', (req, res) => {
+  res.json(readHomepage());
+});
+
+function rebuildAndDeploy() {
+  const isServer = os.platform() === 'linux';
+  let cmd;
+
+  if (isServer) {
+    // Auf dem Server: Hugo bauen und lokal nach /var/www/ kopieren
+    cmd = `cd ${__dirname} && /usr/local/bin/hugo --minify && cp -r public/* /var/www/emy-karate/ && cp -r public/* /var/www/emy.bonzeipunk.de/`;
+  } else {
+    // Lokal: Hugo bauen und per SSH/Rsync auf Server schieben
+    const SSH_KEY = '/Users/jessi/.ssh/vpsserver/vpsserver';
+    cmd = `cd ${__dirname} && hugo --minify && SSH_ASKPASS_REQUIRE=never ssh-add ${SSH_KEY} <<< "bonzeikiller" 2>/dev/null; rsync -az --delete -e "ssh -o StrictHostKeyChecking=no -i ${SSH_KEY}" ${__dirname}/public/ root@217.160.212.198:/var/www/emy-karate/ && rsync -az --delete -e "ssh -o StrictHostKeyChecking=no -i ${SSH_KEY}" ${__dirname}/public/ root@217.160.212.198:/var/www/emy.bonzeipunk.de/`;
+  }
+
+  console.log('Starte Rebuild/Deploy...');
+  exec(cmd, { shell: '/bin/bash' }, (err, stdout, stderr) => {
+    if (err) {
+      console.error('Deploy-Fehler:', err.message);
+      console.error('Stderr:', stderr);
+    } else {
+      console.log('✓ Deploy erfolgreich');
+      if (stdout) console.log('Stdout:', stdout);
+    }
+  });
+}
+
+app.put('/api/homepage', (req, res) => {
+  const hp = readHomepage();
+  if (req.body.siteTitle !== undefined) hp.siteTitle = req.body.siteTitle;
+  if (req.body.badge !== undefined) hp.hero.badge = req.body.badge;
+  if (req.body.description !== undefined) hp.hero.description = req.body.description;
+  if (req.body.stats !== undefined) hp.stats = req.body.stats;
+  if (req.body.hero_karte !== undefined) hp.hero_karte = req.body.hero_karte;
+  if (req.body.pruefung_karte !== undefined) hp.pruefung_karte = req.body.pruefung_karte;
+  if (req.body.dojo_karte !== undefined) hp.dojo_karte = req.body.dojo_karte;
+  if (req.body.cta !== undefined) hp.cta = req.body.cta;
+  writeHomepage(hp);
+  res.json({ ok: true });
+  rebuildAndDeploy();
+});
+
+app.post('/api/homepage/image', upload.single('image'), async (req, res) => {
+  try {
+    const filename = 'hero.webp';
+    await sharp(req.file.buffer)
+      .resize(1200, 1200, { fit: 'inside', withoutEnlargement: true })
+      .webp({ quality: 88 })
+      .toFile(path.join(HERO_DIR, filename));
+    const hp = readHomepage();
+    hp.hero.image = filename;
+    writeHomepage(hp);
+    res.json({ ok: true, image: filename });
+    rebuildAndDeploy();
+  } catch (e) {
+    res.status(500).json({ ok: false, error: e.message });
+  }
+});
+
+app.use('/hero', express.static(HERO_DIR));
+app.use('/uebermich-img', express.static(UEBERMICH_IMG_DIR));
+app.use('/erfolge-img', express.static(ERFOLGE_IMG_DIR));
+app.use('/gaestebuch-img', express.static(GAESTEBUCH_IMG_DIR));
+
+// Über mich API
+function readUebermich() {
+  return JSON.parse(fs.readFileSync(UEBERMICH_FILE, 'utf8'));
+}
+function writeUebermich(data) {
+  fs.writeFileSync(UEBERMICH_FILE, JSON.stringify(data, null, 2));
+}
+
+app.get('/api/uebermich', (req, res) => {
+  res.json(readUebermich());
+});
+
+app.put('/api/uebermich', (req, res) => {
+  const data = req.body;
+  writeUebermich(data);
+  res.json({ ok: true });
+  rebuildAndDeploy();
+});
+
+app.post('/api/uebermich/image', upload.single('image'), async (req, res) => {
+  try {
+    const filename = 'portrait.webp';
+    await sharp(req.file.buffer)
+      .resize(800, 1000, { fit: 'cover', position: 'top' })
+      .webp({ quality: 88 })
+      .toFile(path.join(UEBERMICH_IMG_DIR, filename));
+    const data = readUebermich();
+    data.hero.image = filename;
+    writeUebermich(data);
+    res.json({ ok: true, image: filename });
+    rebuildAndDeploy();
+  } catch (e) {
+    res.status(500).json({ ok: false, error: e.message });
+  }
+});
+
+// ── Erfolge API ───────────────────────────────────────────────
+function readErfolge() {
+  return JSON.parse(fs.readFileSync(ERFOLGE_FILE, 'utf8'));
+}
+function writeErfolge(data) {
+  fs.writeFileSync(ERFOLGE_FILE, JSON.stringify(data, null, 2));
+}
+
+app.get('/api/erfolge', (req, res) => {
+  res.json(readErfolge());
+});
+
+app.put('/api/erfolge', (req, res) => {
+  writeErfolge(req.body);
+  res.json({ ok: true });
+  rebuildAndDeploy();
+});
+
+app.post('/api/erfolge/image', upload.single('image'), async (req, res) => {
+  try {
+    const filename = 'hero.webp';
+    await sharp(req.file.buffer)
+      .resize(1200, 1500, { fit: 'inside', withoutEnlargement: true })
+      .webp({ quality: 88 })
+      .toFile(path.join(ERFOLGE_IMG_DIR, filename));
+    const data = readErfolge();
+    data.hero.image = filename;
+    writeErfolge(data);
+    res.json({ ok: true, image: filename });
+    rebuildAndDeploy();
+  } catch (e) {
+    res.status(500).json({ ok: false, error: e.message });
+  }
+});
+
+// ── Einzelerfolge (Markdown) API ──────────────────────────────
+const ERFOLGE_CONTENT_DIR = path.join(__dirname, 'content/erfolge');
+
+function parseFM(content) {
+  const match = content.match(/^---\r?\n([\s\S]+?)\r?\n---\r?\n([\s\S]*)$/);
+  if (!match) return { data: {}, content };
+  const fm = match[1];
+  const body = match[2];
+  const data = {};
+  fm.split('\n').forEach(line => {
+    const [key, ...rest] = line.split(':');
+    if (key && rest.length) data[key.trim()] = rest.join(':').trim().replace(/^"|"$/g, '');
+  });
+  return { data, content: body };
+}
+
+app.get('/api/individual-successes', (req, res) => {
+  const files = fs.readdirSync(ERFOLGE_CONTENT_DIR).filter(f => f.endsWith('.md') && f !== '_index.md');
+  const list = files.map(f => {
+    const c = fs.readFileSync(path.join(ERFOLGE_CONTENT_DIR, f), 'utf8');
+    const { data } = parseFM(c);
+    return { fileName: f, title: data.title || f, rang: data.rang, image: data.image, weight: parseInt(data.weight) || 999 };
+  });
+  list.sort((a, b) => a.weight - b.weight);
+  res.json(list);
+});
+
+app.put('/api/individual-successes/reorder', (req, res) => {
+  const { order } = req.body;
+  if (!Array.isArray(order)) return res.status(400).json({ ok: false });
+  
+  order.forEach((fileName, index) => {
+    const filePath = path.join(ERFOLGE_CONTENT_DIR, fileName);
+    if (!fs.existsSync(filePath)) return;
+    
+    const content = fs.readFileSync(filePath, 'utf8');
+    const { data, content: body } = parseFM(content);
+    
+    data.weight = index + 1;
+    
+    let fmStr = '---\n';
+    for (const k in data) {
+      if (data[k] !== undefined && data[k] !== null) {
+        if (k === 'weight') {
+          fmStr += `${k}: ${data[k]}\n`;
+        } else {
+          fmStr += `${k}: "${data[k]}"\n`;
+        }
+      }
+    }
+    fmStr += '---\n';
+    fs.writeFileSync(filePath, fmStr + '\n' + body);
+  });
+  
+  res.json({ ok: true });
+  rebuildAndDeploy();
+});
+
+app.get('/api/individual-success/:file', (req, res) => {
+  const c = fs.readFileSync(path.join(ERFOLGE_CONTENT_DIR, req.params.file), 'utf8');
+  const { data, content } = parseFM(c);
+  res.json({ ...data, content });
+});
+
+app.put('/api/individual-success/:file', (req, res) => {
+  const filePath = path.join(ERFOLGE_CONTENT_DIR, req.params.file);
+  const oldContent = fs.readFileSync(filePath, 'utf8');
+  const { data: oldData } = parseFM(oldContent);
+  const { title, rang, summary, content, ort, datum, kategorie, is_weitere_auszeichnung, image, images } = req.body;
+  
+  const newData = { ...oldData, title, rang, summary, ort, datum, kategorie, is_weitere_auszeichnung };
+  if (image !== undefined) newData.image = image;
+  if (images !== undefined) newData.images = images;
+  let fmStr = '---\n';
+  for (const k in newData) {
+    if (newData[k]) {
+      if (k === 'weight') {
+        fmStr += `${k}: ${newData[k]}\n`;
+      } else {
+        fmStr += `${k}: "${newData[k]}"\n`;
+      }
+    }
+  }
+  fmStr += '---\n';
+  fs.writeFileSync(filePath, fmStr + '\n' + content);
+  res.json({ ok: true });
+  rebuildAndDeploy();
+});
+
+app.post('/api/individual-success/:file/images', upload.array('images', 5), async (req, res) => {
+  try {
+    const baseName = req.params.file.replace('.md', '');
+    const filenames = [];
+    
+    for (const file of req.files) {
+      const isVideo = file.mimetype.startsWith('video/');
+      const origExt = path.extname(file.originalname).toLowerCase();
+      const ext = isVideo ? origExt : '.webp';
+      const filename = `success-${baseName}-${Date.now()}-${Math.random().toString(36).slice(2,7)}${ext}`;
+      
+      if (isVideo) {
+        fs.writeFileSync(path.join(ERFOLGE_IMG_DIR, filename), file.buffer);
+      } else {
+        await sharp(file.buffer)
+          .resize(1000, 1000, { fit: 'inside', withoutEnlargement: true })
+          .webp({ quality: 85 })
+          .toFile(path.join(ERFOLGE_IMG_DIR, filename));
+      }
+      filenames.push(filename);
+    }
+    
+    // In Markdown Datei schreiben
+    const filePath = path.join(ERFOLGE_CONTENT_DIR, req.params.file);
+    const c = fs.readFileSync(filePath, 'utf8');
+    const { data, content } = parseFM(c);
+    
+    let existingImages = [];
+    try { existingImages = JSON.parse(req.body.existingImages || '[]'); } catch(e){}
+    const allImages = [...existingImages, ...filenames];
+    
+    let mainIdx = parseInt(req.body.mainImageIndex) || 0;
+    if (mainIdx < 0 || mainIdx >= allImages.length) mainIdx = 0;
+    
+    if (allImages.length > 0) {
+      data.image = allImages[mainIdx]; // Vom User gewähltes Hauptbild
+      data.images = allImages.join(',');
+    } else {
+      delete data.image;
+      delete data.images;
+    }
+    
+    let fmStr = '---\n';
+    for (const k in data) {
+      if (data[k]) fmStr += `${k}: "${data[k]}"\n`;
+    }
+    fmStr += '---\n';
+    fs.writeFileSync(filePath, fmStr + '\n' + content);
+    
+    res.json({ ok: true, images: filenames });
+    rebuildAndDeploy();
+  } catch (e) {
+    res.status(500).json({ ok: false, error: e.message });
+  }
+});
+
+// ── Galerie Seiten-Texte API ──────────────────────────────────
+app.get('/api/galerie', (req, res) => {
+  res.json(JSON.parse(fs.readFileSync(GALERIE_PAGE_FILE, 'utf8')));
+});
+app.put('/api/galerie', (req, res) => {
+  fs.writeFileSync(GALERIE_PAGE_FILE, JSON.stringify(req.body, null, 2));
+  res.json({ ok: true });
+  rebuildAndDeploy();
+});
+
+// ── Gästebuch API ─────────────────────────────────────────────
+function readGaestebuch() {
+  return JSON.parse(fs.readFileSync(GAESTEBUCH_FILE, 'utf8'));
+}
+function writeGaestebuch(data) {
+  fs.writeFileSync(GAESTEBUCH_FILE, JSON.stringify(data, null, 2));
+}
+
+app.get('/api/gaestebuch', (req, res) => {
+  res.json(readGaestebuch());
+});
+
+app.put('/api/gaestebuch', (req, res) => {
+  writeGaestebuch(req.body);
+  res.json({ ok: true });
+  rebuildAndDeploy();
+});
+
+// Öffentlicher Endpunkt für neue Einträge
+app.post('/api/gaestebuch/public', (req, res) => {
+  try {
+    const { name, text, email, subject } = req.body;
+    if (!name || !text) return res.status(400).json({ ok: false, error: 'Name und Text fehlen' });
+
+    const data = readGaestebuch();
+    const newEntry = {
+      id: Date.now().toString(),
+      name: name.trim(),
+      rolle: subject || 'Besucher',
+      text: text.trim(),
+      farbe: 'default',
+      breit: false,
+      datum: new Date().toISOString()
+    };
+
+    data.eintraege.unshift(newEntry); // Oben anfügen
+    writeGaestebuch(data);
+    res.json({ ok: true });
+    
+    // Nach kurzem Delay bauen, damit der User nicht warten muss
+    setTimeout(() => rebuildAndDeploy(), 500);
+  } catch (e) {
+    res.status(500).json({ ok: false, error: e.message });
+  }
+});
+
+app.post('/api/gaestebuch/image', upload.single('image'), async (req, res) => {
+  try {
+    const filename = 'hero.webp';
+    await sharp(req.file.buffer)
+      .resize(1400, 600, { fit: 'cover', position: 'center' })
+      .webp({ quality: 88 })
+      .toFile(path.join(GAESTEBUCH_IMG_DIR, filename));
+    const data = JSON.parse(fs.readFileSync(GAESTEBUCH_FILE, 'utf8'));
+    data.hero.image = filename;
+    fs.writeFileSync(GAESTEBUCH_FILE, JSON.stringify(data, null, 2));
+    res.json({ ok: true, image: filename });
+    rebuildAndDeploy();
+  } catch (e) {
+    res.status(500).json({ ok: false, error: e.message });
+  }
+});
+
+// ── Global (Social Links) API ─────────────────────────────────
+app.get('/api/global', (req, res) => {
+  res.json(JSON.parse(fs.readFileSync(GLOBAL_FILE, 'utf8')));
+});
+app.put('/api/global', (req, res) => {
+  fs.writeFileSync(GLOBAL_FILE, JSON.stringify(req.body, null, 2));
+  res.json({ ok: true });
+  rebuildAndDeploy();
+});
+
+// ── Erfolge Interactions (Likes/Comments) API ─────────────────
+function readErfolgeInteractions() {
+  if (!fs.existsSync(ERFOLGE_INTERACTIONS_FILE)) {
+    return {};
+  }
+  try {
+    return JSON.parse(fs.readFileSync(ERFOLGE_INTERACTIONS_FILE, 'utf8'));
+  } catch (e) {
+    return {};
+  }
+}
+
+function writeErfolgeInteractions(data) {
+  fs.writeFileSync(ERFOLGE_INTERACTIONS_FILE, JSON.stringify(data, null, 2));
+}
+
+function getClientIp(req) {
+  const forwarded = req.headers['x-forwarded-for'];
+  if (forwarded) {
+    return forwarded.split(',')[0].trim();
+  }
+  return req.ip || req.socket.remoteAddress;
+}
+
+app.get('/api/erfolge/interactions', (req, res) => {
+  try {
+    const clientIp = getClientIp(req);
+    const data = readErfolgeInteractions();
+    const sanitized = {};
+    for (const id in data) {
+      const item = data[id];
+      const likedIps = item.likedIps || [];
+      const comments = item.comments || [];
+      
+      // Omit IP from comments in public response (GDPR-compliant)
+      const sanitizedComments = comments.map(c => ({
+        id: c.id,
+        name: c.name,
+        text: c.text,
+        date: c.date
+      }));
+
+      sanitized[id] = {
+        likes: typeof item.likes === 'number' ? item.likes : likedIps.length,
+        comments: sanitizedComments,
+        likedByUser: likedIps.includes(clientIp),
+        commentedByUser: comments.some(c => c.ip === clientIp)
+      };
+    }
+    res.json(sanitized);
+  } catch (e) {
+    res.status(500).json({ ok: false, error: e.message });
+  }
+});
+
+app.post('/api/erfolge/interactions/like', (req, res) => {
+  try {
+    const { id } = req.body;
+    if (!id) return res.status(400).json({ ok: false, error: 'ID fehlt' });
+    
+    const clientIp = getClientIp(req);
+    const interactions = readErfolgeInteractions();
+    if (!interactions[id]) {
+      interactions[id] = { likes: 0, likedIps: [], comments: [] };
+    }
+    if (!interactions[id].likedIps) {
+      interactions[id].likedIps = [];
+    }
+    
+    if (interactions[id].likedIps.includes(clientIp)) {
+      // Already liked, just return current status (GDPR-compliant, no IP leak)
+      return res.json({ 
+        ok: true, 
+        data: { 
+          likes: interactions[id].likedIps.length, 
+          comments: interactions[id].comments || [],
+          likedByUser: true
+        } 
+      });
+    }
+    
+    interactions[id].likedIps.push(clientIp);
+    interactions[id].likes = interactions[id].likedIps.length;
+    writeErfolgeInteractions(interactions);
+    
+    res.json({ 
+      ok: true, 
+      data: { 
+        likes: interactions[id].likes, 
+        comments: interactions[id].comments || [],
+        likedByUser: true
+      } 
+    });
+  } catch (e) {
+    res.status(500).json({ ok: false, error: e.message });
+  }
+});
+
+app.post('/api/erfolge/interactions/unlike', (req, res) => {
+  try {
+    const { id } = req.body;
+    if (!id) return res.status(400).json({ ok: false, error: 'ID fehlt' });
+    
+    const clientIp = getClientIp(req);
+    const interactions = readErfolgeInteractions();
+    if (interactions[id]) {
+      if (!interactions[id].likedIps) {
+        interactions[id].likedIps = [];
+      }
+      interactions[id].likedIps = interactions[id].likedIps.filter(ip => ip !== clientIp);
+      interactions[id].likes = interactions[id].likedIps.length;
+      writeErfolgeInteractions(interactions);
+    }
+    
+    const current = interactions[id] || { likes: 0, comments: [] };
+    res.json({ 
+      ok: true, 
+      data: { 
+        likes: current.likes || 0, 
+        comments: current.comments || [],
+        likedByUser: false
+      } 
+    });
+  } catch (e) {
+    res.status(500).json({ ok: false, error: e.message });
+  }
+});
+
+app.post('/api/erfolge/interactions/comment', (req, res) => {
+  try {
+    const { id, name, text } = req.body;
+    if (!id || !name || !text) return res.status(400).json({ ok: false, error: 'ID, Name oder Text fehlt' });
+    
+    const clientIp = getClientIp(req);
+    const interactions = readErfolgeInteractions();
+    if (!interactions[id]) {
+      interactions[id] = { likes: 0, likedIps: [], comments: [] };
+    }
+    if (!interactions[id].comments) {
+      interactions[id].comments = [];
+    }
+    
+    // Check if client IP already commented on this success
+    if (interactions[id].comments.some(c => c.ip === clientIp)) {
+      return res.status(400).json({ ok: false, error: 'Du hast bereits einen Kommentar hinterlassen.' });
+    }
+    
+    const newComment = {
+      id: Date.now().toString() + '-' + Math.random().toString(36).slice(2, 7),
+      name: name.trim(),
+      text: text.trim(),
+      date: new Date().toISOString(),
+      ip: clientIp // Store IP for rate limiting
+    };
+    
+    interactions[id].comments.push(newComment);
+    writeErfolgeInteractions(interactions);
+    
+    // Omit IP from comments in public response
+    const sanitizedComments = interactions[id].comments.map(c => ({
+      id: c.id,
+      name: c.name,
+      text: c.text,
+      date: c.date
+    }));
+    
+    res.json({ 
+      ok: true, 
+      data: {
+        likes: typeof interactions[id].likes === 'number' ? interactions[id].likes : (interactions[id].likedIps || []).length,
+        comments: sanitizedComments,
+        likedByUser: (interactions[id].likedIps || []).includes(clientIp),
+        commentedByUser: true
+      }, 
+      comment: {
+        id: newComment.id,
+        name: newComment.name,
+        text: newComment.text,
+        date: newComment.date
+      }
+    });
+  } catch (e) {
+    res.status(500).json({ ok: false, error: e.message });
+  }
+});
+
+// Admin-UI
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'admin.html'));
+});
+
+app.get('/__old', (req, res) => {
+  res.send(`<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Galerie verwalten 📸</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  * { font-family: 'Segoe UI', system-ui, sans-serif; }
+  .drop-zone { border: 3px dashed #e879a0; transition: all .2s; }
+  .drop-zone.drag-over { background: #fdf2f8; border-color: #b30065; transform: scale(1.01); }
+  .photo-card { transition: transform .2s, box-shadow .2s; }
+  .photo-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(179,0,101,.15); }
+  .kategorie-btn.active { background: #8930b0; color: white; }
+  .progress-bar { transition: width .3s; }
+</style>
+</head>
+<body class="bg-pink-50 min-h-screen">
+
+<!-- Header -->
+<header class="bg-white shadow-md shadow-pink-100 sticky top-0 z-50">
+  <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-black text-pink-600 italic uppercase tracking-tight">MiyaKarate</h1>
+      <p class="text-xs text-gray-400 font-medium">Galerie verwalten</p>
+    </div>
+    <a href="http://localhost:1313/galerie/" target="_blank"
+      class="flex items-center gap-2 bg-pink-600 text-white px-5 py-2.5 rounded-full font-bold text-sm hover:bg-pink-700 transition-colors">
+      🌐 Website ansehen
+    </a>
+  </div>
+</header>
+
+<main class="max-w-5xl mx-auto px-6 py-10 space-y-10">
+
+  <!-- Upload-Bereich -->
+  <section class="bg-white rounded-3xl p-8 shadow-sm">
+    <h2 class="text-xl font-black text-gray-800 mb-6 flex items-center gap-2">
+      <span class="text-3xl">📤</span> Fotos hochladen
+    </h2>
+
+    <!-- Drop-Zone -->
+    <div id="dropZone"
+      class="drop-zone rounded-2xl p-12 text-center cursor-pointer mb-6"
+      onclick="document.getElementById('fileInput').click()">
+      <div class="text-6xl mb-4">🖼️</div>
+      <p class="text-xl font-bold text-pink-600 mb-2">Fotos hier reinziehen</p>
+      <p class="text-gray-400 text-sm">oder hier klicken zum Auswählen</p>
+      <p class="text-gray-300 text-xs mt-2">JPG, PNG, HEIC • bis zu 20 MB</p>
+    </div>
+    <input type="file" id="fileInput" multiple accept="image/*" class="hidden"/>
+
+    <!-- Metadaten -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+      <div>
+        <label class="block text-sm font-bold text-gray-600 mb-2">📝 Titel (optional)</label>
+        <input id="uploadTitle" type="text" placeholder="z.B. Landesmeisterschaft 2024"
+          class="w-full border-2 border-pink-100 rounded-xl px-4 py-3 focus:outline-none focus:border-pink-400 text-gray-700"/>
+      </div>
+      <div>
+        <label class="block text-sm font-bold text-gray-600 mb-2">🏷️ Kategorie</label>
+        <div class="flex gap-2 flex-wrap pt-1">
+          <button onclick="setKat(this,'Training')" class="kategorie-btn active px-4 py-2 rounded-full border-2 border-purple-200 text-sm font-bold transition-colors">Training</button>
+          <button onclick="setKat(this,'Wettkämpfe')" class="kategorie-btn px-4 py-2 rounded-full border-2 border-purple-200 text-sm font-bold transition-colors bg-white text-gray-600">Wettkämpfe</button>
+          <button onclick="setKat(this,'Gürtelprüfungen')" class="kategorie-btn px-4 py-2 rounded-full border-2 border-purple-200 text-sm font-bold transition-colors bg-white text-gray-600">Gürtelprüfungen</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vorschau der gewählten Dateien -->
+    <div id="previewList" class="grid grid-cols-3 sm:grid-cols-5 gap-3 mb-6 hidden"></div>
+
+    <!-- Fortschrittsbalken -->
+    <div id="progressWrap" class="hidden mb-4">
+      <div class="h-3 bg-pink-100 rounded-full overflow-hidden">
+        <div id="progressBar" class="progress-bar h-full bg-gradient-to-r from-pink-500 to-purple-500 rounded-full" style="width:0%"></div>
+      </div>
+      <p id="progressText" class="text-sm text-gray-500 mt-2 text-center">Wird hochgeladen…</p>
+    </div>
+
+    <button id="uploadBtn" onclick="startUpload()" disabled
+      class="w-full py-4 rounded-2xl font-black text-xl bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-lg shadow-pink-200 disabled:opacity-40 disabled:cursor-not-allowed hover:scale-[1.01] active:scale-95 transition-transform">
+      ✨ Hochladen!
+    </button>
+  </section>
+
+  <!-- Meine Fotos -->
+  <section class="bg-white rounded-3xl p-8 shadow-sm">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-xl font-black text-gray-800 flex items-center gap-2">
+        <span class="text-3xl">🗂️</span> Meine Fotos
+        <span id="photoCount" class="text-sm font-bold text-pink-500 bg-pink-50 px-3 py-1 rounded-full"></span>
+      </h2>
+      <div class="flex gap-2">
+        <button onclick="filterPhotos('Alle')" class="filter-btn active text-xs font-bold px-3 py-1.5 rounded-full bg-pink-600 text-white">Alle</button>
+        <button onclick="filterPhotos('Training')" class="filter-btn text-xs font-bold px-3 py-1.5 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200">Training</button>
+        <button onclick="filterPhotos('Wettkämpfe')" class="filter-btn text-xs font-bold px-3 py-1.5 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200">Wettkämpfe</button>
+        <button onclick="filterPhotos('Gürtelprüfungen')" class="filter-btn text-xs font-bold px-3 py-1.5 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200">Gürtel</button>
+      </div>
+    </div>
+    <div id="photoGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+      <div class="col-span-full text-center py-16 text-gray-300">
+        <div class="text-5xl mb-3">📭</div>
+        <p class="font-bold">Noch keine Fotos</p>
+        <p class="text-sm">Lad dein erstes Foto hoch!</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Edit Modal -->
+<div id="editModal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+  <div class="bg-white rounded-3xl p-8 w-full max-w-md shadow-2xl">
+    <h3 class="text-xl font-black text-gray-800 mb-6">✏️ Foto bearbeiten</h3>
+    <input type="hidden" id="editId"/>
+    <div class="space-y-4">
+      <div>
+        <label class="block text-sm font-bold text-gray-600 mb-2">Titel</label>
+        <input id="editTitle" type="text"
+          class="w-full border-2 border-pink-100 rounded-xl px-4 py-3 focus:outline-none focus:border-pink-400 text-gray-700"/>
+      </div>
+      <div>
+        <label class="block text-sm font-bold text-gray-600 mb-2">Kategorie</label>
+        <select id="editKat"
+          class="w-full border-2 border-pink-100 rounded-xl px-4 py-3 focus:outline-none focus:border-pink-400 text-gray-700">
+          <option>Training</option>
+          <option>Wettkämpfe</option>
+          <option>Gürtelprüfungen</option>
+        </select>
+      </div>
+    </div>
+    <div class="flex gap-3 mt-8">
+      <button onclick="saveEdit()" class="flex-1 py-3 rounded-xl font-black bg-gradient-to-r from-pink-500 to-purple-600 text-white hover:scale-[1.02] active:scale-95 transition-transform">💾 Speichern</button>
+      <button onclick="closeModal()" class="px-6 py-3 rounded-xl font-bold bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors">Abbrechen</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-6 py-3 rounded-full font-bold text-sm shadow-xl z-50"></div>
+
+<script>
+  let selectedKat = 'Training';
+  let allPhotos = [];
+  let currentFilter = 'Alle';
+  let pendingFiles = [];  // speichert Dateien aus Drag&Drop UND file input
+
+  function setKat(btn, kat) {
+    selectedKat = kat;
+    document.querySelectorAll('.kategorie-btn').forEach(b => {
+      b.classList.remove('active');
+      b.classList.add('bg-white', 'text-gray-600');
+    });
+    btn.classList.add('active');
+    btn.classList.remove('bg-white', 'text-gray-600');
+  }
+
+  // Drop-Zone
+  const dz = document.getElementById('dropZone');
+  const fi = document.getElementById('fileInput');
+  dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('drag-over'); });
+  dz.addEventListener('dragleave', () => dz.classList.remove('drag-over'));
+  dz.addEventListener('drop', e => {
+    e.preventDefault();
+    dz.classList.remove('drag-over');
+    pendingFiles = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+    showPreviews(pendingFiles);
+  });
+  fi.addEventListener('change', () => {
+    pendingFiles = Array.from(fi.files);
+    showPreviews(pendingFiles);
+  });
+
+  function showPreviews(files) {
+    const list = document.getElementById('previewList');
+    list.innerHTML = '';
+    if (!files.length) { list.classList.add('hidden'); document.getElementById('uploadBtn').disabled = true; return; }
+    list.classList.remove('hidden');
+    document.getElementById('uploadBtn').disabled = false;
+    files.forEach(f => {
+      const url = URL.createObjectURL(f);
+      const div = document.createElement('div');
+      div.className = 'aspect-square rounded-xl overflow-hidden bg-gray-100 relative';
+      div.innerHTML = \`<img src="\${url}" class="w-full h-full object-cover"/>\`;
+      list.appendChild(div);
+    });
+  }
+
+  async function startUpload() {
+    const files = pendingFiles;
+    if (!files.length) return;
+
+    const btn = document.getElementById('uploadBtn');
+    const wrap = document.getElementById('progressWrap');
+    const bar = document.getElementById('progressBar');
+    const txt = document.getElementById('progressText');
+
+    btn.disabled = true;
+    wrap.classList.remove('hidden');
+
+    const fd = new FormData();
+    Array.from(files).forEach(f => fd.append('photos', f));
+    fd.append('title', document.getElementById('uploadTitle').value);
+    fd.append('kategorie', selectedKat);
+
+    // Simulate progress during upload
+    let prog = 0;
+    const ticker = setInterval(() => {
+      prog = Math.min(prog + 3, 90);
+      bar.style.width = prog + '%';
+    }, 100);
+
+    try {
+      const r = await fetch('/api/upload', { method: 'POST', body: fd });
+      clearInterval(ticker);
+      bar.style.width = '100%';
+      txt.textContent = 'Fertig! ✨';
+
+      if (r.ok) {
+        showToast('✅ ' + files.length + ' Foto(s) hochgeladen!');
+        fi.value = '';
+        pendingFiles = [];
+        document.getElementById('previewList').innerHTML = '';
+        document.getElementById('previewList').classList.add('hidden');
+        document.getElementById('uploadTitle').value = '';
+        setTimeout(() => { wrap.classList.add('hidden'); bar.style.width = '0%'; btn.disabled = false; }, 1500);
+        loadPhotos();
+      } else {
+        showToast('❌ Fehler beim Hochladen');
+        btn.disabled = false;
+      }
+    } catch(e) {
+      clearInterval(ticker);
+      showToast('❌ Verbindungsfehler');
+      btn.disabled = false;
+    }
+  }
+
+  async function loadPhotos() {
+    const r = await fetch('/api/photos');
+    const data = await r.json();
+    allPhotos = data.photos || [];
+    renderPhotos();
+  }
+
+  function renderPhotos() {
+    const grid = document.getElementById('photoGrid');
+    const count = document.getElementById('photoCount');
+    const filtered = currentFilter === 'Alle' ? allPhotos : allPhotos.filter(p => p.kategorie === currentFilter);
+
+    count.textContent = allPhotos.length + ' Fotos';
+
+    if (!filtered.length) {
+      grid.innerHTML = \`<div class="col-span-full text-center py-16 text-gray-300">
+        <div class="text-5xl mb-3">\${currentFilter === 'Alle' ? '📭' : '🔍'}</div>
+        <p class="font-bold">\${currentFilter === 'Alle' ? 'Noch keine Fotos' : 'Keine Fotos in dieser Kategorie'}</p>
+        \${currentFilter === 'Alle' ? '<p class="text-sm">Lad dein erstes Foto hoch!</p>' : ''}
+      </div>\`;
+      return;
+    }
+
+    const katColors = { 'Training': 'bg-pink-100 text-pink-700', 'Wettkämpfe': 'bg-purple-100 text-purple-700', 'Gürtelprüfungen': 'bg-amber-100 text-amber-700' };
+
+    grid.innerHTML = filtered.map(p => \`
+      <div class="photo-card group relative bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100" data-id="\${p.id}" data-kat="\${p.kategorie}">
+        <div class="aspect-square overflow-hidden">
+          <img src="/images/\${p.thumb}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="\${p.title}"/>
+        </div>
+        <div class="p-3">
+          <p class="font-bold text-gray-800 text-sm truncate mb-1">\${p.title}</p>
+          <span class="text-[10px] font-bold px-2 py-0.5 rounded-full \${katColors[p.kategorie] || 'bg-gray-100 text-gray-600'}">\${p.kategorie}</span>
+        </div>
+        <div class="absolute top-2 right-2 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+          <button onclick="openEdit('\${p.id}',\`\${p.title}\`,'\${p.kategorie}')"
+            class="w-8 h-8 bg-white rounded-full shadow-md flex items-center justify-center text-base hover:scale-110 transition-transform">✏️</button>
+          <button onclick="deletePhoto('\${p.id}')"
+            class="w-8 h-8 bg-red-500 rounded-full shadow-md flex items-center justify-center text-base hover:scale-110 transition-transform">🗑️</button>
+        </div>
+      </div>
+    \`).join('');
+  }
+
+  function filterPhotos(kat) {
+    currentFilter = kat;
+    document.querySelectorAll('.filter-btn').forEach(b => {
+      b.classList.remove('bg-pink-600', 'text-white');
+      b.classList.add('bg-gray-100', 'text-gray-600');
+    });
+    event.target.classList.add('bg-pink-600', 'text-white');
+    event.target.classList.remove('bg-gray-100', 'text-gray-600');
+    renderPhotos();
+  }
+
+  function openEdit(id, title, kat) {
+    document.getElementById('editId').value = id;
+    document.getElementById('editTitle').value = title;
+    document.getElementById('editKat').value = kat;
+    document.getElementById('editModal').classList.remove('hidden');
+  }
+
+  function closeModal() {
+    document.getElementById('editModal').classList.add('hidden');
+  }
+
+  async function saveEdit() {
+    const id = document.getElementById('editId').value;
+    const r = await fetch('/api/photo/' + id, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        title: document.getElementById('editTitle').value,
+        kategorie: document.getElementById('editKat').value
+      })
+    });
+    if (r.ok) {
+      closeModal();
+      showToast('✅ Gespeichert!');
+      loadPhotos();
+    }
+  }
+
+  async function deletePhoto(id) {
+    if (!confirm('Foto wirklich löschen? Das kann nicht rückgängig gemacht werden.')) return;
+    const r = await fetch('/api/photo/' + id, { method: 'DELETE' });
+    if (r.ok) {
+      showToast('🗑️ Foto gelöscht');
+      loadPhotos();
+    }
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.remove('hidden');
+    setTimeout(() => t.classList.add('hidden'), 3000);
+  }
+
+  // Enter in Edit-Modal
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeModal();
+    if (e.key === 'Enter' && !document.getElementById('editModal').classList.contains('hidden')) saveEdit();
+  });
+
+  loadPhotos();
+</script>
+</body>
+</html>`);
+});
+
+
+// --- Erfolge Interaktionen (Likes & Kommentare) ---
+const INTERACTIONS_FILE = path.join(__dirname, 'data', 'erfolge_interactions.json');
+
+function readInteractions() {
+  if (!fs.existsSync(INTERACTIONS_FILE)) return {};
+  return JSON.parse(fs.readFileSync(INTERACTIONS_FILE, 'utf8'));
+}
+
+function writeInteractions(data) {
+  fs.writeFileSync(INTERACTIONS_FILE, JSON.stringify(data, null, 2));
+}
+
+app.get('/api/erfolge-interactions', (req, res) => {
+  res.json(readInteractions());
+});
+
+app.put('/api/erfolge-interactions', (req, res) => {
+  writeInteractions(req.body);
+  res.json({ ok: true });
+  rebuildAndDeploy();
+});
+
+app.delete('/api/erfolge-interactions/comment/:erfolgId/:commentId', (req, res) => {
+  const { erfolgId, commentId } = req.params;
+  const interactions = readInteractions();
+  if (interactions[erfolgId] && interactions[erfolgId].comments) {
+    interactions[erfolgId].comments = interactions[erfolgId].comments.filter(c => c.id !== commentId);
+    writeInteractions(interactions);
+    res.json({ ok: true });
+    rebuildAndDeploy();
+  } else {
+    res.status(404).json({ error: 'Not found' });
+  }
+});
+
+app.listen(PORT, () => {
+  console.log(`\n✨ MiyaKarate Admin läuft auf http://localhost:${PORT}\n`);
+});

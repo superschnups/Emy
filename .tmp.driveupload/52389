@@ -1,0 +1,2436 @@
+<!DOCTYPE html>
+<html class="light" lang="de">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MiyaKarate Admin</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "outline-variant": "#abadae",
+        "on-error-container": "#510017",
+        "on-tertiary": "#f5f2f1",
+        "on-surface": "#2c2f30",
+        "on-secondary": "#ffedff",
+        "on-primary-fixed-variant": "#5c0031",
+        "secondary": "#8930b0",
+        "primary-fixed": "#ff6ea9",
+        "secondary-dim": "#7c20a3",
+        "on-secondary-fixed-variant": "#7d21a4",
+        "error-container": "#f74b6d",
+        "on-tertiary-fixed": "#515050",
+        "surface-container-lowest": "#ffffff",
+        "background": "#f5f6f7",
+        "inverse-on-surface": "#9b9d9e",
+        "surface-container": "#e6e8ea",
+        "tertiary": "#5c5b5b",
+        "error": "#b41340",
+        "surface-dim": "#d1d5d7",
+        "surface": "#f5f6f7",
+        "on-secondary-fixed": "#580079",
+        "surface-tint": "#b30065",
+        "surface-container-low": "#eff1f2",
+        "on-tertiary-fixed-variant": "#6e6d6d",
+        "inverse-surface": "#0c0f10",
+        "tertiary-dim": "#504f4f",
+        "on-primary-fixed": "#000000",
+        "surface-variant": "#dadddf",
+        "surface-container-high": "#e0e3e4",
+        "on-primary": "#ffeff2",
+        "tertiary-fixed-dim": "#f3f0ef",
+        "tertiary-container": "#ffffff",
+        "on-background": "#2c2f30",
+        "on-surface-variant": "#595c5d",
+        "on-tertiary-container": "#636262",
+        "on-error": "#ffefef",
+        "secondary-fixed": "#f0c1ff",
+        "primary": "#b30065",
+        "tertiary-fixed": "#ffffff",
+        "primary-container": "#ff6ea9",
+        "on-primary-container": "#4b0027",
+        "primary-dim": "#9d0058",
+        "on-secondary-container": "#72129a",
+        "error-dim": "#a70138",
+        "outline": "#757778",
+        "primary-fixed-dim": "#ff4e9e",
+        "secondary-fixed-dim": "#eaaeff",
+        "inverse-primary": "#ff479c",
+        "secondary-container": "#f0c1ff",
+        "surface-container-highest": "#dadddf",
+        "surface-bright": "#f5f6f7"
+      },
+      borderRadius: {
+        DEFAULT: "1rem",
+        lg: "2rem",
+        xl: "3rem",
+        full: "9999px"
+      },
+      fontFamily: {
+        headline: ["Lexend"],
+        body: ["Be Vietnam Pro"],
+        label: ["Be Vietnam Pro"]
+      }
+    }
+  }
+}
+</script>
+<style>
+  body { font-family: 'Be Vietnam Pro', sans-serif; }
+  h1, h2, h3, .font-lexend { font-family: 'Lexend', sans-serif; }
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
+  .drop-active {
+    background: rgba(179, 0, 101, 0.04) !important;
+    border-color: #b30065 !important;
+    transform: scale(1.01);
+  }
+</style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen">
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-zinc-50 flex flex-col py-6 gap-2 z-40">
+  <div class="px-6 mb-8">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-primary-container flex items-center justify-center text-white shadow-lg shadow-primary/20">
+        <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">bolt</span>
+      </div>
+      <div>
+        <h1 class="text-xl font-black text-primary font-lexend" id="adminSiteTitle">MiyaKarate</h1>
+        <p class="text-[10px] uppercase tracking-widest text-zinc-500 font-bold">Admin Panel</p>
+      </div>
+    </div>
+  </div>
+
+  <nav class="flex-1 space-y-1" id="sideNav">
+    <a data-section="overview"
+      class="nav-link active-nav bg-pink-50 text-primary rounded-xl mx-2 flex items-center gap-3 px-4 py-3 font-lexend font-medium hover:translate-x-1 duration-300 transition-all cursor-pointer">
+      <span class="material-symbols-outlined">dashboard</span>
+      <span>Übersicht</span>
+    </a>
+    <a data-section="media"
+      class="nav-link text-zinc-600 hover:bg-zinc-100 rounded-xl mx-2 flex items-center gap-3 px-4 py-3 font-lexend font-medium hover:translate-x-1 duration-300 transition-all cursor-pointer">
+      <span class="material-symbols-outlined">collections</span>
+      <span>Galerie</span>
+    </a>
+    <a data-section="career"
+      class="nav-link text-zinc-600 hover:bg-zinc-100 rounded-xl mx-2 flex items-center gap-3 px-4 py-3 font-lexend font-medium hover:translate-x-1 duration-300 transition-all cursor-pointer">
+      <span class="material-symbols-outlined">emoji_events</span>
+      <span>Erfolge</span>
+    </a>
+    <a data-section="community"
+      class="nav-link text-zinc-600 hover:bg-zinc-100 rounded-xl mx-2 flex items-center gap-3 px-4 py-3 font-lexend font-medium hover:translate-x-1 duration-300 transition-all cursor-pointer">
+      <span class="material-symbols-outlined">forum</span>
+      <span>Gästebuch</span>
+    </a>
+    <a data-section="homepage"
+      class="nav-link text-zinc-600 hover:bg-zinc-100 rounded-xl mx-2 flex items-center gap-3 px-4 py-3 font-lexend font-medium hover:translate-x-1 duration-300 transition-all cursor-pointer">
+      <span class="material-symbols-outlined">home</span>
+      <span>Startseite</span>
+    </a>
+    <a data-section="uebermich"
+      class="nav-link text-zinc-600 hover:bg-zinc-100 rounded-xl mx-2 flex items-center gap-3 px-4 py-3 font-lexend font-medium hover:translate-x-1 duration-300 transition-all cursor-pointer">
+      <span class="material-symbols-outlined">person</span>
+      <span>Über mich</span>
+    </a>
+    <a data-section="settings"
+      class="nav-link text-zinc-600 hover:bg-zinc-100 rounded-xl mx-2 flex items-center gap-3 px-4 py-3 font-lexend font-medium hover:translate-x-1 duration-300 transition-all cursor-pointer">
+      <span class="material-symbols-outlined">tune</span>
+      <span>Einstellungen</span>
+    </a>
+  </nav>
+
+  <div class="px-4 mt-4">
+    <button id="btnAddContent"
+      class="w-full py-4 bg-gradient-to-r from-primary to-primary-container text-on-primary rounded-xl font-lexend font-bold text-sm shadow-xl shadow-primary/20 active:scale-95 transition-all">
+      Inhalt hinzufügen
+    </button>
+  </div>
+
+  <div class="mt-auto border-t border-zinc-200 pt-4">
+    <a id="viewWebsiteLink" href="http://localhost:1313/galerie/" target="_blank"
+      class="text-zinc-600 hover:bg-zinc-100 rounded-xl mx-2 flex items-center gap-3 px-4 py-3 font-lexend font-medium transition-all">
+      <span class="material-symbols-outlined">open_in_new</span>
+      <span>Website ansehen</span>
+    </a>
+  </div>
+</aside>
+
+<!-- ═══ MAIN ═══ -->
+<main class="ml-64 p-8 min-h-screen">
+
+  <!-- Top Header -->
+  <header class="flex justify-between items-center mb-10">
+    <div>
+      <h2 class="text-3xl font-extrabold text-on-surface font-lexend tracking-tight" id="pageTitle">Übersicht</h2>
+      <p class="text-on-surface-variant font-medium" id="pageSubtitle">Willkommen zurück. Hier ist dein aktueller Stand.</p>
+    </div>
+    <div class="flex items-center gap-4">
+      <button class="w-12 h-12 rounded-full bg-surface-container-low flex items-center justify-center text-on-surface-variant hover:bg-surface-container transition-all">
+        <span class="material-symbols-outlined">notifications</span>
+      </button>
+      <div class="flex items-center gap-3 bg-surface-container-low px-4 py-2 rounded-full">
+        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary-container flex items-center justify-center text-white text-xs font-black">M</div>
+        <span class="font-lexend font-bold text-sm" id="adminSiteTitleHeader">MiyaKarate</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ══ SECTION: OVERVIEW ══ -->
+  <div id="section-overview">
+    <!-- Stats Bento -->
+    <div class="grid grid-cols-12 gap-6 mb-8">
+      <div class="col-span-12 lg:col-span-8 grid grid-cols-3 gap-4 bg-surface-container-low p-6 rounded-xl">
+        <div class="p-6 bg-surface-container-lowest rounded-lg border-l-4 border-primary">
+          <p class="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-2">Fotos gesamt</p>
+          <h3 class="text-4xl font-black text-on-surface font-lexend" id="statPhotos">—</h3>
+          <div class="mt-2 text-primary font-bold text-xs flex items-center gap-1">
+            <span class="material-symbols-outlined text-sm">photo_library</span> In der Galerie
+          </div>
+        </div>
+        <div class="p-6 bg-surface-container-lowest rounded-lg border-l-4 border-secondary">
+          <p class="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-2">Kategorien</p>
+          <h3 class="text-4xl font-black text-on-surface font-lexend" id="statCats">—</h3>
+          <div class="mt-2 text-secondary font-bold text-xs flex items-center gap-1">
+            <span class="material-symbols-outlined text-sm">label</span> <span id="statCatsSublabel">Training, Wettkampf, Gürtel</span>
+          </div>
+        </div>
+        <div class="p-6 bg-surface-container-lowest rounded-lg border-l-4 border-on-tertiary-fixed-variant">
+          <p class="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-2">Letzter Upload</p>
+          <h3 class="text-xl font-black text-on-surface font-lexend leading-tight" id="statLast">—</h3>
+          <div class="mt-2 text-zinc-500 font-bold text-xs flex items-center gap-1">
+            <span class="material-symbols-outlined text-sm">schedule</span> Zuletzt hochgeladen
+          </div>
+        </div>
+      </div>
+
+      <!-- Fast Actions -->
+      <div class="col-span-12 lg:col-span-4 bg-gradient-to-br from-secondary to-secondary-dim p-8 rounded-xl relative overflow-hidden flex flex-col justify-between">
+        <div class="relative z-10">
+          <h4 class="text-2xl font-black text-white font-lexend mb-2">Schnellzugriff</h4>
+          <p class="text-white/80 text-sm font-medium">Direkt loslegen.</p>
+        </div>
+        <div class="grid grid-cols-2 gap-3 relative z-10 mt-6">
+          <button data-section="media"
+            class="nav-trigger bg-white/20 backdrop-blur-md border border-white/30 text-white rounded-lg py-3 px-2 flex flex-col items-center gap-2 hover:bg-white/30 transition-all active:scale-95">
+            <span class="material-symbols-outlined">upload_file</span>
+            <span class="text-[10px] font-bold uppercase tracking-tighter">Fotos hochladen</span>
+          </button>
+          <button data-section="media"
+            class="nav-trigger bg-white/20 backdrop-blur-md border border-white/30 text-white rounded-lg py-3 px-2 flex flex-col items-center gap-2 hover:bg-white/30 transition-all active:scale-95">
+            <span class="material-symbols-outlined">grid_view</span>
+            <span class="text-[10px] font-bold uppercase tracking-tighter">Galerie öffnen</span>
+          </button>
+        </div>
+        <div class="absolute -right-10 -bottom-10 opacity-20 transform -rotate-12">
+          <span class="material-symbols-outlined text-[160px] text-white">sports_martial_arts</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Kategorie-Übersicht -->
+    <div class="bg-surface-container-low rounded-xl p-6 mb-8">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-extrabold font-lexend">Fotos nach Kategorie</h3>
+        <button type="button" id="overviewAddCatBtn"
+          class="flex items-center gap-1 text-xs font-bold text-primary hover:bg-pink-50 px-3 py-1.5 rounded-full transition-all">
+          <span class="material-symbols-outlined text-sm">add</span> Neue Kategorie
+        </button>
+      </div>
+      <div class="space-y-4" id="catOverviewList">
+        <p class="text-sm text-on-surface-variant">Wird geladen…</p>
+      </div>
+      <div id="overviewAddCatForm" class="hidden mt-4 flex gap-2">
+        <input id="overviewNewCatInput" type="text" placeholder="Kategoriename…"
+          class="flex-1 bg-surface-container rounded-DEFAULT px-3 py-2 text-on-surface placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"/>
+        <button type="button" id="overviewSaveCatBtn"
+          class="px-4 py-2 rounded-xl font-bold text-sm bg-primary text-on-primary active:scale-95 transition-all">
+          Hinzufügen
+        </button>
+        <button type="button" id="overviewCancelCatBtn"
+          class="px-3 py-2 rounded-xl font-bold text-sm bg-surface-container text-on-surface-variant">
+          ✕
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SECTION: MEDIA LIBRARY ══ -->
+  <div id="section-media" class="hidden">
+
+    <!-- Galerie Seiten-Texte -->
+    <section class="bg-surface-container-lowest rounded-xl p-8 mb-8 shadow-sm">
+      <h3 class="text-xl font-black font-lexend text-on-surface mb-8 flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary">text_fields</span>
+        Galerie – Seiten-Texte
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Badge (oben)</label>
+          <input id="galBadge" type="text" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"/>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Überschrift (normal)</label>
+          <input id="galHeadingMain" type="text" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm font-bold uppercase"/>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Überschrift (farbig)</label>
+          <input id="galHeadingColored" type="text" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm font-bold uppercase"/>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Beschreibungstext</label>
+          <textarea id="galDescription" rows="3" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm resize-none"></textarea>
+        </div>
+      </div>
+      <h4 class="text-sm font-black font-lexend text-on-surface-variant uppercase tracking-widest mb-4">Stats Ribbon (Zähler unter dem Grid)</h4>
+      <div class="mb-4">
+        <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Überschrift Ribbon</label>
+        <input id="galRibbonHeading" type="text" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm font-bold"/>
+      </div>
+      <div class="mb-6">
+        <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Beschreibung Ribbon</label>
+        <textarea id="galRibbonDesc" rows="2" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm resize-none"></textarea>
+      </div>
+      <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-3">Statistiken (Wert + Bezeichnung)</label>
+      <div class="space-y-3 mb-8" id="galStatsFields"></div>
+      <button id="galSaveBtn" type="button" class="w-full py-4 rounded-xl font-black text-lg bg-gradient-to-r from-primary to-primary-container text-on-primary shadow-lg shadow-primary/20 active:scale-95 transition-all font-lexend">
+        Galerie-Texte speichern & deployen
+      </button>
+    </section>
+
+    <!-- Upload -->
+    <section class="bg-surface-container-lowest rounded-xl p-8 mb-8 shadow-sm">
+      <h3 class="text-xl font-black font-lexend text-on-surface mb-6 flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary">upload_file</span>
+        Fotos hochladen
+      </h3>
+
+      <label id="dropZone" for="fileInput"
+        class="block border-2 border-dashed border-primary/30 bg-surface-container-low rounded-xl p-12 text-center cursor-pointer mb-6 transition-all">
+        <span class="material-symbols-outlined text-primary block mb-4" style="font-size:3rem;">add_photo_alternate</span>
+        <p class="text-lg font-bold text-primary mb-1 pointer-events-none font-lexend">Fotos hier reinziehen</p>
+        <p class="text-on-surface-variant text-sm pointer-events-none">oder klicken zum Auswählen</p>
+        <p class="text-zinc-400 text-xs mt-2 pointer-events-none">JPG, PNG, HEIC · mehrere auf einmal möglich</p>
+      </label>
+      <input type="file" id="fileInput" multiple accept="image/*" class="sr-only"/>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Titel (optional)</label>
+          <input id="uploadTitle" type="text" placeholder="z.B. Landesmeisterschaft 2024"
+            class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"/>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Kategorie</label>
+          <div class="flex gap-2 flex-wrap pt-1" id="katButtons"></div>
+        </div>
+      </div>
+
+      <div id="previewList" class="grid grid-cols-4 sm:grid-cols-6 gap-3 mb-6"></div>
+
+      <div id="progressWrap" class="hidden mb-4">
+        <div class="h-2 bg-surface-variant rounded-full overflow-hidden">
+          <div id="progressBar" class="h-full bg-gradient-to-r from-primary to-primary-container rounded-full transition-all duration-300" style="width:0%"></div>
+        </div>
+        <p id="progressText" class="text-xs text-on-surface-variant mt-2 text-center font-medium">Wird hochgeladen…</p>
+      </div>
+
+      <button id="uploadBtn" type="button" disabled
+        class="w-full py-4 rounded-xl font-black text-lg bg-gradient-to-r from-primary to-primary-container text-on-primary shadow-lg shadow-primary/20 disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 transition-all font-lexend">
+        Hochladen
+      </button>
+      <p id="uploadStatus" class="text-center text-xs mt-3 text-on-surface-variant font-medium"></p>
+    </section>
+
+    <!-- Galerie -->
+    <section class="bg-surface-container-lowest rounded-xl p-8 shadow-sm">
+      <div class="flex items-center justify-between mb-6 flex-wrap gap-3">
+        <h3 class="text-xl font-black font-lexend text-on-surface flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary">photo_library</span>
+          Galerie
+          <span id="photoCount" class="text-xs font-bold text-primary bg-pink-50 px-3 py-1 rounded-full">0 Fotos</span>
+        </h3>
+        <div class="flex gap-2 flex-wrap" id="filterButtons">
+          <button type="button" data-filter="Alle"
+            class="filter-btn text-xs font-bold px-3 py-1.5 rounded-full bg-primary text-on-primary">Alle</button>
+        </div>
+      </div>
+      <div id="photoGrid"></div>
+    </section>
+  </div>
+
+  <!-- ══ SECTION: HOMEPAGE ══ -->
+  <div id="section-homepage" class="hidden">
+    <section class="bg-surface-container-lowest rounded-xl p-8 shadow-sm">
+      <h3 class="text-xl font-black font-lexend text-on-surface mb-8 flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary">home</span>
+        Startseite bearbeiten
+      </h3>
+
+      <!-- Hero-Bild -->
+      <div class="mb-8">
+        <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-3">Hero-Bild</label>
+        <div class="flex gap-6 items-start flex-wrap">
+          <div class="w-48 h-48 rounded-xl overflow-hidden bg-surface-container flex-shrink-0">
+            <img id="heroPreview" src="" alt="Hero-Vorschau" class="w-full h-full object-cover hidden"/>
+            <div id="heroPlaceholder" class="w-full h-full flex flex-col items-center justify-center text-on-surface-variant">
+              <span class="material-symbols-outlined text-4xl mb-2">image</span>
+              <span class="text-xs font-medium">Kein Bild</span>
+            </div>
+          </div>
+          <div class="flex-1 min-w-48">
+            <label for="heroFileInput"
+              class="block border-2 border-dashed border-primary/30 bg-surface-container-low rounded-xl p-6 text-center cursor-pointer hover:border-primary/60 transition-all mb-3">
+              <span class="material-symbols-outlined text-primary block mb-2">upload_file</span>
+              <p class="text-sm font-bold text-primary font-lexend">Bild auswählen</p>
+              <p class="text-xs text-on-surface-variant mt-1">JPG, PNG, HEIC</p>
+            </label>
+            <input type="file" id="heroFileInput" accept="image/*" class="sr-only"/>
+            <button id="heroUploadBtn" disabled
+              class="w-full py-3 rounded-xl font-bold text-sm bg-gradient-to-r from-primary to-primary-container text-on-primary shadow-md shadow-primary/20 disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 transition-all font-lexend">
+              Bild hochladen
+            </button>
+            <p id="heroUploadStatus" class="text-xs text-on-surface-variant mt-2 text-center"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Badge-Text -->
+      <div class="mb-6">
+        <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Badge-Text (über der Überschrift)</label>
+        <input id="heroBadge" type="text"
+          class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm font-medium tracking-widest uppercase"/>
+      </div>
+
+      <!-- Beschreibungstext -->
+      <div class="mb-8">
+        <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Beschreibungstext</label>
+        <textarea id="heroDescription" rows="4"
+          class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm leading-relaxed resize-none"></textarea>
+      </div>
+
+      <!-- Stats -->
+      <div class="mb-8">
+        <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-3">Statistiken</label>
+        <div class="space-y-3" id="statsFields"></div>
+      </div>
+
+      <!-- Hero-Karte -->
+      <h4 class="text-sm font-black font-lexend text-on-surface-variant uppercase tracking-widest mt-8 mb-4">Hero-Karte (Rang auf dem Bild)</h4>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Rang (z.B. Blaugurt)</label>
+          <input id="hpKarteRang" type="text" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"/>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Status (z.B. Status 2024)</label>
+          <input id="hpKarteStatus" type="text" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"/>
+        </div>
+      </div>
+
+      <!-- Prüfungs-Karte -->
+      <h4 class="text-sm font-black font-lexend text-on-surface-variant uppercase tracking-widest mt-8 mb-4">Prüfungs-Karte (pinke Box)</h4>
+      <div class="grid grid-cols-1 gap-4 mb-8">
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Titel</label>
+          <input id="hpPruefungTitel" type="text" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"/>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Beschreibung</label>
+          <textarea id="hpPruefungDesc" rows="2" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm resize-none"></textarea>
+        </div>
+      </div>
+
+      <!-- Dojo-Karte -->
+      <h4 class="text-sm font-black font-lexend text-on-surface-variant uppercase tracking-widest mt-8 mb-4">Dojo-Karte (graue Box)</h4>
+      <div class="grid grid-cols-1 gap-4 mb-8">
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Titel</label>
+          <input id="hpDojoTitel" type="text" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"/>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Beschreibung</label>
+          <textarea id="hpDojoDesc" rows="2" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm resize-none"></textarea>
+        </div>
+      </div>
+
+      <!-- CTA-Sektion -->
+      <h4 class="text-sm font-black font-lexend text-on-surface-variant uppercase tracking-widest mt-8 mb-4">Galerie-CTA (dunkler Bereich)</h4>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Überschrift (normal)</label>
+          <input id="hpCtaMain" type="text" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"/>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Überschrift (farbig/akzent)</label>
+          <input id="hpCtaColored" type="text" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"/>
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Beschreibungstext</label>
+          <textarea id="hpCtaDesc" rows="2" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm resize-none"></textarea>
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Button-Text</label>
+          <input id="hpCtaBtn" type="text" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm font-bold uppercase tracking-widest"/>
+        </div>
+      </div>
+
+      <button id="heroSaveBtn"
+        class="w-full py-4 rounded-xl font-black text-lg bg-gradient-to-r from-primary to-primary-container text-on-primary shadow-lg shadow-primary/20 active:scale-95 transition-all font-lexend">
+        Änderungen speichern
+      </button>
+    </section>
+  </div>
+
+  <!-- ══ SECTION: ÜBER MICH ══ -->
+  <div id="section-uebermich" class="hidden">
+    <section class="bg-surface-container-lowest rounded-xl p-8 shadow-sm mb-8">
+      <h3 class="text-xl font-black font-lexend text-on-surface mb-8 flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary">person</span>
+        Über mich – Seite bearbeiten
+      </h3>
+
+      <!-- Bild -->
+      <div class="mb-8">
+        <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-3">Portrait-Bild</label>
+        <div class="flex gap-6 items-start flex-wrap">
+          <div class="w-36 h-44 rounded-xl overflow-hidden bg-surface-container flex-shrink-0">
+            <img id="umPreview" src="" alt="Portrait" class="w-full h-full object-cover hidden"/>
+            <div id="umPlaceholder" class="w-full h-full flex flex-col items-center justify-center text-on-surface-variant">
+              <span class="material-symbols-outlined text-4xl mb-2">image</span>
+              <span class="text-xs font-medium">Kein Bild</span>
+            </div>
+          </div>
+          <div class="flex-1 min-w-48">
+            <label for="umFileInput" class="block border-2 border-dashed border-primary/30 bg-surface-container-low rounded-xl p-6 text-center cursor-pointer hover:border-primary/60 transition-all mb-3">
+              <span class="material-symbols-outlined text-primary block mb-2">upload_file</span>
+              <p class="text-sm font-bold text-primary font-lexend">Bild auswählen</p>
+              <p class="text-xs text-on-surface-variant mt-1">JPG, PNG, HEIC</p>
+            </label>
+            <input type="file" id="umFileInput" accept="image/*" class="sr-only"/>
+            <button id="umUploadBtn" disabled class="w-full py-3 rounded-xl font-bold text-sm bg-gradient-to-r from-primary to-primary-container text-on-primary shadow-md shadow-primary/20 disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 transition-all font-lexend">Bild hochladen</button>
+            <p id="umUploadStatus" class="text-xs text-on-surface-variant mt-2 text-center"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hero-Texte -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Badge (z.B. "Meine Reise")</label>
+          <input id="umBadge" type="text" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"/>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Aktueller Rang</label>
+          <input id="umRang" type="text" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"/>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Überschrift Zeile 1</label>
+          <input id="umH1" type="text" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm font-black uppercase"/>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Überschrift Zeile 2 (farbig)</label>
+          <input id="umH2" type="text" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm font-black uppercase"/>
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Überschrift Rest</label>
+          <input id="umHSuffix" type="text" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm font-black uppercase"/>
+        </div>
+      </div>
+
+      <div class="mb-6">
+        <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Beschreibungstext</label>
+        <textarea id="umDesc" rows="4" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm leading-relaxed resize-none"></textarea>
+      </div>
+
+      <!-- Aktiver Gurt -->
+      <div class="mb-6">
+        <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Aktiver Gurt</label>
+        <select id="umGurt" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm">
+          <option>Weiß</option><option>Gelb</option><option>Orange</option><option>Grün</option>
+          <option>Blau</option><option>Lila</option><option>Braun</option><option>Schwarz</option>
+        </select>
+      </div>
+
+      <!-- Stats -->
+      <h4 class="text-sm font-black font-lexend text-on-surface-variant uppercase tracking-widest mt-8 mb-4">Statistik-Boxen</h4>
+      <div id="umStatsFields" class="space-y-3 mb-6"></div>
+
+      <!-- Zitat -->
+      <h4 class="text-sm font-black font-lexend text-on-surface-variant uppercase tracking-widest mt-8 mb-4">Zitat</h4>
+      <div class="mb-4">
+        <textarea id="umZitat" rows="3" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm resize-none"></textarea>
+      </div>
+      <div class="mb-8">
+        <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Autor</label>
+        <input id="umZitatAutor" type="text" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"/>
+      </div>
+
+      <button id="umSaveBtn" class="w-full py-4 rounded-xl font-black text-lg bg-gradient-to-r from-primary to-primary-container text-on-primary shadow-lg shadow-primary/20 active:scale-95 transition-all font-lexend">
+        Änderungen speichern & deployen
+      </button>
+    </section>
+  </div>
+
+  <!-- ══ SECTION: CAREER ══ -->
+  <div id="section-career" class="hidden">
+    <section class="bg-surface-container-lowest rounded-xl p-8 shadow-sm">
+      <h3 class="text-xl font-black font-lexend text-on-surface mb-8 flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary">emoji_events</span>
+        Erfolge-Seite bearbeiten
+      </h3>
+
+      <!-- Hero-Bild -->
+      <h4 class="text-sm font-black font-lexend text-on-surface-variant uppercase tracking-widest mb-4">Hero-Bild</h4>
+      <div class="flex gap-6 items-start flex-wrap mb-8">
+        <div class="w-40 h-48 rounded-xl overflow-hidden bg-surface-container flex-shrink-0">
+          <img id="efHeroPreview" src="" alt="Erfolge Hero" class="w-full h-full object-cover hidden"/>
+          <div id="efHeroPlaceholder" class="w-full h-full flex flex-col items-center justify-center text-on-surface-variant">
+            <span class="material-symbols-outlined text-4xl mb-2">image</span>
+            <span class="text-xs font-medium">Kein Bild</span>
+          </div>
+        </div>
+        <div class="flex-1 min-w-48">
+          <label for="efHeroFileInput" class="block border-2 border-dashed border-primary/30 bg-surface-container-low rounded-xl p-6 text-center cursor-pointer hover:border-primary/60 transition-all mb-3">
+            <span class="material-symbols-outlined text-primary block mb-2">upload_file</span>
+            <p class="text-sm font-bold text-primary font-lexend">Bild auswählen</p>
+            <p class="text-xs text-on-surface-variant mt-1">JPG, PNG, HEIC</p>
+          </label>
+          <input type="file" id="efHeroFileInput" accept="image/*" class="sr-only"/>
+          <button id="efHeroUploadBtn" disabled class="w-full py-3 rounded-xl font-bold text-sm bg-gradient-to-r from-primary to-primary-container text-on-primary shadow-md shadow-primary/20 disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 transition-all font-lexend">Bild hochladen</button>
+          <p id="efHeroUploadStatus" class="text-xs text-on-surface-variant mt-2 text-center"></p>
+        </div>
+      </div>
+
+      <!-- Hero-Texte -->
+      <h4 class="text-sm font-black font-lexend text-on-surface-variant uppercase tracking-widest mb-4">Hero-Text</h4>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Badge-Text</label>
+          <input id="efBadge" type="text" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"/>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Aktueller Rang (Karte)</label>
+          <input id="efRang" type="text" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"/>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Überschrift (normal)</label>
+          <input id="efHeadingMain" type="text" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm font-black uppercase"/>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Überschrift (farbig)</label>
+          <input id="efHeadingColored" type="text" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm font-black uppercase"/>
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Beschreibungstext</label>
+          <textarea id="efDescription" rows="3" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm leading-relaxed resize-none"></textarea>
+        </div>
+      </div>
+
+      <!-- Haupt-Meilenstein -->
+      <h4 class="text-sm font-black font-lexend text-on-surface-variant uppercase tracking-widest mt-8 mb-4">Haupt-Meilenstein (große Karte)</h4>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Event / Titel</label>
+          <input id="efMeilensteinEvent" type="text" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"/>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Platz / Ergebnis</label>
+          <input id="efMeilensteinPlatz" type="text" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"/>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Jahr</label>
+          <input id="efMeilensteinJahr" type="text" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"/>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Ort</label>
+          <input id="efMeilensteinOrt" type="text" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"/>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Kategorie</label>
+          <input id="efMeilensteinKat" type="text" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"/>
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Beschreibung</label>
+          <textarea id="efMeilensteinDesc" rows="3" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm resize-none"></textarea>
+        </div>
+      </div>
+
+      <!-- Weitere Auszeichnungen -->
+      <h4 class="text-sm font-black font-lexend text-on-surface-variant uppercase tracking-widest mt-8 mb-4">Weitere Auszeichnungen</h4>
+      <div id="efWeitereFields" class="space-y-3 mb-3"></div>
+      <button id="efWeitereAdd" type="button" class="flex items-center gap-2 text-sm font-bold text-primary border border-primary/30 rounded-xl px-4 py-2 hover:bg-pink-50 transition-all mb-8">
+        <span class="material-symbols-outlined text-base">add</span> Auszeichnung hinzufügen
+      </button>
+
+      <!-- Statistiken -->
+      <h4 class="text-sm font-black font-lexend text-on-surface-variant uppercase tracking-widest mt-8 mb-2">Statistiken (3 Boxen)</h4>
+      <p class="text-xs text-on-surface-variant mb-4">Box 1 = lila, Box 2 = grau, Box 3 = weiß mit pinker Linie.</p>
+      <div id="efStatsFields" class="space-y-3 mb-8"></div>
+
+      <!-- Zitat -->
+      <h4 class="text-sm font-black font-lexend text-on-surface-variant uppercase tracking-widest mt-8 mb-4">Zitat</h4>
+      <div class="mb-4">
+        <textarea id="efZitatText" rows="3" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm resize-none"></textarea>
+      </div>
+      <div class="mb-8">
+        <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Autor</label>
+        <input id="efZitatAutor" type="text" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"/>
+      </div>
+
+      <button id="careerSaveBtn" class="w-full py-4 rounded-xl font-black text-lg bg-gradient-to-r from-primary to-primary-container text-on-primary shadow-lg shadow-primary/20 active:scale-95 transition-all font-lexend mb-12">
+        Erfolge-Seite speichern & deployen
+      </button>
+
+      <!-- Einzelerfolge (Markdown) -->
+      <h3 class="text-xl font-black font-lexend text-on-surface mb-6 flex items-center gap-2 pt-8 border-t border-zinc-200">
+        <span class="material-symbols-outlined text-primary">article</span>
+        Einzelerfolge (Berichte)
+      </h3>
+      <p class="text-sm text-on-surface-variant mb-6">Hier kannst du die Berichte bearbeiten, die auf der Startseite unter "Highlights" erscheinen.</p>
+      <div id="individualSuccessList" class="space-y-4"></div>
+    </section>
+  </div>
+
+  <!-- ══ SECTION: COMMUNITY ══ -->
+  <div id="section-community" class="hidden">
+    <section class="bg-surface-container-lowest rounded-xl p-8 shadow-sm mb-8">
+      <h3 class="text-xl font-black font-lexend text-on-surface mb-8 flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary">forum</span>
+        Gästebuch bearbeiten
+      </h3>
+
+      <!-- Hero Bild -->
+      <h4 class="text-sm font-black font-lexend text-on-surface-variant uppercase tracking-widest mb-4">Hero-Bild (Hintergrundbild)</h4>
+      <div class="flex gap-6 items-start flex-wrap mb-8">
+        <div class="w-48 h-24 rounded-xl overflow-hidden bg-surface-container flex-shrink-0">
+          <img id="gbHeroPreview" src="" alt="Gästebuch Hero" class="w-full h-full object-cover hidden"/>
+          <div id="gbHeroPlaceholder" class="w-full h-full flex flex-col items-center justify-center text-on-surface-variant">
+            <span class="material-symbols-outlined text-3xl mb-1">image</span>
+            <span class="text-xs font-medium">Kein Bild</span>
+          </div>
+        </div>
+        <div class="flex-1 min-w-48">
+          <label for="gbHeroFileInput" class="block border-2 border-dashed border-primary/30 bg-surface-container-low rounded-xl p-5 text-center cursor-pointer hover:border-primary/60 transition-all mb-3">
+            <span class="material-symbols-outlined text-primary block mb-1">upload_file</span>
+            <p class="text-sm font-bold text-primary font-lexend">Bild auswählen</p>
+            <p class="text-xs text-on-surface-variant mt-1">JPG, PNG, HEIC (16:9 empfohlen)</p>
+          </label>
+          <input type="file" id="gbHeroFileInput" accept="image/*" class="sr-only"/>
+          <button id="gbHeroUploadBtn" disabled class="w-full py-3 rounded-xl font-bold text-sm bg-gradient-to-r from-primary to-primary-container text-on-primary shadow-md shadow-primary/20 disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 transition-all font-lexend">Bild hochladen</button>
+          <p id="gbHeroUploadStatus" class="text-xs text-on-surface-variant mt-2 text-center"></p>
+        </div>
+      </div>
+
+      <!-- Hero Texte -->
+      <h4 class="text-sm font-black font-lexend text-on-surface-variant uppercase tracking-widest mb-4">Hero-Text</h4>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Badge</label>
+          <input id="gbBadge" type="text" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"/>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Überschrift (normal)</label>
+          <input id="gbHeading" type="text" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm font-bold"/>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Überschrift (farbig)</label>
+          <input id="gbHeadingColored" type="text" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm font-bold"/>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Beschreibungstext</label>
+          <textarea id="gbDescription" rows="3" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm resize-none"></textarea>
+        </div>
+      </div>
+
+      <!-- Kontakt -->
+      <h4 class="text-sm font-black font-lexend text-on-surface-variant uppercase tracking-widest mb-4">Kontakt-Info (Sidebar)</h4>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">E-Mail</label>
+          <input id="gbEmail" type="email" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"/>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Dojo-Name</label>
+          <input id="gbDojo" type="text" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"/>
+        </div>
+      </div>
+
+      <!-- Einträge -->
+      <h4 class="text-sm font-black font-lexend text-on-surface-variant uppercase tracking-widest mt-8 mb-2">Gästebuch-Einträge</h4>
+      <p class="text-xs text-on-surface-variant mb-4">Erster Eintrag erscheint im "Neuester Eintrag"-Widget. Farbe "Akzent" erzeugt die lila/pink Verlaufskarte.</p>
+      <div id="gbEintragFields" class="space-y-3 mb-3"></div>
+      <button id="gbEintragAdd" type="button" class="flex items-center gap-2 text-sm font-bold text-primary border border-primary/30 rounded-xl px-4 py-2 hover:bg-pink-50 transition-all mb-8">
+        <span class="material-symbols-outlined text-base">add</span> Eintrag hinzufügen
+      </button>
+
+      <button id="gbSaveBtn" class="w-full py-4 rounded-xl font-black text-lg bg-gradient-to-r from-primary to-primary-container text-on-primary shadow-lg shadow-primary/20 active:scale-95 transition-all font-lexend">
+        Gästebuch speichern & deployen
+      </button>
+    </section>
+  </div>
+
+  <!-- ══ SECTION: SETTINGS ══ -->
+  <div id="section-settings" class="hidden">
+    <!-- Social Links -->
+    <section class="bg-surface-container-lowest rounded-xl p-8 shadow-sm mb-6">
+      <h3 class="text-xl font-black font-lexend text-on-surface mb-6 flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary">share</span>
+        Social Links
+      </h3>
+      <p class="text-sm text-on-surface-variant mb-6">Diese Links erscheinen im Footer auf allen Seiten der Website.</p>
+      <div class="space-y-4 mb-6">
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-on-surface-variant">photo_camera</span>
+          <input id="socialInstagram" type="text" placeholder="Instagram URL (oder #)"
+            class="flex-1 bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"/>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-on-surface-variant">smart_display</span>
+          <input id="socialYoutube" type="text" placeholder="YouTube URL (oder #)"
+            class="flex-1 bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"/>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-on-surface-variant">mail</span>
+          <input id="socialEmail" type="email" placeholder="E-Mail-Adresse"
+            class="flex-1 bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"/>
+        </div>
+      </div>
+      <button type="button" id="saveSocialBtn"
+        class="px-6 py-3 rounded-xl font-black text-sm bg-primary text-on-primary active:scale-95 transition-all font-lexend flex items-center gap-2">
+        <span class="material-symbols-outlined text-sm">save</span> Speichern & deployen
+      </button>
+      <p id="socialStatus" class="text-xs text-on-surface-variant mt-2"></p>
+    </section>
+
+    <!-- Site-Name -->
+    <section class="bg-surface-container-lowest rounded-xl p-8 shadow-sm mb-6">
+      <h3 class="text-xl font-black font-lexend text-on-surface mb-6 flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary">badge</span>
+        Site-Name
+      </h3>
+      <p class="text-sm text-on-surface-variant mb-4">Dieser Name erscheint in der Navbar, im Footer und überall auf der Website.</p>
+      <div class="flex gap-3">
+        <input id="siteTitleInput" type="text" placeholder="z.B. MiyaKarate"
+          class="flex-1 bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm font-bold font-lexend uppercase italic tracking-tight"/>
+        <button type="button" id="saveSiteTitleBtn"
+          class="px-6 py-3 rounded-xl font-black text-sm bg-primary text-on-primary active:scale-95 transition-all font-lexend flex items-center gap-2">
+          <span class="material-symbols-outlined text-sm">save</span> Speichern
+        </button>
+      </div>
+      <p id="siteTitleStatus" class="text-xs text-on-surface-variant mt-2"></p>
+    </section>
+
+    <section class="bg-surface-container-lowest rounded-xl p-8 shadow-sm">
+      <h3 class="text-xl font-black font-lexend text-on-surface mb-6 flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary">label</span>
+        Kategorien verwalten
+      </h3>
+      <p class="text-sm text-on-surface-variant mb-6">Kategorien werden für Galerie und Upload verwendet. Neue Kategorien erscheinen sofort überall.</p>
+
+      <!-- Liste -->
+      <div class="space-y-2 mb-6" id="catManageList">
+        <p class="text-sm text-on-surface-variant">Wird geladen…</p>
+      </div>
+
+      <!-- Neue Kategorie hinzufügen -->
+      <div class="flex gap-3">
+        <input id="newCatInput" type="text" placeholder="Neue Kategorie…"
+          class="flex-1 bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"/>
+        <button type="button" id="addCatBtn"
+          class="px-6 py-3 rounded-xl font-black text-sm bg-primary text-on-primary active:scale-95 transition-all font-lexend flex items-center gap-2">
+          <span class="material-symbols-outlined text-sm">add</span> Hinzufügen
+        </button>
+      </div>
+      <p id="newCatStatus" class="text-xs text-on-surface-variant mt-2"></p>
+    </section>
+  </div>
+
+</main>
+
+<!-- ═══ EDIT MODAL ═══ -->
+<div id="editModal" class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+  <div class="bg-surface-container-lowest rounded-xl p-8 w-full max-w-md shadow-2xl">
+    <h3 class="text-xl font-black font-lexend text-on-surface mb-6 flex items-center gap-2">
+      <span class="material-symbols-outlined text-primary">edit</span> Foto bearbeiten
+    </h3>
+    <input type="hidden" id="editId"/>
+    <div class="space-y-4">
+      <div>
+        <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Titel</label>
+        <input id="editTitle" type="text" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm font-bold"/>
+      </div>
+      <div>
+        <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Kategorie</label>
+        <select id="editKat" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"></select>
+      </div>
+    </div>
+    <div class="flex gap-3 mt-8">
+      <button type="button" id="saveEditBtn" class="flex-1 py-3 rounded-xl font-black bg-gradient-to-r from-primary to-primary-container text-on-primary active:scale-95 transition-all font-lexend">Speichern</button>
+      <button type="button" id="cancelEditBtn" class="px-6 py-3 rounded-xl font-bold bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all">Abbrechen</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ EDIT SUCCESS MODAL ═══ -->
+<div id="editSuccessModal" class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+  <div class="bg-surface-container-lowest rounded-xl p-8 w-full max-w-2xl shadow-2xl max-h-[90vh] overflow-y-auto">
+    <h3 class="text-xl font-black font-lexend text-on-surface mb-6 flex items-center gap-2">
+      <span class="material-symbols-outlined text-primary">edit_note</span> Bericht bearbeiten
+    </h3>
+    <input type="hidden" id="esFileName"/>
+    <div class="space-y-4">
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Titel</label>
+          <input id="esTitle" type="text" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm font-bold"/>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Rang (z.B. Gold)</label>
+          <input id="esRang" type="text" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"/>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Ort</label>
+          <input id="esOrt" type="text" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"/>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Datum</label>
+          <input id="esDatum" type="text" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm placeholder-zinc-400" placeholder="z.B. 2024-05-12"/>
+        </div>
+        <div class="col-span-2">
+          <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Kategorie</label>
+          <input id="esKat" type="text" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm placeholder-zinc-400" placeholder="z.B. Wettkämpfe"/>
+        </div>
+        <div class="col-span-2 flex items-center gap-3 mt-2">
+          <input id="esIsWeitere" type="checkbox" class="w-5 h-5 text-primary rounded border-outline-variant focus:ring-primary/30 cursor-pointer"/>
+          <label for="esIsWeitere" class="text-sm font-bold text-on-surface-variant cursor-pointer">Unter "Weitere Auszeichnungen" anzeigen (statt als ausführlicher Bericht)</label>
+        </div>
+      </div>
+      <div>
+        <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Kurzfassung (Summary)</label>
+        <textarea id="esSummary" rows="2" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm resize-none"></textarea>
+      </div>
+      <div>
+        <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Inhalt (Markdown)</label>
+        <textarea id="esContent" rows="8" class="w-full bg-surface-container-low rounded-DEFAULT px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm font-mono"></textarea>
+      </div>
+      
+      <!-- Bild Upload für Einzelerfolg -->
+      <div class="pt-4 border-t border-zinc-100">
+        <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-3">Beitragsbilder (max 5, Klick wählt Hauptbild)</label>
+        
+        <div id="esImagesPreviewContainer" class="flex gap-3 mb-4 flex-wrap">
+          <div class="w-full text-xs text-on-surface-variant italic">Keine Bilder vorhanden.</div>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <input type="file" id="esFileInput" accept="image/*, video/*" multiple class="hidden"/>
+          <button type="button" onclick="document.getElementById('esFileInput').click()" class="text-xs font-bold text-primary bg-pink-50 px-4 py-2 rounded-full hover:bg-pink-100 transition-all">Neue Bilder wählen</button>
+          <p id="esFileStatus" class="text-[10px] text-on-surface-variant mt-1">Nichts ausgewählt</p>
+        </div>
+      </div>
+    </div>
+    <div class="flex gap-3 mt-8">
+      <button type="button" id="saveSuccessBtn" class="flex-1 py-3 rounded-xl font-black bg-gradient-to-r from-primary to-primary-container text-on-primary active:scale-95 transition-all font-lexend">Speichern</button>
+      <button type="button" onclick="document.getElementById('editSuccessModal').classList.add('hidden')" class="px-6 py-3 rounded-xl font-bold bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all">Abbrechen</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TOAST ═══ -->
+<div id="toast"
+  class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-on-surface text-surface-container-lowest px-6 py-3 rounded-full font-bold text-sm shadow-xl z-50 whitespace-nowrap font-lexend">
+</div>
+
+<script>
+(function () {
+  // Website URL anpassen (Lokal vs. Server)
+  const isLocal = window.location.hostname === 'localhost' || window.location.hostname === 'karate' || window.location.hostname.startsWith('192.168.');
+  const websiteUrl = isLocal ? 'http://localhost:1313' : 'https://emy.bonzeipunk.de';
+  const linkEl = document.getElementById('viewWebsiteLink');
+  if (linkEl) {
+    linkEl.href = linkEl.href.replace('http://localhost:1313', websiteUrl);
+  }
+
+  // ─── State ───────────────────────────────────────────────
+  let selectedKat = '';
+  let currentFilter = 'Alle';
+  let allPhotos = [];
+  let allCategories = [];
+  let pendingFiles = [];
+  
+  let esCurrentImages = [];
+  let esMainImageIndex = 0;
+  let esNewFilesSelected = false;
+
+  function renderEsImages(items) {
+    const container = document.getElementById('esImagesPreviewContainer');
+    container.innerHTML = '';
+    if (!items || items.length === 0) {
+      container.innerHTML = '<div class="w-full text-xs text-on-surface-variant italic">Keine Bilder vorhanden.</div>';
+      return;
+    }
+    
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      const isFile = item instanceof File;
+      const isVideo = isFile ? item.type.startsWith('video/') : item.match(/\.(mp4|webm|mov|m4v)$/i);
+      const src = isFile ? URL.createObjectURL(item) : '/erfolge-img/' + item + '?t=' + Date.now();
+      
+      const div = document.createElement('div');
+      div.className = 'relative w-20 h-20 rounded-lg overflow-hidden border-4 cursor-pointer transition-all ' + (i === esMainImageIndex ? 'border-primary shadow-lg scale-105 z-10' : 'border-transparent hover:border-primary/50');
+      div.onclick = () => {
+        esMainImageIndex = i;
+        renderEsImages(items);
+      };
+      
+      if (isVideo) {
+        const vid = document.createElement('video');
+        vid.src = src;
+        vid.className = 'w-full h-full object-cover';
+        vid.muted = true;
+        div.appendChild(vid);
+        
+        const playIcon = document.createElement('span');
+        playIcon.className = 'material-symbols-outlined absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white drop-shadow-md pointer-events-none';
+        playIcon.textContent = 'play_circle';
+        div.appendChild(playIcon);
+      } else {
+        const img = document.createElement('img');
+        img.src = src;
+        img.className = 'w-full h-full object-cover';
+        div.appendChild(img);
+      }
+      
+      const badge = document.createElement('div');
+      badge.className = 'absolute bottom-0 left-0 right-0 bg-primary/90 text-white text-[9px] text-center font-bold py-1 z-20 ' + (i === esMainImageIndex ? 'block' : 'hidden');
+      badge.textContent = 'HAUPTBILD';
+      
+      const deleteBtn = document.createElement('button');
+      deleteBtn.className = 'absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] shadow-md z-30 hover:bg-red-600 transition-colors';
+      deleteBtn.innerHTML = '✕';
+      deleteBtn.onclick = (e) => {
+        e.stopPropagation();
+        items.splice(i, 1);
+        if (esMainImageIndex >= items.length) esMainImageIndex = Math.max(0, items.length - 1);
+        renderEsImages(items);
+        document.getElementById('esFileStatus').textContent = items.length + ' Dateien insgesamt';
+      };
+      
+      div.appendChild(badge);
+      div.appendChild(deleteBtn);
+      container.appendChild(div);
+    }
+  }
+
+  // ─── Navigation ──────────────────────────────────────────
+  const sections = ['overview', 'media', 'homepage', 'uebermich', 'career', 'community', 'settings'];
+  const pageTitles = {
+    overview:  ['Übersicht', 'Willkommen zurück. Hier ist dein aktueller Stand.'],
+    media:     ['Galerie', 'Fotos hochladen und verwalten.'],
+    homepage:  ['Startseite', 'Hero-Bild und Text der Startseite bearbeiten.'],
+    uebermich: ['Über mich', 'Seite "Über mich" bearbeiten – Text, Bild, Erfolge, Zitat.'],
+    career:    ['Erfolge', 'Meilensteine und Gürtelprüfungen.'],
+    community: ['Gästebuch', 'Kommentare und Einträge.'],
+    settings:  ['Einstellungen', 'Konfiguration des Admin-Bereichs.']
+  };
+
+  function switchSection(name) {
+    sections.forEach(s => {
+      document.getElementById('section-' + s).classList.toggle('hidden', s !== name);
+    });
+    document.querySelectorAll('.nav-link').forEach(el => {
+      const active = el.dataset.section === name;
+      el.classList.toggle('active-nav', active);
+      el.classList.toggle('bg-pink-50', active);
+      el.classList.toggle('text-primary', active);
+      el.classList.toggle('text-zinc-600', !active);
+      el.classList.toggle('hover:bg-zinc-100', !active);
+    });
+    const [title, sub] = pageTitles[name] || ['Admin', ''];
+    document.getElementById('pageTitle').textContent = title;
+    document.getElementById('pageSubtitle').textContent = sub;
+    if (name === 'media') { loadPhotos(); loadGaleriePage(); }
+    if (name === 'homepage') loadHomepage();
+    if (name === 'uebermich') loadUebermich();
+    if (name === 'career') loadCareer();
+    if (name === 'community') loadGaestebuch();
+    if (name === 'settings') { renderCatManage(); loadSiteTitle(); loadSocialLinks(); }
+  }
+
+  document.getElementById('sideNav').addEventListener('click', function (e) {
+    const link = e.target.closest('.nav-link');
+    if (link) switchSection(link.dataset.section);
+  });
+
+  document.querySelectorAll('.nav-trigger').forEach(btn => {
+    btn.addEventListener('click', function () {
+      switchSection(btn.dataset.section);
+    });
+  });
+
+  document.getElementById('btnAddContent').addEventListener('click', function () {
+    switchSection('media');
+  });
+
+  // ─── Kategorien laden & UI aufbauen ──────────────────────
+  async function loadCategories() {
+    try {
+      const r = await fetch('/api/categories');
+      allCategories = await r.json();
+    } catch (e) {
+      allCategories = ['Training', 'Wettkämpfe', 'Gürtelprüfungen'];
+    }
+    if (!selectedKat || !allCategories.includes(selectedKat)) {
+      selectedKat = allCategories[0] || '';
+    }
+    renderKatButtons();
+    renderFilterButtons();
+    renderEditKatOptions();
+    renderCatManage();
+  }
+
+  function renderKatButtons() {
+    const container = document.getElementById('katButtons');
+    container.innerHTML = '';
+    allCategories.forEach(function (kat) {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.dataset.kat = kat;
+      btn.textContent = kat;
+      const isActive = kat === selectedKat;
+      btn.className = 'kat-btn px-4 py-2 rounded-full text-xs font-bold transition-all ' +
+        (isActive ? 'bg-primary text-on-primary' : 'bg-surface-container text-on-surface-variant');
+      container.appendChild(btn);
+    });
+  }
+
+  function renderFilterButtons() {
+    const container = document.getElementById('filterButtons');
+    // "Alle"-Button behalten, Rest neu
+    const alleBtn = container.querySelector('[data-filter="Alle"]');
+    container.innerHTML = '';
+    if (alleBtn) container.appendChild(alleBtn);
+    allCategories.forEach(function (kat) {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.dataset.filter = kat;
+      btn.textContent = kat;
+      btn.className = 'filter-btn text-xs font-bold px-3 py-1.5 rounded-full ' +
+        (currentFilter === kat ? 'bg-primary text-on-primary' : 'bg-surface-container text-on-surface-variant');
+      container.appendChild(btn);
+    });
+  }
+
+  function renderEditKatOptions() {
+    const sel = document.getElementById('editKat');
+    const current = sel.value;
+    sel.innerHTML = '';
+    allCategories.forEach(function (kat) {
+      const opt = document.createElement('option');
+      opt.value = kat;
+      opt.textContent = kat;
+      sel.appendChild(opt);
+    });
+    if (current && allCategories.includes(current)) sel.value = current;
+  }
+
+  function renderCatManage() {
+    const list = document.getElementById('catManageList');
+    if (!list) return;
+    if (!allCategories.length) {
+      list.innerHTML = '<p class="text-sm text-on-surface-variant">Noch keine Kategorien.</p>';
+      return;
+    }
+    list.innerHTML = '';
+    allCategories.forEach(function (kat) {
+      const row = document.createElement('div');
+      row.className = 'flex items-center justify-between bg-surface-container-low rounded-xl px-4 py-3';
+      row.innerHTML =
+        '<div class="flex items-center gap-3">' +
+        '<span class="material-symbols-outlined text-primary text-sm">label</span>' +
+        '<span class="font-bold text-sm">' + escHtml(kat) + '</span>' +
+        '</div>' +
+        '<button type="button" data-del="' + escHtml(kat) + '" class="del-cat-btn text-xs text-error font-bold px-3 py-1 rounded-full hover:bg-pink-50 transition-all flex items-center gap-1">' +
+        '<span class="material-symbols-outlined text-sm">delete</span> Löschen' +
+        '</button>';
+      list.appendChild(row);
+    });
+  }
+
+  // ─── Kategorie-Buttons (Upload) ───────────────────────────
+  document.getElementById('katButtons').addEventListener('click', function (e) {
+    const btn = e.target.closest('.kat-btn');
+    if (!btn) return;
+    selectedKat = btn.dataset.kat;
+    document.querySelectorAll('.kat-btn').forEach(b => {
+      const isActive = b === btn;
+      b.classList.toggle('bg-primary', isActive);
+      b.classList.toggle('text-on-primary', isActive);
+      b.classList.toggle('bg-surface-container', !isActive);
+      b.classList.toggle('text-on-surface-variant', !isActive);
+    });
+  });
+
+  // ─── Kategorie hinzufügen ─────────────────────────────────
+  document.getElementById('addCatBtn').addEventListener('click', async function () {
+    const input = document.getElementById('newCatInput');
+    const status = document.getElementById('newCatStatus');
+    const name = input.value.trim();
+    if (!name) return;
+    try {
+      const r = await fetch('/api/categories', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name })
+      });
+      const data = await r.json();
+      if (r.ok) {
+        allCategories = data.categories;
+        input.value = '';
+        status.textContent = '';
+        renderKatButtons();
+        renderFilterButtons();
+        renderEditKatOptions();
+        renderCatManage();
+        showToast('✓ Kategorie "' + name + '" hinzugefügt');
+      } else {
+        status.textContent = data.error || 'Fehler';
+      }
+    } catch (e) {
+      status.textContent = 'Verbindungsfehler';
+    }
+  });
+  document.getElementById('newCatInput').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') document.getElementById('addCatBtn').click();
+  });
+
+  // ─── Kategorie löschen ────────────────────────────────────
+  document.getElementById('catManageList').addEventListener('click', async function (e) {
+    const btn = e.target.closest('.del-cat-btn');
+    if (!btn) return;
+    const name = btn.dataset.del;
+    if (!confirm('Kategorie "' + name + '" wirklich löschen?')) return;
+    try {
+      const r = await fetch('/api/categories/' + encodeURIComponent(name), { method: 'DELETE' });
+      const data = await r.json();
+      if (r.ok) {
+        allCategories = data.categories;
+        if (selectedKat === name) selectedKat = allCategories[0] || '';
+        renderKatButtons();
+        renderFilterButtons();
+        renderEditKatOptions();
+        renderCatManage();
+        showToast('Kategorie "' + name + '" gelöscht');
+      }
+    } catch (e) {
+      showToast('Verbindungsfehler');
+    }
+  });
+
+  // ─── Schnell-Kategorie aus Übersicht ─────────────────────
+  document.getElementById('overviewAddCatBtn').addEventListener('click', function () {
+    document.getElementById('overviewAddCatForm').classList.remove('hidden');
+    document.getElementById('overviewNewCatInput').focus();
+  });
+  document.getElementById('overviewCancelCatBtn').addEventListener('click', function () {
+    document.getElementById('overviewAddCatForm').classList.add('hidden');
+    document.getElementById('overviewNewCatInput').value = '';
+  });
+  async function overviewSaveCat() {
+    const input = document.getElementById('overviewNewCatInput');
+    const name = input.value.trim();
+    if (!name) return;
+    try {
+      const r = await fetch('/api/categories', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name })
+      });
+      const data = await r.json();
+      if (r.ok) {
+        allCategories = data.categories;
+        input.value = '';
+        document.getElementById('overviewAddCatForm').classList.add('hidden');
+        renderKatButtons();
+        renderFilterButtons();
+        renderEditKatOptions();
+        renderCatManage();
+        loadStats();
+        showToast('✓ Kategorie "' + name + '" hinzugefügt');
+      } else {
+        showToast(data.error || 'Fehler');
+      }
+    } catch (e) {
+      showToast('Verbindungsfehler');
+    }
+  }
+  document.getElementById('overviewSaveCatBtn').addEventListener('click', overviewSaveCat);
+  document.getElementById('overviewNewCatInput').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') overviewSaveCat();
+    if (e.key === 'Escape') document.getElementById('overviewCancelCatBtn').click();
+  });
+
+  // ─── Drag & Drop ──────────────────────────────────────────
+  const dropZone = document.getElementById('dropZone');
+  const fileInput = document.getElementById('fileInput');
+
+  dropZone.addEventListener('dragover', function (e) {
+    e.preventDefault();
+    dropZone.classList.add('drop-active');
+  });
+  dropZone.addEventListener('dragleave', function () {
+    dropZone.classList.remove('drop-active');
+  });
+  dropZone.addEventListener('drop', function (e) {
+    e.preventDefault();
+    dropZone.classList.remove('drop-active');
+    setFiles(Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/')));
+  });
+  fileInput.addEventListener('change', function () {
+    setFiles(Array.from(fileInput.files));
+  });
+
+  function setFiles(files) {
+    pendingFiles = files;
+    const previewList = document.getElementById('previewList');
+    previewList.innerHTML = '';
+    const uploadBtn = document.getElementById('uploadBtn');
+    const uploadStatus = document.getElementById('uploadStatus');
+    if (!files.length) { uploadBtn.disabled = true; return; }
+    uploadBtn.disabled = false;
+    uploadStatus.textContent = files.length + ' Foto(s) ausgewählt';
+    files.forEach(function (f) {
+      const url = URL.createObjectURL(f);
+      const div = document.createElement('div');
+      div.className = 'aspect-square rounded-DEFAULT overflow-hidden bg-surface-container';
+      const img = document.createElement('img');
+      img.src = url;
+      img.className = 'w-full h-full object-cover';
+      div.appendChild(img);
+      previewList.appendChild(div);
+    });
+  }
+
+  // ─── Upload ───────────────────────────────────────────────
+  document.getElementById('uploadBtn').addEventListener('click', async function () {
+    if (!pendingFiles.length) return;
+    const uploadBtn = document.getElementById('uploadBtn');
+    const progressWrap = document.getElementById('progressWrap');
+    const progressBar = document.getElementById('progressBar');
+    const progressText = document.getElementById('progressText');
+    const uploadStatus = document.getElementById('uploadStatus');
+
+    uploadBtn.disabled = true;
+    progressWrap.classList.remove('hidden');
+    progressBar.style.width = '0%';
+    uploadStatus.textContent = 'Wird hochgeladen…';
+
+    let prog = 0;
+    const ticker = setInterval(function () {
+      prog = Math.min(prog + 4, 85);
+      progressBar.style.width = prog + '%';
+    }, 150);
+
+    try {
+      const fd = new FormData();
+      pendingFiles.forEach(f => fd.append('photos', f));
+      fd.append('title', document.getElementById('uploadTitle').value.trim());
+      fd.append('kategorie', selectedKat);
+
+      const r = await fetch('/api/upload', { method: 'POST', body: fd });
+      clearInterval(ticker);
+
+      if (r.ok) {
+        progressBar.style.width = '100%';
+        progressText.textContent = 'Fertig!';
+        const data = await r.json();
+        showToast('✓ ' + data.added.length + ' Foto(s) hochgeladen');
+        fileInput.value = '';
+        pendingFiles = [];
+        document.getElementById('previewList').innerHTML = '';
+        document.getElementById('uploadTitle').value = '';
+        uploadStatus.textContent = '';
+        setTimeout(function () {
+          progressWrap.classList.add('hidden');
+          progressBar.style.width = '0%';
+          progressText.textContent = 'Wird hochgeladen…';
+          uploadBtn.disabled = true;
+        }, 1500);
+        loadPhotos();
+        loadStats();
+      } else {
+        const err = await r.text();
+        uploadStatus.textContent = 'Fehler: ' + err;
+        uploadBtn.disabled = false;
+        progressWrap.classList.add('hidden');
+      }
+    } catch (err) {
+      clearInterval(ticker);
+      uploadStatus.textContent = 'Verbindungsfehler: ' + err.message;
+      uploadBtn.disabled = false;
+      progressWrap.classList.add('hidden');
+    }
+  });
+
+  // ─── Filter ───────────────────────────────────────────────
+  document.getElementById('filterButtons').addEventListener('click', function (e) {
+    const btn = e.target.closest('.filter-btn');
+    if (!btn) return;
+    currentFilter = btn.dataset.filter;
+    document.querySelectorAll('.filter-btn').forEach(b => {
+      const active = b === btn;
+      b.classList.toggle('bg-primary', active);
+      b.classList.toggle('text-on-primary', active);
+      b.classList.toggle('bg-surface-container', !active);
+      b.classList.toggle('text-on-surface-variant', !active);
+    });
+    renderPhotos();
+  });
+
+  // ─── Fotos laden & rendern ────────────────────────────────
+  async function loadPhotos() {
+    try {
+      const r = await fetch('/api/photos');
+      const data = await r.json();
+      allPhotos = data.photos || [];
+      renderPhotos();
+    } catch (err) {
+      console.error('Load error:', err);
+    }
+  }
+
+  function renderPhotos() {
+    const photoGrid = document.getElementById('photoGrid');
+    const photoCount = document.getElementById('photoCount');
+    const filtered = currentFilter === 'Alle'
+      ? allPhotos
+      : allPhotos.filter(p => p.kategorie === currentFilter);
+
+    photoCount.textContent = allPhotos.length + ' Fotos';
+
+    if (!filtered.length) {
+      photoGrid.innerHTML =
+        '<div class="text-center py-16 text-on-surface-variant">' +
+        '<span class="material-symbols-outlined text-5xl text-surface-variant mb-3 block">' +
+        (currentFilter === 'Alle' ? 'photo_library' : 'search_off') + '</span>' +
+        '<p class="font-bold font-lexend">' +
+        (currentFilter === 'Alle' ? 'Noch keine Fotos' : 'Keine Fotos in dieser Kategorie') + '</p>' +
+        '</div>';
+      return;
+    }
+
+    const katColors = {
+      'Training': 'bg-pink-100 text-primary',
+      'Wettkämpfe': 'bg-purple-100 text-secondary',
+      'Gürtelprüfungen': 'bg-amber-100 text-amber-700'
+    };
+
+    photoGrid.innerHTML = '';
+    const grid = document.createElement('div');
+    grid.className = 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4';
+
+    filtered.forEach(function (p) {
+      const card = document.createElement('div');
+      card.className = 'group relative bg-surface-container-lowest rounded-DEFAULT overflow-hidden shadow-sm hover:-translate-y-1 transition-transform duration-200';
+
+      const imgWrap = document.createElement('div');
+      imgWrap.className = 'aspect-square overflow-hidden';
+      const img = document.createElement('img');
+      img.src = '/images/' + p.thumb;
+      img.alt = p.title;
+      img.className = 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-300';
+      imgWrap.appendChild(img);
+
+      const info = document.createElement('div');
+      info.className = 'p-3';
+      info.innerHTML =
+        '<p class="font-bold text-on-surface text-xs truncate mb-1">' + escHtml(p.title) + '</p>' +
+        '<span class="text-[10px] font-bold px-2 py-0.5 rounded-full ' +
+        (katColors[p.kategorie] || 'bg-surface-container text-on-surface-variant') + '">' +
+        escHtml(p.kategorie) + '</span>';
+
+      const actions = document.createElement('div');
+      actions.className = 'absolute top-2 right-2 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity';
+
+      const editBtn = document.createElement('button');
+      editBtn.type = 'button';
+      editBtn.className = 'w-8 h-8 bg-surface-container-lowest rounded-full shadow-md flex items-center justify-center hover:scale-110 transition-transform';
+      editBtn.innerHTML = '<span class="material-symbols-outlined text-sm text-on-surface">edit</span>';
+      editBtn.addEventListener('click', function () { openEdit(p.id, p.title, p.kategorie); });
+
+      const delBtn = document.createElement('button');
+      delBtn.type = 'button';
+      delBtn.className = 'w-8 h-8 bg-error rounded-full shadow-md flex items-center justify-center hover:scale-110 transition-transform';
+      delBtn.innerHTML = '<span class="material-symbols-outlined text-sm text-on-error">delete</span>';
+      delBtn.addEventListener('click', function () { deletePhoto(p.id); });
+
+      actions.appendChild(editBtn);
+      actions.appendChild(delBtn);
+      card.appendChild(imgWrap);
+      card.appendChild(info);
+      card.appendChild(actions);
+      grid.appendChild(card);
+    });
+
+    photoGrid.appendChild(grid);
+  }
+
+  function escHtml(s) {
+    return String(s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  // ─── Stats für Übersicht ──────────────────────────────────
+  async function loadStats() {
+    try {
+      const r = await fetch('/api/photos');
+      const data = await r.json();
+      const photos = data.photos || [];
+      document.getElementById('statPhotos').textContent = photos.length;
+      document.getElementById('statCats').textContent = allCategories.length;
+      document.getElementById('statCatsSublabel').textContent = allCategories.slice(0, 3).join(', ') + (allCategories.length > 3 ? '...' : '');
+
+      const counts = {};
+      let lastDate = null;
+      photos.forEach(p => {
+        counts[p.kategorie] = (counts[p.kategorie] || 0) + 1;
+        const ts = parseInt(p.id);
+        if (!isNaN(ts) && (!lastDate || ts > lastDate)) lastDate = ts;
+      });
+
+      const icons = ['fitness_center', 'emoji_events', 'workspace_premium', 'sports_martial_arts', 'star', 'label'];
+      const colors = ['bg-pink-100 text-primary', 'bg-purple-100 text-secondary', 'bg-amber-100 text-amber-600', 'bg-blue-100 text-blue-600', 'bg-green-100 text-green-600', 'bg-surface-container text-on-surface-variant'];
+      const list = document.getElementById('catOverviewList');
+      list.innerHTML = '';
+      allCategories.forEach(function (kat, i) {
+        const colorClass = colors[i % colors.length];
+        const icon = icons[i % icons.length];
+        const row = document.createElement('div');
+        row.className = 'flex items-center justify-between';
+        row.innerHTML =
+          '<div class="flex items-center gap-3">' +
+          '<div class="w-8 h-8 ' + colorClass + ' rounded flex items-center justify-center">' +
+          '<span class="material-symbols-outlined text-sm">' + icon + '</span></div>' +
+          '<span class="font-bold text-sm">' + escHtml(kat) + '</span>' +
+          '</div>' +
+          '<span class="text-sm font-black">' + (counts[kat] || 0) + ' Fotos</span>';
+        list.appendChild(row);
+      });
+
+      if (lastDate) {
+        const d = new Date(lastDate);
+        document.getElementById('statLast').textContent =
+          d.toLocaleDateString('de-DE', { day: '2-digit', month: 'short', year: 'numeric' });
+      }
+    } catch (err) {
+      console.error('Stats error:', err);
+    }
+  }
+
+  // ─── Edit Modal ───────────────────────────────────────────
+  function openEdit(id, title, kat) {
+    document.getElementById('editId').value = id;
+    document.getElementById('editTitle').value = title;
+    document.getElementById('editKat').value = kat;
+    document.getElementById('editModal').classList.remove('hidden');
+    document.getElementById('editTitle').focus();
+  }
+
+  document.getElementById('cancelEditBtn').addEventListener('click', function () {
+    document.getElementById('editModal').classList.add('hidden');
+  });
+
+  document.getElementById('saveEditBtn').addEventListener('click', async function () {
+    const id = document.getElementById('editId').value;
+    try {
+      const r = await fetch('/api/photo/' + id, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: document.getElementById('editTitle').value,
+          kategorie: document.getElementById('editKat').value
+        })
+      });
+      if (r.ok) {
+        document.getElementById('editModal').classList.add('hidden');
+        showToast('✓ Gespeichert');
+        loadPhotos();
+        loadStats();
+      }
+    } catch (err) {
+      console.error('Save error:', err);
+    }
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') document.getElementById('editModal').classList.add('hidden');
+  });
+
+  // ─── Löschen ──────────────────────────────────────────────
+  async function deletePhoto(id) {
+    if (!confirm('Foto wirklich löschen? Das kann nicht rückgängig gemacht werden.')) return;
+    try {
+      const r = await fetch('/api/photo/' + id, { method: 'DELETE' });
+      if (r.ok) {
+        showToast('Foto gelöscht');
+        loadPhotos();
+        loadStats();
+      }
+    } catch (err) {
+      console.error('Delete error:', err);
+    }
+  }
+
+  // ─── Toast ────────────────────────────────────────────────
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.remove('hidden');
+    setTimeout(function () { t.classList.add('hidden'); }, 3000);
+  }
+
+  // ─── Homepage ─────────────────────────────────────────────
+  async function loadHomepage() {
+    try {
+      const r = await fetch('/api/homepage');
+      const data = await r.json();
+      const hero = data.hero || {};
+      document.getElementById('heroBadge').value = hero.badge || '';
+      document.getElementById('heroDescription').value = hero.description || '';
+      const hk = data.hero_karte || {};
+      document.getElementById('hpKarteRang').value = hk.rang || '';
+      document.getElementById('hpKarteStatus').value = hk.status || '';
+      const pk = data.pruefung_karte || {};
+      document.getElementById('hpPruefungTitel').value = pk.titel || '';
+      document.getElementById('hpPruefungDesc').value = pk.beschreibung || '';
+      const dk = data.dojo_karte || {};
+      document.getElementById('hpDojoTitel').value = dk.titel || '';
+      document.getElementById('hpDojoDesc').value = dk.beschreibung || '';
+      const cta = data.cta || {};
+      document.getElementById('hpCtaMain').value = cta.heading_main || '';
+      document.getElementById('hpCtaColored').value = cta.heading_colored || '';
+      document.getElementById('hpCtaDesc').value = cta.description || '';
+      document.getElementById('hpCtaBtn').value = cta.button_text || '';
+      const statsFields = document.getElementById('statsFields');
+      statsFields.innerHTML = '';
+      (data.stats || []).forEach(function(s) {
+        const row = document.createElement('div');
+        row.className = 'flex gap-3 items-center';
+        row.innerHTML =
+          '<input type="text" value="' + escHtml(s.value||'') + '" placeholder="Wert" data-stat="value"' +
+          ' class="w-24 bg-surface-container-low rounded-DEFAULT px-3 py-2 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm font-black text-center"/>' +
+          '<input type="text" value="' + escHtml(s.label||'') + '" placeholder="Bezeichnung" data-stat="label"' +
+          ' class="flex-1 bg-surface-container-low rounded-DEFAULT px-3 py-2 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"/>';
+        statsFields.appendChild(row);
+      });
+      if (hero.image) {
+        document.getElementById('heroPreview').src = '/hero/' + hero.image + '?t=' + Date.now();
+        document.getElementById('heroPreview').classList.remove('hidden');
+        document.getElementById('heroPlaceholder').classList.add('hidden');
+      }
+    } catch (err) { console.error('Homepage load error:', err); }
+  }
+
+  // Hero-Bild Vorschau
+  document.getElementById('heroFileInput').addEventListener('change', function () {
+    const file = this.files[0];
+    if (!file) return;
+    document.getElementById('heroPreview').src = URL.createObjectURL(file);
+    document.getElementById('heroPreview').classList.remove('hidden');
+    document.getElementById('heroPlaceholder').classList.add('hidden');
+    document.getElementById('heroUploadBtn').disabled = false;
+    document.getElementById('heroUploadStatus').textContent = file.name;
+  });
+
+  // Hero-Bild Upload
+  document.getElementById('heroUploadBtn').addEventListener('click', async function () {
+    const file = document.getElementById('heroFileInput').files[0];
+    if (!file) return;
+    this.disabled = true;
+    document.getElementById('heroUploadStatus').textContent = 'Wird hochgeladen…';
+    try {
+      const fd = new FormData();
+      fd.append('image', file);
+      const r = await fetch('/api/homepage/image', { method: 'POST', body: fd });
+      if (r.ok) {
+        showToast('✓ Bild gespeichert');
+        document.getElementById('heroUploadStatus').textContent = 'Gespeichert!';
+      } else {
+        document.getElementById('heroUploadStatus').textContent = 'Fehler beim Upload';
+      }
+    } catch (err) {
+      document.getElementById('heroUploadStatus').textContent = 'Verbindungsfehler';
+    }
+    this.disabled = false;
+  });
+
+  // Text speichern
+  document.getElementById('heroSaveBtn').addEventListener('click', async function () {
+    try {
+      const rows = document.getElementById('statsFields').querySelectorAll('div');
+      const stats = Array.from(rows).map(function(row) {
+        return {
+          value: row.querySelector('[data-stat="value"]').value,
+          label: row.querySelector('[data-stat="label"]').value
+        };
+      });
+      const r = await fetch('/api/homepage', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          badge: document.getElementById('heroBadge').value,
+          description: document.getElementById('heroDescription').value,
+          stats: stats,
+          hero_karte: {
+            rang: document.getElementById('hpKarteRang').value,
+            status: document.getElementById('hpKarteStatus').value
+          },
+          pruefung_karte: {
+            titel: document.getElementById('hpPruefungTitel').value,
+            beschreibung: document.getElementById('hpPruefungDesc').value
+          },
+          dojo_karte: {
+            titel: document.getElementById('hpDojoTitel').value,
+            beschreibung: document.getElementById('hpDojoDesc').value
+          },
+          cta: {
+            heading_main: document.getElementById('hpCtaMain').value,
+            heading_colored: document.getElementById('hpCtaColored').value,
+            description: document.getElementById('hpCtaDesc').value,
+            button_text: document.getElementById('hpCtaBtn').value
+          }
+        })
+      });
+      if (r.ok) showToast('✓ Startseite gespeichert & Deploy gestartet');
+    } catch (err) { console.error('Save error:', err); }
+  });
+
+  // ─── Über mich ────────────────────────────────────────────
+  function createWeitereRow(titel, detail, beschreibung, jahr, ort, kategorie) {
+    const row = document.createElement('div');
+    row.className = 'bg-surface-container-low rounded-xl p-4 flex flex-col gap-2';
+    row.innerHTML =
+      '<div class="flex gap-3 items-center">' +
+        '<input type="text" value="' + (titel||'') + '" placeholder="Titel" data-we="titel"' +
+        ' class="flex-1 bg-white rounded-DEFAULT px-3 py-2 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm font-bold"/>' +
+        '<input type="text" value="' + (detail||'') + '" placeholder="Untertitel (z.B. Silber – Kata 2024)" data-we="detail"' +
+        ' class="flex-1 bg-white rounded-DEFAULT px-3 py-2 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"/>' +
+        '<button type="button" class="we-delete shrink-0 w-8 h-8 flex items-center justify-center rounded-lg text-error hover:bg-error/10 transition-all">' +
+        '<span class="material-symbols-outlined text-lg">delete</span></button>' +
+      '</div>' +
+      '<textarea data-we="beschreibung" rows="2" placeholder="Beschreibung (optional)"' +
+      ' class="w-full bg-white rounded-DEFAULT px-3 py-2 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm resize-none">' + (beschreibung||'') + '</textarea>' +
+      '<div class="flex gap-3">' +
+        '<input type="text" value="' + (jahr||'') + '" placeholder="Jahr (z.B. 2024)" data-we="jahr"' +
+        ' class="w-28 bg-white rounded-DEFAULT px-3 py-2 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"/>' +
+        '<input type="text" value="' + (ort||'') + '" placeholder="Ort (z.B. Berlin)" data-we="ort"' +
+        ' class="flex-1 bg-white rounded-DEFAULT px-3 py-2 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"/>' +
+        '<input type="text" value="' + (kategorie||'') + '" placeholder="Kategorie (z.B. U14)" data-we="kategorie"' +
+        ' class="w-28 bg-white rounded-DEFAULT px-3 py-2 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"/>' +
+      '</div>';
+    row.querySelector('.we-delete').addEventListener('click', function() { row.remove(); });
+    return row;
+  }
+
+  async function loadUebermich() {
+    try {
+      const r = await fetch('/api/uebermich');
+      const d = await r.json();
+      document.getElementById('umBadge').value = d.hero.badge || '';
+      document.getElementById('umRang').value = d.hero.rang_value || '';
+      document.getElementById('umH1').value = d.hero.heading_line1 || '';
+      document.getElementById('umH2').value = d.hero.heading_line2 || '';
+      document.getElementById('umHSuffix').value = d.hero.heading_suffix || '';
+      document.getElementById('umDesc').value = d.hero.description || '';
+      document.getElementById('umGurt').value = d.gurtweg.aktiver_gurt || 'Blau';
+      document.getElementById('umZitat').value = d.zitat.text || '';
+      document.getElementById('umZitatAutor').value = d.zitat.autor || '';
+
+      // Stats
+      const sf = document.getElementById('umStatsFields');
+      sf.innerHTML = '';
+      (d.stats || []).forEach(function(s) {
+        const row = document.createElement('div');
+        row.className = 'flex gap-3 items-center';
+        row.innerHTML =
+          '<input type="text" value="' + (s.wert||'') + '" placeholder="Wert" data-us="wert"' +
+          ' class="w-24 bg-surface-container-low rounded-DEFAULT px-3 py-2 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm font-black text-center"/>' +
+          '<input type="text" value="' + (s.label||'') + '" placeholder="Bezeichnung" data-us="label"' +
+          ' class="flex-1 bg-surface-container-low rounded-DEFAULT px-3 py-2 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"/>';
+        sf.appendChild(row);
+      });
+
+      if (d.hero.image) {
+        document.getElementById('umPreview').src = '/uebermich-img/' + d.hero.image + '?t=' + Date.now();
+        document.getElementById('umPreview').classList.remove('hidden');
+        document.getElementById('umPlaceholder').classList.add('hidden');
+      }
+    } catch(err) { console.error('Uebermich load error:', err); }
+  }
+
+  document.getElementById('umFileInput').addEventListener('change', function() {
+    const file = this.files[0];
+    if (!file) return;
+    document.getElementById('umPreview').src = URL.createObjectURL(file);
+    document.getElementById('umPreview').classList.remove('hidden');
+    document.getElementById('umPlaceholder').classList.add('hidden');
+    document.getElementById('umUploadBtn').disabled = false;
+    document.getElementById('umUploadStatus').textContent = file.name;
+  });
+
+  document.getElementById('umUploadBtn').addEventListener('click', async function() {
+    const file = document.getElementById('umFileInput').files[0];
+    if (!file) return;
+    this.disabled = true;
+    document.getElementById('umUploadStatus').textContent = 'Wird hochgeladen…';
+    try {
+      const fd = new FormData();
+      fd.append('image', file);
+      const r = await fetch('/api/uebermich/image', { method: 'POST', body: fd });
+      if (r.ok) {
+        showToast('✓ Bild gespeichert');
+        document.getElementById('umUploadStatus').textContent = 'Gespeichert!';
+      } else {
+        document.getElementById('umUploadStatus').textContent = 'Fehler beim Upload';
+      }
+    } catch(err) {
+      document.getElementById('umUploadStatus').textContent = 'Verbindungsfehler';
+    }
+    this.disabled = false;
+  });
+
+  document.getElementById('umSaveBtn').addEventListener('click', async function() {
+    try {
+      const r = await fetch('/api/uebermich');
+      const data = await r.json();
+
+      data.hero.badge = document.getElementById('umBadge').value;
+      data.hero.rang_value = document.getElementById('umRang').value;
+      data.hero.heading_line1 = document.getElementById('umH1').value;
+      data.hero.heading_line2 = document.getElementById('umH2').value;
+      data.hero.heading_suffix = document.getElementById('umHSuffix').value;
+      data.hero.description = document.getElementById('umDesc').value;
+      data.gurtweg.aktiver_gurt = document.getElementById('umGurt').value;
+      data.zitat.text = document.getElementById('umZitat').value;
+      data.zitat.autor = document.getElementById('umZitatAutor').value;
+
+      const stRows = document.getElementById('umStatsFields').querySelectorAll('div.flex');
+      data.stats = Array.from(stRows).map(function(row) {
+        return {
+          wert: row.querySelector('[data-us="wert"]').value,
+          label: row.querySelector('[data-us="label"]').value
+        };
+      });
+
+      const res = await fetch('/api/uebermich', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      if (res.ok) showToast('✓ Über mich gespeichert & Deploy gestartet');
+    } catch(err) { console.error('Save error:', err); }
+  });
+
+  // ─── Erfolge (Career) ─────────────────────────────────────
+  function createAuszeichnungRow(titel, detail, beschreibung) {
+    const row = document.createElement('div');
+    row.className = 'bg-surface-container-low rounded-xl p-4 flex flex-col gap-3';
+    row.innerHTML =
+      '<div class="flex gap-3 items-center">' +
+      '<input type="text" value="' + escHtml(titel||'') + '" placeholder="Titel" data-ea="titel"' +
+      ' class="flex-1 bg-white rounded-DEFAULT px-3 py-2 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm font-bold"/>' +
+      '<input type="text" value="' + escHtml(detail||'') + '" placeholder="Untertitel (z.B. Silber – Kata 2024)" data-ea="detail"' +
+      ' class="flex-1 bg-white rounded-DEFAULT px-3 py-2 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"/>' +
+      '<button type="button" class="ea-delete shrink-0 w-8 h-8 flex items-center justify-center rounded-lg text-error hover:bg-error/10 transition-all">' +
+      '<span class="material-symbols-outlined text-lg">delete</span></button>' +
+      '</div>' +
+      '<textarea data-ea="beschreibung" rows="2" placeholder="Beschreibung (optional)"' +
+      ' class="w-full bg-white rounded-DEFAULT px-3 py-2 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm resize-none">' + escHtml(beschreibung||'') + '</textarea>';
+    row.querySelector('.ea-delete').addEventListener('click', function() { row.remove(); });
+    return row;
+  }
+  document.getElementById('efWeitereAdd').addEventListener('click', function() {
+    document.getElementById('efWeitereFields').appendChild(createAuszeichnungRow('', ''));
+  });
+
+  document.getElementById('efHeroFileInput').addEventListener('change', function() {
+    const file = this.files[0];
+    if (!file) return;
+    document.getElementById('efHeroPreview').src = URL.createObjectURL(file);
+    document.getElementById('efHeroPreview').classList.remove('hidden');
+    document.getElementById('efHeroPlaceholder').classList.add('hidden');
+    document.getElementById('efHeroUploadBtn').disabled = false;
+    document.getElementById('efHeroUploadStatus').textContent = file.name;
+  });
+
+  document.getElementById('efHeroUploadBtn').addEventListener('click', async function() {
+    const file = document.getElementById('efHeroFileInput').files[0];
+    if (!file) return;
+    this.disabled = true;
+    document.getElementById('efHeroUploadStatus').textContent = 'Wird hochgeladen…';
+    try {
+      const fd = new FormData();
+      fd.append('image', file);
+      const r = await fetch('/api/erfolge/image', { method: 'POST', body: fd });
+      if (r.ok) {
+        showToast('✓ Bild gespeichert');
+        document.getElementById('efHeroUploadStatus').textContent = 'Gespeichert!';
+      } else {
+        document.getElementById('efHeroUploadStatus').textContent = 'Fehler beim Upload';
+      }
+    } catch(err) {
+      document.getElementById('efHeroUploadStatus').textContent = 'Verbindungsfehler';
+    }
+    this.disabled = false;
+  });
+
+  async function loadCareer() {
+    try {
+      const r = await fetch('/api/erfolge');
+      const d = await r.json();
+      const hero = d.hero || {};
+      document.getElementById('efBadge').value = hero.badge || '';
+      document.getElementById('efHeadingMain').value = hero.heading_main || '';
+      document.getElementById('efHeadingColored').value = hero.heading_colored || '';
+      document.getElementById('efDescription').value = hero.description || '';
+      document.getElementById('efRang').value = hero.rang_value || '';
+      if (hero.image) {
+        document.getElementById('efHeroPreview').src = '/erfolge-img/' + hero.image + '?t=' + Date.now();
+        document.getElementById('efHeroPreview').classList.remove('hidden');
+        document.getElementById('efHeroPlaceholder').classList.add('hidden');
+      }
+      const m = d.meilenstein || {};
+      document.getElementById('efMeilensteinEvent').value = m.event || '';
+      document.getElementById('efMeilensteinPlatz').value = m.platz || '';
+      document.getElementById('efMeilensteinDesc').value = m.beschreibung || '';
+      document.getElementById('efMeilensteinJahr').value = m.jahr || '';
+      document.getElementById('efMeilensteinOrt').value = m.ort || '';
+      document.getElementById('efMeilensteinKat').value = m.kategorie || '';
+      const wf = document.getElementById('efWeitereFields');
+      wf.innerHTML = '';
+      (d.weitere_auszeichnungen || []).forEach(function(a) {
+        wf.appendChild(createAuszeichnungRow(a.titel, a.detail, a.beschreibung));
+      });
+      const sf = document.getElementById('efStatsFields');
+      sf.innerHTML = '';
+      (d.stats || []).forEach(function(s) {
+        const row = document.createElement('div');
+        row.className = 'flex gap-3 items-center';
+        row.innerHTML =
+          '<input type="text" value="' + escHtml(s.wert||'') + '" placeholder="Wert" data-es="wert"' +
+          ' class="w-24 bg-surface-container-low rounded-DEFAULT px-3 py-2 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm font-black text-center"/>' +
+          '<input type="text" value="' + escHtml(s.label||'') + '" placeholder="Bezeichnung" data-es="label"' +
+          ' class="flex-1 bg-surface-container-low rounded-DEFAULT px-3 py-2 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"/>';
+        sf.appendChild(row);
+      });
+      document.getElementById('efZitatText').value = (d.zitat || {}).text || '';
+      document.getElementById('efZitatAutor').value = (d.zitat || {}).autor || '';
+      loadIndividualSuccesses();
+    } catch(err) { console.error('Career load error:', err); }
+  }
+
+  document.getElementById('careerSaveBtn').addEventListener('click', async function() {
+    try {
+      const r0 = await fetch('/api/erfolge');
+      const existing = await r0.json();
+      const weRows = document.getElementById('efWeitereFields').querySelectorAll(':scope > div');
+      const stRows = document.getElementById('efStatsFields').querySelectorAll('div.flex');
+      const data = {
+        hero: {
+          badge: document.getElementById('efBadge').value,
+          heading_main: document.getElementById('efHeadingMain').value,
+          heading_colored: document.getElementById('efHeadingColored').value,
+          description: document.getElementById('efDescription').value,
+          rang_value: document.getElementById('efRang').value,
+          rang_label: (existing.hero || {}).rang_label || 'Aktueller Rang',
+          image: (existing.hero || {}).image || ''
+        },
+        meilenstein: {
+          event: document.getElementById('efMeilensteinEvent').value,
+          platz: document.getElementById('efMeilensteinPlatz').value,
+          beschreibung: document.getElementById('efMeilensteinDesc').value,
+          jahr: document.getElementById('efMeilensteinJahr').value,
+          ort: document.getElementById('efMeilensteinOrt').value,
+          kategorie: document.getElementById('efMeilensteinKat').value
+        },
+        weitere_auszeichnungen: Array.from(weRows).map(function(row) {
+          return {
+            titel: row.querySelector('[data-ea="titel"]').value,
+            detail: row.querySelector('[data-ea="detail"]').value,
+            beschreibung: row.querySelector('[data-ea="beschreibung"]').value
+          };
+        }),
+        stats: Array.from(stRows).map(function(row) {
+          return {
+            wert: row.querySelector('[data-es="wert"]').value,
+            label: row.querySelector('[data-es="label"]').value
+          };
+        }),
+        zitat: {
+          text: document.getElementById('efZitatText').value,
+          autor: document.getElementById('efZitatAutor').value
+        }
+      };
+
+      const res = await fetch('/api/erfolge', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      if (res.ok) showToast('✓ Erfolge gespeichert & Deploy gestartet');
+    } catch(err) { console.error('Career save error:', err); }
+  });
+
+  let individualSuccessData = [];
+
+  async function loadIndividualSuccesses() {
+    try {
+      const r = await fetch('/api/individual-successes');
+      individualSuccessData = await r.json();
+      renderIndividualSuccesses();
+    } catch(err) { console.error('Load individual successes error:', err); }
+  }
+
+  function renderIndividualSuccesses() {
+    const container = document.getElementById('individualSuccessList');
+    container.innerHTML = '';
+    individualSuccessData.forEach((item, index) => {
+      const div = document.createElement('div');
+      div.className = 'flex items-center justify-between bg-surface-container-low rounded-xl px-6 py-4';
+      div.innerHTML = `
+        <div class="flex items-center gap-4">
+          <div class="flex flex-col gap-1 mr-2">
+            <button type="button" onclick="window.moveSuccessUp(${index})" class="text-on-surface-variant hover:text-primary disabled:opacity-30" ${index === 0 ? 'disabled' : ''}>
+              <span class="material-symbols-outlined text-sm">arrow_upward</span>
+            </button>
+            <button type="button" onclick="window.moveSuccessDown(${index})" class="text-on-surface-variant hover:text-primary disabled:opacity-30" ${index === individualSuccessData.length - 1 ? 'disabled' : ''}>
+              <span class="material-symbols-outlined text-sm">arrow_downward</span>
+            </button>
+          </div>
+          <div class="w-10 h-10 rounded-lg bg-white flex items-center justify-center text-primary">
+            <span class="material-symbols-outlined">description</span>
+          </div>
+          <div>
+            <p class="font-bold text-sm">${escHtml(item.title)}</p>
+            <p class="text-[10px] text-on-surface-variant uppercase font-bold tracking-widest">${escHtml(item.rang || 'Bericht')}</p>
+          </div>
+        </div>
+        <button type="button" onclick="window.editSuccess('${escHtml(item.fileName)}')" class="text-xs font-bold text-primary hover:bg-pink-50 px-4 py-2 rounded-full transition-all flex items-center gap-1">
+          <span class="material-symbols-outlined text-sm">edit</span> Bearbeiten
+        </button>
+      `;
+      container.appendChild(div);
+    });
+  }
+
+  window.moveSuccessUp = async function(index) {
+    if (index <= 0) return;
+    const temp = individualSuccessData[index - 1];
+    individualSuccessData[index - 1] = individualSuccessData[index];
+    individualSuccessData[index] = temp;
+    renderIndividualSuccesses();
+    await saveIndividualSuccessOrder();
+  };
+
+  window.moveSuccessDown = async function(index) {
+    if (index >= individualSuccessData.length - 1) return;
+    const temp = individualSuccessData[index + 1];
+    individualSuccessData[index + 1] = individualSuccessData[index];
+    individualSuccessData[index] = temp;
+    renderIndividualSuccesses();
+    await saveIndividualSuccessOrder();
+  };
+
+  async function saveIndividualSuccessOrder() {
+    try {
+      const order = individualSuccessData.map(item => item.fileName);
+      const res = await fetch('/api/individual-successes/reorder', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ order })
+      });
+      if (!res.ok) throw new Error('Reorder failed');
+    } catch(err) {
+      console.error('Save order error:', err);
+    }
+  }
+
+  window.editSuccess = async function(fileName) {
+    try {
+      const r = await fetch('/api/individual-success/' + fileName);
+      const data = await r.json();
+      document.getElementById('esFileName').value = fileName;
+      document.getElementById('esTitle').value = data.title || '';
+      document.getElementById('esRang').value = data.rang || '';
+      document.getElementById('esOrt').value = data.ort || '';
+      document.getElementById('esDatum').value = data.datum || '';
+      document.getElementById('esKat').value = data.kategorie || '';
+      document.getElementById('esIsWeitere').checked = data.is_weitere_auszeichnung === 'true' || data.is_weitere_auszeichnung === true;
+      document.getElementById('esSummary').value = data.summary || '';
+      document.getElementById('esContent').value = data.content || '';
+      
+      esNewFilesSelected = false;
+      document.getElementById('esFileInput').value = '';
+      document.getElementById('esFileStatus').textContent = 'Keine neuen Dateien gewählt';
+      
+      let existingImages = [];
+      if (data.images) {
+        existingImages = data.images.split(',').map(s => s.trim()).filter(Boolean);
+      } else if (data.image) {
+        existingImages = [data.image];
+      }
+      
+      esCurrentImages = existingImages;
+      esMainImageIndex = 0;
+      if (data.image && existingImages.includes(data.image)) {
+        esMainImageIndex = existingImages.indexOf(data.image);
+      }
+      
+      renderEsImages(esCurrentImages);
+      document.getElementById('editSuccessModal').classList.remove('hidden');
+    } catch(err) { console.error('Edit success error:', err); }
+  }
+
+  document.getElementById('esFileInput').addEventListener('change', function() {
+    const newFiles = Array.from(this.files);
+    if (esCurrentImages.length + newFiles.length > 5) {
+      alert(`Bitte maximal 5 Dateien insgesamt auswählen! (Aktuell: ${esCurrentImages.length})`);
+      this.value = '';
+      return;
+    }
+    if (newFiles.length > 0) {
+      esNewFilesSelected = true;
+      esCurrentImages = esCurrentImages.concat(newFiles);
+      renderEsImages(esCurrentImages);
+      document.getElementById('esFileStatus').textContent = esCurrentImages.length + ' Dateien insgesamt';
+    }
+    this.value = '';
+  });
+
+  document.getElementById('saveSuccessBtn').addEventListener('click', async function() {
+    const fileName = document.getElementById('esFileName').value;
+    const title = document.getElementById('esTitle').value;
+    const rang = document.getElementById('esRang').value;
+    const ort = document.getElementById('esOrt').value;
+    const datum = document.getElementById('esDatum').value;
+    const kategorie = document.getElementById('esKat').value;
+    const is_weitere_auszeichnung = document.getElementById('esIsWeitere').checked;
+    const summary = document.getElementById('esSummary').value;
+    const content = document.getElementById('esContent').value;
+    const fileInput = document.getElementById('esFileInput');
+    
+    try {
+      const existingOnly = esCurrentImages.filter(x => typeof x === 'string');
+      const newFilesOnly = esCurrentImages.filter(x => x instanceof File);
+      const selectedMainImage = (newFilesOnly.length === 0 && existingOnly.length > 0) ? existingOnly[esMainImageIndex] : '';
+      const finalImagesStr = existingOnly.join(',');
+      
+      // 1. Metadaten & Inhalt speichern
+      const r = await fetch('/api/individual-success/' + fileName, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+           title, rang, ort, datum, kategorie, is_weitere_auszeichnung, summary, content,
+           image: selectedMainImage,
+           images: finalImagesStr
+        })
+      });
+      
+      // 2. Bilder falls gewählt
+      if (newFilesOnly.length > 0) {
+        const fd = new FormData();
+        for (let i = 0; i < newFilesOnly.length; i++) {
+          fd.append('images', newFilesOnly[i]);
+        }
+        fd.append('existingImages', JSON.stringify(existingOnly));
+        fd.append('mainImageIndex', esMainImageIndex);
+        await fetch('/api/individual-success/' + fileName + '/images', {
+          method: 'POST',
+          body: fd
+        });
+      }
+      
+      if (r.ok) {
+        showToast('✓ Bericht gespeichert & Deploy gestartet');
+        document.getElementById('editSuccessModal').classList.add('hidden');
+        loadIndividualSuccesses();
+      }
+    } catch(err) { console.error('Save success error:', err); }
+  });
+
+  // ─── Site-Name ────────────────────────────────────────────
+  async function loadSiteTitle() {
+    try {
+      const r = await fetch('/api/homepage');
+      const data = await r.json();
+      const title = data.siteTitle || '';
+      document.getElementById('siteTitleInput').value = title;
+      updateAdminTitle(title);
+    } catch (err) { console.error('SiteTitle load error:', err); }
+  }
+
+  function updateAdminTitle(title) {
+    if (!title) return;
+    document.getElementById('adminSiteTitle').textContent = title;
+    document.getElementById('adminSiteTitleHeader').textContent = title;
+  }
+
+  document.getElementById('saveSiteTitleBtn').addEventListener('click', async function () {
+    const status = document.getElementById('siteTitleStatus');
+    const val = document.getElementById('siteTitleInput').value.trim();
+    if (!val) { status.textContent = 'Bitte einen Namen eingeben.'; return; }
+    try {
+      const r = await fetch('/api/homepage', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ siteTitle: val })
+      });
+      if (r.ok) {
+        updateAdminTitle(val);
+        showToast('✓ Site-Name gespeichert & Deploy gestartet');
+        status.textContent = '';
+      } else {
+        status.textContent = 'Fehler beim Speichern.';
+      }
+    } catch (err) { status.textContent = 'Verbindungsfehler'; }
+  });
+
+  // ─── Galerie Seiten-Texte ─────────────────────────────────
+  async function loadGaleriePage() {
+    try {
+      const r = await fetch('/api/galerie');
+      const d = await r.json();
+      const hero = d.hero || {};
+      document.getElementById('galBadge').value = hero.badge || '';
+      document.getElementById('galHeadingMain').value = hero.heading_main || '';
+      document.getElementById('galHeadingColored').value = hero.heading_colored || '';
+      document.getElementById('galDescription').value = hero.description || '';
+      const ribbon = d.ribbon || {};
+      document.getElementById('galRibbonHeading').value = ribbon.heading || '';
+      document.getElementById('galRibbonDesc').value = ribbon.description || '';
+      const sf = document.getElementById('galStatsFields');
+      sf.innerHTML = '';
+      (ribbon.stats || []).forEach(function(s) {
+        const row = document.createElement('div');
+        row.className = 'flex gap-3 items-center';
+        row.innerHTML =
+          '<input type="text" value="' + escHtml(s.wert||'') + '" placeholder="Wert" data-gs="wert"' +
+          ' class="w-24 bg-surface-container-low rounded-DEFAULT px-3 py-2 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm font-black text-center"/>' +
+          '<input type="text" value="' + escHtml(s.label||'') + '" placeholder="Bezeichnung" data-gs="label"' +
+          ' class="flex-1 bg-surface-container-low rounded-DEFAULT px-3 py-2 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"/>';
+        sf.appendChild(row);
+      });
+    } catch(err) { console.error('Galerie page load error:', err); }
+  }
+
+  document.getElementById('galSaveBtn').addEventListener('click', async function() {
+    try {
+      const stRows = document.getElementById('galStatsFields').querySelectorAll('div.flex');
+      const data = {
+        hero: {
+          badge: document.getElementById('galBadge').value,
+          heading_main: document.getElementById('galHeadingMain').value,
+          heading_colored: document.getElementById('galHeadingColored').value,
+          description: document.getElementById('galDescription').value
+        },
+        ribbon: {
+          heading: document.getElementById('galRibbonHeading').value,
+          description: document.getElementById('galRibbonDesc').value,
+          stats: Array.from(stRows).map(function(row) {
+            return {
+              wert: row.querySelector('[data-gs="wert"]').value,
+              label: row.querySelector('[data-gs="label"]').value
+            };
+          })
+        }
+      };
+      const res = await fetch('/api/galerie', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      if (res.ok) showToast('✓ Galerie-Texte gespeichert & Deploy gestartet');
+    } catch(err) { console.error('Galerie save error:', err); }
+  });
+
+  // ─── Gästebuch ────────────────────────────────────────────
+  function createEintragRow(name, rolle, text, farbe, breit) {
+    const row = document.createElement('div');
+    row.className = 'bg-surface-container-low rounded-xl p-4 flex flex-col gap-3';
+    row.innerHTML =
+      '<div class="flex gap-3 items-start">' +
+        '<div class="flex-1 grid grid-cols-2 gap-3">' +
+          '<input type="text" value="' + escHtml(name||'') + '" placeholder="Name" data-gb="name"' +
+          ' class="bg-white rounded-DEFAULT px-3 py-2 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm font-bold"/>' +
+          '<input type="text" value="' + escHtml(rolle||'') + '" placeholder="Rolle (z.B. Trainerin)" data-gb="rolle"' +
+          ' class="bg-white rounded-DEFAULT px-3 py-2 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"/>' +
+        '</div>' +
+        '<button type="button" class="gb-delete shrink-0 w-8 h-8 flex items-center justify-center rounded-lg text-error hover:bg-error/10 transition-all">' +
+        '<span class="material-symbols-outlined text-lg">delete</span></button>' +
+      '</div>' +
+      '<textarea data-gb="text" rows="2" placeholder="Nachricht"' +
+      ' class="w-full bg-white rounded-DEFAULT px-3 py-2 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm resize-none">' + escHtml(text||'') + '</textarea>' +
+      '<div class="flex gap-4 items-center flex-wrap">' +
+        '<label class="flex items-center gap-2 text-sm cursor-pointer">' +
+          '<input type="checkbox" data-gb="breit" ' + (breit ? 'checked' : '') + ' class="rounded"/>' +
+          '<span class="text-on-surface-variant font-medium">Breite Karte</span>' +
+        '</label>' +
+        '<select data-gb="farbe" class="bg-white rounded-DEFAULT px-3 py-2 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm">' +
+          '<option value="default"' + ((!farbe || farbe === 'default') ? ' selected' : '') + '>Standard (weiß)</option>' +
+          '<option value="secondary"' + (farbe === 'secondary' ? ' selected' : '') + '>Akzent (lila/pink)</option>' +
+        '</select>' +
+      '</div>';
+    row.querySelector('.gb-delete').addEventListener('click', function() { row.remove(); });
+    return row;
+  }
+
+  document.getElementById('gbEintragAdd').addEventListener('click', function() {
+    document.getElementById('gbEintragFields').appendChild(createEintragRow('', '', '', 'default', false));
+  });
+
+  document.getElementById('gbHeroFileInput').addEventListener('change', function() {
+    const file = this.files[0];
+    if (!file) return;
+    document.getElementById('gbHeroPreview').src = URL.createObjectURL(file);
+    document.getElementById('gbHeroPreview').classList.remove('hidden');
+    document.getElementById('gbHeroPlaceholder').classList.add('hidden');
+    document.getElementById('gbHeroUploadBtn').disabled = false;
+    document.getElementById('gbHeroUploadStatus').textContent = file.name;
+  });
+
+  document.getElementById('gbHeroUploadBtn').addEventListener('click', async function() {
+    const file = document.getElementById('gbHeroFileInput').files[0];
+    if (!file) return;
+    this.disabled = true;
+    document.getElementById('gbHeroUploadStatus').textContent = 'Wird hochgeladen…';
+    try {
+      const fd = new FormData();
+      fd.append('image', file);
+      const r = await fetch('/api/gaestebuch/image', { method: 'POST', body: fd });
+      if (r.ok) {
+        showToast('✓ Bild gespeichert');
+        document.getElementById('gbHeroUploadStatus').textContent = 'Gespeichert!';
+      } else {
+        document.getElementById('gbHeroUploadStatus').textContent = 'Fehler beim Upload';
+      }
+    } catch(err) {
+      document.getElementById('gbHeroUploadStatus').textContent = 'Verbindungsfehler';
+    }
+    this.disabled = false;
+  });
+
+  async function loadGaestebuch() {
+    try {
+      const r = await fetch('/api/gaestebuch');
+      const d = await r.json();
+      const hero = d.hero || {};
+      document.getElementById('gbBadge').value = hero.badge || '';
+      document.getElementById('gbHeading').value = hero.heading || '';
+      document.getElementById('gbHeadingColored').value = hero.heading_colored || '';
+      document.getElementById('gbDescription').value = hero.description || '';
+      const kontakt = d.kontakt || {};
+      document.getElementById('gbEmail').value = kontakt.email || '';
+      document.getElementById('gbDojo').value = kontakt.dojo || '';
+      if (hero.image) {
+        document.getElementById('gbHeroPreview').src = '/gaestebuch-img/' + hero.image + '?t=' + Date.now();
+        document.getElementById('gbHeroPreview').classList.remove('hidden');
+        document.getElementById('gbHeroPlaceholder').classList.add('hidden');
+      }
+      const ef = document.getElementById('gbEintragFields');
+      ef.innerHTML = '';
+      (d.eintraege || []).forEach(function(e) {
+        ef.appendChild(createEintragRow(e.name, e.rolle, e.text, e.farbe, e.breit));
+      });
+    } catch(err) { console.error('Gaestebuch load error:', err); }
+  }
+
+  document.getElementById('gbSaveBtn').addEventListener('click', async function() {
+    try {
+      const r0 = await fetch('/api/gaestebuch');
+      const existing = await r0.json();
+      const rows = document.getElementById('gbEintragFields').querySelectorAll(':scope > div');
+      const eintraege = Array.from(rows).map(function(row, i) {
+        return {
+          id: String(i + 1),
+          name: row.querySelector('[data-gb="name"]').value,
+          rolle: row.querySelector('[data-gb="rolle"]').value,
+          text: row.querySelector('[data-gb="text"]').value,
+          farbe: row.querySelector('[data-gb="farbe"]').value,
+          breit: row.querySelector('[data-gb="breit"]').checked
+        };
+      });
+      const data = {
+        hero: {
+          badge: document.getElementById('gbBadge').value,
+          heading: document.getElementById('gbHeading').value,
+          heading_colored: document.getElementById('gbHeadingColored').value,
+          description: document.getElementById('gbDescription').value,
+          image: (existing.hero || {}).image || ''
+        },
+        kontakt: {
+          email: document.getElementById('gbEmail').value,
+          dojo: document.getElementById('gbDojo').value
+        },
+        eintraege: eintraege
+      };
+      const res = await fetch('/api/gaestebuch', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      if (res.ok) showToast('✓ Gästebuch gespeichert & Deploy gestartet');
+    } catch(err) { console.error('Gaestebuch save error:', err); }
+  });
+
+  // ─── Social Links ─────────────────────────────────────────
+  async function loadSocialLinks() {
+    try {
+      const r = await fetch('/api/global');
+      const d = await r.json();
+      const social = d.social || {};
+      document.getElementById('socialInstagram').value = social.instagram || '';
+      document.getElementById('socialYoutube').value = social.youtube || '';
+      document.getElementById('socialEmail').value = social.email || '';
+    } catch(err) { console.error('Social load error:', err); }
+  }
+
+  document.getElementById('saveSocialBtn').addEventListener('click', async function() {
+    const status = document.getElementById('socialStatus');
+    try {
+      const r = await fetch('/api/global', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          social: {
+            instagram: document.getElementById('socialInstagram').value,
+            youtube: document.getElementById('socialYoutube').value,
+            email: document.getElementById('socialEmail').value
+          }
+        })
+      });
+      if (r.ok) {
+        showToast('✓ Social Links gespeichert & Deploy gestartet');
+        status.textContent = '';
+      } else {
+        status.textContent = 'Fehler beim Speichern.';
+      }
+    } catch(err) { status.textContent = 'Verbindungsfehler'; }
+  });
+
+  // ─── Init ─────────────────────────────────────────────────
+  loadCategories().then(function () { loadStats(); });
+  loadSiteTitle();
+  loadSocialLinks();
+})();
+</script>
+</body>
+</html>
