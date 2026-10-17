@@ -23,3 +23,7 @@ Temporary Items
 .apdisk
 
 .DS_Store
+
+node_modules/
+.git.bak/
+.hugo_build.lock
