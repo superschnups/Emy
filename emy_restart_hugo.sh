@@ -1,1 +1,0 @@
-/Users/jessi/karatehp/bin/emy_restart_hugo.sh
